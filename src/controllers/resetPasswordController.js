@@ -45,7 +45,7 @@ const forgotPassword = async (req, res) => {
           );
       
           if (result.affectedRows > 0) {
-            const resetUrl = `https://apievent-67yf.onrender.com/api/password/reset-password/${hashedToken}`;
+            const resetUrl = `https://api-digitalevent.onrender.com/api/password/reset-password/${hashedToken}`;
             const transporter = nodemailer.createTransport({
               service: "Gmail",
               auth: {
