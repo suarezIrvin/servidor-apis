@@ -25,14 +25,15 @@ const Evento = async (req, res) => {
   const filtroEvento = async (req, res) => {
     const { category, tipo_evento } = req.query;
     try {
-      const sql = `SELECT a.evento_id, a.nombre AS nombre_evento, a.fecha_inicio, a.fecha_termino, a.hora, a.ubicacion, a.max_per, a.estado, a.fecha_autorizacion, b.nombre AS tipo_evento, e.nombre AS organizador_nombre, e.nombre AS autorizado_nombre, c.estado, d.nombre AS categoria_nombre, f.imagen_url 
-                         FROM Eventos a 
-                         INNER JOIN Tipos_Evento b ON a.tipo_evento_id = b.tipo_evento_id  
-                         INNER JOIN Validacion c ON a.validacion_id = c.validacion_id 
-                         INNER JOIN Categorias d ON a.categoria_id = d.categoria_id
-                         INNER JOIN Usuarios e ON a.organizador_id = e.usuario_id
-                         INNER JOIN Imagenes f ON a.evento_id = f.evento_id
-                         ORDER BY ABS(DATEDIFF(fecha_inicio, CURDATE()))`;
+      const sql = `SELECT a.evento_id, a.nombre AS nombre_evento, a.fecha_inicio, a.fecha_termino, a.hora, a.ubicacion, a.max_per, a.estado, a.fecha_autorizacion, 
+                            b.nombre AS tipo_evento, e.nombre AS organizador_nombre, e.nombre AS autorizado_nombre, c.estado, d.nombre AS categoria_nombre 
+                     FROM Eventos a 
+                     INNER JOIN Tipos_Evento b ON a.tipo_evento_id = b.tipo_evento_id  
+                     INNER JOIN Validacion c ON a.validacion_id = c.validacion_id 
+                     INNER JOIN Categorias d ON a.categoria_id = d.categoria_id
+                     INNER JOIN Usuarios e ON a.organizador_id = e.usuario_id
+                     WHERE d.nombre = ? OR b.nombre = ?
+                     ORDER BY ABS(DATEDIFF(fecha_inicio, CURDATE()))`;
   
       const [rows, fields] = await pool.query(sql, [category, tipo_evento]);
   
