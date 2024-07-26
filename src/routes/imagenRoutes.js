@@ -1,13 +1,13 @@
-const multer = require("multer");
-const upload = multer({ dest: "uploads/" });
-
+const multer = require('multer');
+const upload = multer();
 const express = require("express");
-const imagenController = require("../controllers/imagenController");
+const { subirImagen } = require('../controllers/imagenController');
+
 const router = express.Router();
 
 /**
  * @swagger
- * /api/imagenes/perfiles/{perfilId}/subir-imagen:
+ * /api/imagenes/upload/:usuario_id:
  *   put:
  *     summary: Sube una foto de perfil
  *     tags: [Usuario]
@@ -38,10 +38,6 @@ const router = express.Router();
  *       500:
  *         description: Internal server error
  */
-router.put(
-  "/perfiles/:perfilId/subir-imagen",
-  upload.single("file"),
-  imagenController.subirImagen
-);
+router.put("/upload/:usuario_id", upload.single("image"), subirImagen);
 
 module.exports = router;

@@ -1,4 +1,5 @@
-const cloudinary = require("cloudinary").v2;
+const { v2: cloudinary } = require('cloudinary');
+const streamifier = require('streamifier');
 const pool = require("../config/connection");
 require("dotenv").config();
 
@@ -8,34 +9,49 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-const imagenController = {
-  subirImagen: async (req, res) => {
-    try {
-      if (!req.file) {
-        return res
-          .status(400)
-          .json({ error: "No se proporcionó ningún archivo" });
-      }
 
-      // Subir imagen a Cloudinary
-      const resultado = await cloudinary.uploader.upload(req.file.path);
+ const subirImagen = async (req, res) => {
+    if (!req.file) {
+      return res.status(400).json({ error: 'No file uploaded' });
+  }
 
-      // Actualizar la URL de la imagen en la base de datos
-      const [result] = await pool.query(
-        "UPDATE Usuarios SET fotoPerfil = ? WHERE usuario_id = ?",
-        [resultado.secure_url, req.params.usuarioId]
-      );
+  try {
+      // Cargar la imagen a Cloudinary
+      const stream = cloudinary.uploader.upload_stream(async (error, result) => {
+          if (error) {
+              console.error('Error uploading to Cloudinary:', error);
+              return res.status(500).json({ error: 'Failed to upload image' });
+          }
 
-      if (result.affectedRows === 0) {
-        return res.status(404).json({ error: "Usuario no encontrado" });
-      }
+          try {
+              // Guardar la URL de la imagen en la base de datos con una consulta SQL directa
+              pool.query(
+                  'UPDATE Usuarios SET fotoPerfil = ? WHERE usuario_id = ?',
+                  [result.secure_url, req.params.id],
+                  (err, results) => {
+                      if (err) {
+                          console.error('Error saving image URL in database:', err);
+                          return res.status(500).json({ error: 'Failed to save image URL in the database' });
+                      }
 
-      res.json({ fotoPerfil: resultado.secure_url });
-    } catch (error) {
-      console.error("Error en subirImagen:", error);
-      res.status(500).json({ error: "Error interno del servidor" });
-    }
-  },
+                      res.json({ message: 'Image uploaded successfully', url: result.secure_url });
+                  }
+              );
+          } catch (err) {
+              console.error('Error saving image URL in database:', err);
+              res.status(500).json({ error: 'Failed to save image URL in the database' });
+          }
+      });
+
+      // Convertir el buffer del archivo a stream y luego pipe al stream de Cloudinary 
+      streamifier.createReadStream(req.file.buffer).pipe(stream);
+  } catch (error) {
+      console.error('Error uploading image:', error);
+      res.status(500).json({ error: 'Failed to upload image' });
+  }
+  };
+
+
+module.exports = {
+  subirImagen
 };
-
-module.exports = imagenController;
