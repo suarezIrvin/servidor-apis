@@ -27,7 +27,7 @@ cloudinary.config({
               // Guardar la URL de la imagen en la base de datos con una consulta SQL directa
               pool.query(
                   'UPDATE Usuarios SET fotoPerfil = ? WHERE usuario_id = ?',
-                  [result.secure_url, req.params.id],
+                  [result.secure_url, req.params.usuario_id],
                   (err, results) => {
                       if (err) {
                           console.error('Error saving image URL in database:', err);

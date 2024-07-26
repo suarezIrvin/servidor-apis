@@ -7,7 +7,7 @@ const router = express.Router();
 
 /**
  * @swagger
- * /api/imagenes/upload/:usuario_id:
+ * /api/imagenes/upload/{usuario_id}:
  *   put:
  *     summary: Sube una foto de perfil
  *     tags: [Usuario]
@@ -25,7 +25,7 @@ const router = express.Router();
  *           schema:
  *             type: object
  *             properties:
- *               file:
+ *               image:
  *                 type: string
  *                 format: binary
  *     responses:
@@ -38,6 +38,6 @@ const router = express.Router();
  *       500:
  *         description: Internal server error
  */
-router.put("/upload/:usuario_id", upload.single("image"), subirImagen);
+router.put("/upload/:usuario_id", upload.single('image'), subirImagen);
 
 module.exports = router;
