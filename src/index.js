@@ -1,6 +1,7 @@
 const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
+const bodyParser = require('body-parser');
 const dotenv = require("dotenv");
 const authMiddleware = require("./middlewares/authMiddleware");
 const swaggerRouter = require("./config/swagger");
@@ -13,6 +14,7 @@ const app = express();
 app.use(express.json());
 app.use(morgan("dev"));
 app.use(cors());
+app.use(bodyParser.json());
 
 // Rutas
 app.use("/api", require("./routes/indexRouter"));
