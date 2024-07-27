@@ -3,6 +3,40 @@ const router = express.Router();
 const pool = require("../config/connection");
 
 // Read all
+
+/**
+ * @openapi
+ * /api/asientos:
+ *   get:
+ *     summary: obtiene todos los asientos
+ *     description: Obtiene todas los asientos.
+ *     tags:
+ *       - Asientos
+ *     responses:
+ *       200:
+ *         description: Lista de de comentarios.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   asiento_id:
+ *                     type: integer
+ *                     example: 1
+ *                   numero_asiento:
+ *                     type: string
+ *                     example: "a1"
+ *                   estado:
+ *                     type: string
+ *                     example: "reservado"
+ *                   usuario_id:
+ *                     type: int
+ *                     example: 1
+ *       500:
+ *         description: Error al obtener las notificaciones.
+ */
 router.get("/", async (req, res) => {
   try {
     const [rows, fields] = await pool.query("SELECT * FROM Asientos");
@@ -12,6 +46,47 @@ router.get("/", async (req, res) => {
   }
 });
 
+
+/**
+ * @openapi
+ * /api/asientos/{id}:
+ *   get:
+ *     summary: obtiene el asiento por id
+ *     description: Obtiene un asiento por su ID.
+ *     tags:
+ *       - Asientos
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         example: 1
+ *     responses:
+ *       200:
+ *         description: Detalles del usuario encontrado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                   asiento_id:
+ *                     type: integer
+ *                     example: 1
+ *                   numero_asiento:
+ *                     type: string
+ *                     example: "a1"
+ *                   estado:
+ *                     type: string
+ *                     example: "reservado"
+ *                   usuario_id:
+ *                     type: int
+ *                     example: 1
+ *       404:
+ *         description: asiento no encontrado.
+ *       500:
+ *         description: Error al obtener el asiento.
+ */
 router.get("/:id", async (req, res) => {
   const { id } = req.params;
   try {
@@ -28,6 +103,42 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+
+/**
+ * @swagger
+ * /api/asientos:
+ *   post:
+ *     summary: Registrar un nuevo Asiento
+ *     tags: 
+ *       - Asientos
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - numero_asiento
+ *               - estado
+ *               - usuario_id
+ *             properties:
+ *               numero_asiento:
+ *                 type: string
+ *                 example: "a1"
+ *               estado:
+ *                 type: string
+ *                 example: "Reservado"
+ *               usuario_id:
+ *                 type: int
+ *                 example: 1
+ *     responses:
+ *       201:
+ *         description: Asiento created successfully
+ *       400:
+ *         description: All fields are required
+ *       500:
+ *         description: Error creating user
+ */
 router.post("/", async (req, res) => {
   const { numero_asiento, estado, usuario_id } = req.body;
   if (!numero_asiento || !estado || !usuario_id) {
@@ -65,6 +176,49 @@ router.post("/", async (req, res) => {
   }
 });
 
+
+/**
+ * @openapi
+ * /api/asientos/{id}:
+ *   put:
+ *     summary: edita un asiento
+ *     tags: 
+ *       - Asientos
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: membresia id
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - numero_asiento
+ *               - estado
+ *               - usuario_id
+ *             properties:
+ *               numero_asiento:
+ *                 type: string
+ *                 example: "A1"
+ *               estado:
+ *                 type: string
+ *                 example: "Reservado"
+ *               usuario_id:
+ *                 type: int
+ *                 example: 1
+ *     responses:
+ *       200:
+ *         description: asiento updated successfully
+ *       404:
+ *         description: asiento not found
+ *       500:
+ *         description: Internal server error
+ */
 router.put("/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -121,6 +275,29 @@ router.put("/:id", async (req, res) => {
   }
 });
 
+
+/**
+ * @openapi
+ * /api/asientos/{id}:
+ *   delete:
+ *     summary: Elimina un asiento por su ID.
+ *     tags:
+ *       - Asientos
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         example: 1
+ *     responses:
+ *       204:
+ *         description: asiento eliminado correctamente.
+ *       404:
+ *         description: asiento no encontrado.
+ *       500:
+ *         description: Error al eliminar el usuario.
+ */
 router.delete("/:id", async (req, res) => {
   const { id } = req.params;
   try {

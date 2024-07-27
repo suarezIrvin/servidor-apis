@@ -14,6 +14,7 @@ const asientoRoutes = require("./asientoRouter");
 const escenarioRoutes = require("./escenarioRouter");
 const comentarioRoutes = require('./comentariosRouter');
 const membresiaRoutes = require("./membresiaRouter");
+const detalleEventoRoute = require('./detallesEventoRoute');
 
 // Categorias de las rutas
 router.use("/notification", notificationRoutes);
@@ -28,5 +29,6 @@ router.use("/asientos", asientoRoutes);
 router.use("/escenarios", escenarioRoutes);
 router.use('/comentario', comentarioRoutes);
 router.use('/membresia', membresiaRoutes);
+router.use('/detalle', detalleEventoRoute);
 
 module.exports = router;
