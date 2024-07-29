@@ -6,6 +6,7 @@ const eventoController = require('../controllers/eventoController');
  * @openapi
  * /api/eventos/events:
  *   get:
+ *     summary: obtiene los eventos aprobados
  *     description: Obtiene todas las notificaciones.
  *     tags:
  *       - Eventos
