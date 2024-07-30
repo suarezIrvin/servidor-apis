@@ -20,7 +20,7 @@ const DetalleEvento = {
     INNER JOIN Imagenes f ON b.evento_id = f.evento_id
     WHERE b.evento_id = ?`;
 
-    const query = util.promisify(db.query).bind(db);
+    const query = util.promisify(pool.query).bind(pool);
 
     try {
       const results = await query(sql, [evento_id]);

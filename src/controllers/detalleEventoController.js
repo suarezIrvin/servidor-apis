@@ -5,7 +5,7 @@ const DetalleEventoController = {
   getDetalleEvento: async (req, res) =>{
      const {evento_id} = req.params;
      try {
-        const detalle = await DetalleEvento.getDetalleEventoId({evento_id})
+        const detalle = await DetalleEvento.DetalleEvento.getDetalleEventoId({evento_id})
             if (detalle.length === 0) {
              return res.status(404).json({ message: 'No hay detalles de eventos registrados' });
             }

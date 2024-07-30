@@ -4,6 +4,6 @@ const detallesEventoController = require('../controllers/detalleEventoController
 
 
 
-router.get('/:evento_id', detallesEventoController.DetalleEventoController);
+router.get('/:evento_id', detallesEventoController.DetalleEventoController.getDetalleEvento);
 
 module.exports = router;
