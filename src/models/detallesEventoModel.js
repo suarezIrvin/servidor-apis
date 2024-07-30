@@ -2,7 +2,8 @@ const pool = require('../config/connection');
 const util = require('node:util');
 
 
-const getDetalleEventoId = async (data, callback) =>{
+const DetalleEvento = {
+  getDetalleEventoId: async (data, callback) =>{
     const {evento_id} = data;
     const sql = `SELECT 
     a.detalle_evento_id, a.evento_id, a.descripcion, a.requerimientos, a.precio, 
@@ -19,7 +20,7 @@ const getDetalleEventoId = async (data, callback) =>{
     INNER JOIN Imagenes f ON b.evento_id = f.evento_id
     WHERE b.evento_id = ?`;
 
-    const query = util.promisify(pool.query).bind(pool);
+    const query = util.promisify(db.query).bind(db);
 
     try {
       const results = await query(sql, [evento_id]);
@@ -29,9 +30,11 @@ const getDetalleEventoId = async (data, callback) =>{
       throw error;
     }
   }
+};
+
 
 
 
 module.exports = {
-    getDetalleEventoId
+    DetalleEvento
 }

@@ -1,7 +1,8 @@
 const DetalleEvento = require('../models/detallesEventoModel');
 
 
-const  getDetalleEvento = async (req, res) =>{
+const DetalleEventoController = {
+  getDetalleEvento: async (req, res) =>{
      const {evento_id} = req.params;
      try {
         const detalle = await DetalleEvento.getDetalleEventoId({evento_id})
@@ -15,9 +16,10 @@ const  getDetalleEvento = async (req, res) =>{
      }
      
   }
+}
 
 
 
 module.exports = {
-    getDetalleEvento
+    DetalleEventoController
 }
