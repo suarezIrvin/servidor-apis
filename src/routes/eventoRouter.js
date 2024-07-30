@@ -68,7 +68,7 @@ router.get('/events', eventoController.Evento);
  * @openapi
  * /api/eventos/filtro:
  *   get:
- *     summary: Obtener eventos filtrados por categoría y tipo de evento.
+ *     summary: Obtener eventos filtrados que estan aprobados por nombre, categoria, tipo evento y hora.
  *     tags:
  *       - Eventos
  *     parameters:
@@ -82,6 +82,16 @@ router.get('/events', eventoController.Evento);
  *         schema:
  *           type: string
  *         description: Nombre del tipo de evento a filtrar.
+ *       - in: query
+ *         name: nombre_evento
+ *         schema:
+ *           type: string
+ *         description: Nombre del evento, tambien busca por nombres parecidos no es necesario poner el nombre completo
+ *       - in: query
+ *         name: hora
+ *         schema:
+ *           type: string
+ *         description: hora del evento a filtrar o buscar
  *     responses:
  *       '200':
  *         description: Lista de eventos filtrados.
