@@ -23,7 +23,8 @@ const options = {
     "src/routes/userRoutes.js",
     "src/routes/comentariosRouter.js",
     "src/routes/membresiaRouter.js",
-    "src/routes/asientoRouter.js"
+    "src/routes/asientoRouter.js",
+    "src/routes/escenarioRouter.js"
   ],
 };
 
