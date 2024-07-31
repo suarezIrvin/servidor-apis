@@ -5,62 +5,29 @@ const pool = require("../config/connection");
 router.get("/", async (req, res) => {
   try {
     const [escenarios] = await pool.query("SELECT * FROM Escenario");
-    const escenariosConAsientosYEvento = await Promise.all(
+    const escenariosConAsientos = await Promise.all(
       escenarios.map(async (escenario) => {
-        const [asientos] = await pool.query(
-          "SELECT * FROM Asientos WHERE numero_asiento LIKE ?",
-          [`${escenario.escenario_id}-%`]
+        const asientos = await getAsientosPorEscenarioId(
+          escenario.escenario_id
         );
-        const [eventos] = await pool.query(
-          "SELECT * FROM Eventos WHERE evento_id = ?",
-          [escenario.evento_id]
-        );
-        const evento = eventos[0] ? eventos[0] : null;
-        return { ...escenario, asientos, evento };
+        return { ...escenario, asientos };
       })
     );
-    res.json(escenariosConAsientosYEvento);
+    res.json(escenariosConAsientos);
   } catch (error) {
-    console.error(error);
-    res.status(500).send({
-      message: "Error al obtener los escenarios, asientos y eventos",
-      error: error.message,
-    });
+    manejarError(res, error);
   }
 });
 
 router.get("/:id", async (req, res) => {
   const { id } = req.params;
   try {
-    const [escenarios] = await pool.query(
-      "SELECT * FROM Escenario WHERE escenario_id = ?",
-      [id]
-    );
-    if (escenarios.length === 0) {
-      return res.status(404).json({ error: "Escenario no encontrado" });
-    }
-    const escenario = escenarios[0];
-
-    const [asientos] = await pool.query(
-      "SELECT * FROM Asientos WHERE numero_asiento LIKE ?",
-      [`${id}-%`]
-    );
-
-    const [eventos] = await pool.query(
-      "SELECT * FROM Eventos WHERE evento_id = ?",
-      [escenario.evento_id]
-    );
-    const evento = eventos[0] ? eventos[0] : null;
-
-    const escenarioConAsientosYEvento = { ...escenario, asientos, evento };
-
-    res.json(escenarioConAsientosYEvento);
+    const escenario = await getEscenarioPorId(id);
+    const asientos = await getAsientosPorEscenarioId(id);
+    const escenarioConAsientos = { ...escenario, asientos };
+    res.json(escenarioConAsientos);
   } catch (error) {
-    console.error(error);
-    res.status(500).send({
-      message: "Error al obtener el escenario, asientos y evento",
-      error: error.message,
-    });
+    manejarError(res, error);
   }
 });
 
@@ -151,6 +118,8 @@ router.put("/:id", async (req, res) => {
     manejarError(res, error);
   }
 });
+
+
 
 // Funciones auxiliares
 
