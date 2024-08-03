@@ -9,48 +9,66 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
+// Función para subir imagen a Cloudinary
+const uploadStream = (file) => {
+  return new Promise((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream((error, result) => {
+      if (error) {
+        console.error('Error uploading to Cloudinary:', error);
+        reject(error);
+      } else {
+        resolve(result);
+      }
+    });
+    streamifier.createReadStream(file.buffer).pipe(stream);
+  });
+};
 
- const subirImagen = async (req, res) => {
-    if (!req.file) {
-      return res.status(400).json({ error: 'No file uploaded' });
+// Función para actualizar la URL en la base de datos
+const updateDatabase = (url, usuarioId) => {
+  return new Promise((resolve, reject) => {
+    console.log('Executing database query with URL:', url, 'and usuario_id:', usuarioId);
+    pool.query(
+      'UPDATE Usuarios SET fotoPerfil = ? WHERE usuario_id = ?',
+      [url, usuarioId],
+      (err, results) => {
+        if (err) {
+          console.error('Error saving image URL in database:', err);
+          reject(err);
+        } else {
+          console.log('Database query result:', results);
+          resolve(results);
+        }
+      }
+    );
+  });
+};
+
+const subirImagen = async (req, res) => {
+  console.log('Request received:', req.file);
+
+  if (!req.file) {
+    console.log('No file uploaded');
+    return res.status(400).json({ error: 'No file uploaded' });
   }
 
   try {
-      // Cargar la imagen a Cloudinary
-      const stream = cloudinary.uploader.upload_stream(async (error, result) => {
-          if (error) {
-              console.error('Error uploading to Cloudinary:', error);
-              return res.status(500).json({ error: 'Failed to upload image' });
-          }
+    console.log('Uploading to Cloudinary...');
+    const result = await uploadStream(req.file);
+    console.log('Image uploaded:', result.secure_url);
 
-          try {
-              // Guardar la URL de la imagen en la base de datos con una consulta SQL directa
-              pool.query(
-                  'UPDATE Usuarios SET fotoPerfil = ? WHERE usuario_id = ?',
-                  [result.secure_url, req.params.usuario_id],
-                  (err, results) => {
-                      if (err) {
-                          console.error('Error saving image URL in database:', err);
-                          return res.status(500).json({ error: 'Failed to save image URL in the database' });
-                      }
+    // Enviar la respuesta al cliente antes de actualizar la base de datos
+    res.status(200).json({ message: 'Image uploaded successfully', url: result.secure_url });
 
-                      res.json({ message: 'Image uploaded successfully', url: result.secure_url });
-                  }
-              );
-          } catch (err) {
-              console.error('Error saving image URL in database:', err);
-              res.status(500).json({ error: 'Failed to save image URL in the database' });
-          }
-      });
-
-      // Convertir el buffer del archivo a stream y luego pipe al stream de Cloudinary 
-      streamifier.createReadStream(req.file.buffer).pipe(stream);
+    // Actualizar la base de datos después de enviar la respuesta
+    updateDatabase(result.secure_url, req.params.usuario_id)
+      .then(() => console.log('Image URL saved'))
+      .catch((err) => console.error('Error saving image URL in database:', err));
   } catch (error) {
-      console.error('Error uploading image:', error);
-      res.status(500).json({ error: 'Failed to upload image' });
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Failed to upload image' });
   }
-  };
-
+};
 
 module.exports = {
   subirImagen
