@@ -1,5 +1,5 @@
 const multer = require('multer');
-const upload = multer();
+const upload = require('../middlewares/multerConfig');
 const express = require("express");
 const { subirImagen } = require('../controllers/imagenController');
 
