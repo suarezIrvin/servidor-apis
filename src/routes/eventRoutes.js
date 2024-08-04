@@ -62,7 +62,7 @@ const authMiddleware = require("../middlewares/authMiddleware");
  *       500:
  *         description: Internal server error
  */
-router.post("/create", authMiddleware, eventController.createEvent);
+router.post("/create",  eventController.createEvent);
 
 /**
  * @swagger
@@ -154,7 +154,7 @@ router.get("/organizer", authMiddleware, eventController.listOrganizerEvents);
  *       500:
  *         description: Internal server error
  */
-router.get("/pending", authMiddleware, eventController.listPendingEvents);
+router.get("/pending", eventController.listPendingEvents);
 
 /**
  * @swagger
