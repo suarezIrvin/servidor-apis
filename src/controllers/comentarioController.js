@@ -20,7 +20,7 @@ const getComentarios = async (req, res) => {
     const [comentarios] = await pool.query(
       `
       SELECT c.comentario_id, c.usuario_id, c.evento_id, c.comentario, c.fecha, u.nombre AS usuario_nombre
-      FROM comentarios c
+      FROM Comentarios c
       JOIN usuarios u ON c.usuario_id = u.usuario_id
       LIMIT ? OFFSET ?
       `,
@@ -43,8 +43,8 @@ const getComentariosEvento = async (req, res) => {
     const [comentarios] = await pool.query(
       `
       SELECT c.comentario_id, c.usuario_id, c.evento_id, c.comentario, c.fecha, u.nombre AS usuario_nombre
-      FROM comentarios c
-      JOIN usuarios u ON c.usuario_id = u.usuario_id
+      FROM Comentarios c
+      JOIN Usuarios u ON c.usuario_id = u.usuario_id
       WHERE c.evento_id = ?
       LIMIT ? OFFSET ?
       `,
@@ -69,20 +69,20 @@ const createComentarios = async (req, res) => {
     }
 
     // Verificar la existencia del evento
-    const [eventoExists] = await pool.query('SELECT 1 FROM eventos WHERE id = ?', [evento_id]);
+    const [eventoExists] = await pool.query('SELECT 1 FROM Eventos WHERE id = ?', [evento_id]);
     if (eventoExists.length === 0) {
       return res.status(404).send('Evento no encontrado');
     }
 
     // Verificar la existencia del usuario
-    const [usuarioExists] = await pool.query('SELECT 1 FROM usuarios WHERE id = ?', [usuario_id]);
+    const [usuarioExists] = await pool.query('SELECT 1 FROM Usuarios WHERE id = ?', [usuario_id]);
     if (usuarioExists.length === 0) {
       return res.status(404).send('Usuario no encontrado');
     }
 
     // CONSULTA
     const query = `
-      INSERT INTO comentarios (evento_id, usuario_id, comentario, fecha)
+      INSERT INTO Comentarios (evento_id, usuario_id, comentario, fecha)
       VALUES (?, ?, ?, ?)
     `;
     const values = [evento_id, usuario_id, comentario, fecha];
@@ -106,7 +106,7 @@ const deleteComentario = async (req, res) => {
       const { comentario_id } = req.params;
   
       const [existingComentario] = await pool.query(
-        'SELECT * FROM comentarios WHERE comentario_id = ?',
+        'SELECT * FROM Comentarios WHERE comentario_id = ?',
         [comentario_id]
       );
   
