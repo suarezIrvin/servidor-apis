@@ -69,13 +69,13 @@ const createComentarios = async (req, res) => {
     }
 
     // Verificar la existencia del evento
-    const [eventoExists] = await pool.query('SELECT 1 FROM Eventos WHERE id = ?', [evento_id]);
+    const [eventoExists] = await pool.query('SELECT 1 FROM Eventos WHERE evento_id = ?', [evento_id]);
     if (eventoExists.length === 0) {
       return res.status(404).send('Evento no encontrado');
     }
 
     // Verificar la existencia del usuario
-    const [usuarioExists] = await pool.query('SELECT 1 FROM Usuarios WHERE id = ?', [usuario_id]);
+    const [usuarioExists] = await pool.query('SELECT 1 FROM Usuarios WHERE usuario_id = ?', [usuario_id]);
     if (usuarioExists.length === 0) {
       return res.status(404).send('Usuario no encontrado');
     }
