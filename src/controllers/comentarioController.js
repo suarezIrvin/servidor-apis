@@ -21,7 +21,7 @@ const getComentarios = async (req, res) => {
       `
       SELECT c.comentario_id, c.usuario_id, c.evento_id, c.comentario, c.fecha, u.nombre AS usuario_nombre
       FROM Comentarios c
-      JOIN usuarios u ON c.usuario_id = u.usuario_id
+      JOIN Usuarios u ON c.usuario_id = u.usuario_id
       LIMIT ? OFFSET ?
       `,
       [limit, offset]
