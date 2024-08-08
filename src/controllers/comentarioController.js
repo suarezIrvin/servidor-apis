@@ -1,10 +1,32 @@
 const pool = require('../config/connection'); 
 
-const getComentarios = async (_req, res) => {
+const getComentarios = async (req, res) => {
   try {
+    // Obtener los parámetros de consulta o establecer valores predeterminados
+    let { page = 1, limit = 10 } = req.query;
+    
+    // Convertir page y limit a enteros
+    page = parseInt(page, 10);
+    limit = parseInt(limit, 10);
+
+    // Validar que page y limit sean números enteros positivos
+    if (isNaN(page) || page < 1) page = 1;
+    if (isNaN(limit) || limit < 1) limit = 10;
+
+    // Calcular el offset
+    const offset = (page - 1) * limit;
+
+    // Consulta SQL con JOIN para incluir el nombre del usuario
     const [comentarios] = await pool.query(
-      'SELECT * FROM Comentarios'
+      `
+      SELECT c.comentario_id, c.usuario_id, c.evento_id, c.comentario, c.fecha, u.nombre AS usuario_nombre
+      FROM comentarios c
+      JOIN usuarios u ON c.usuario_id = u.usuario_id
+      LIMIT ? OFFSET ?
+      `,
+      [limit, offset]
     );
+
     res.json(comentarios);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -12,26 +34,30 @@ const getComentarios = async (_req, res) => {
 };
 
 const getComentariosEvento = async (req, res) => {
-    try {
-      const { evento_id } = req.params; 
+  try {
+    const { evento_id } = req.params;
+    const { page = 1, limit = 10 } = req.query;
+    const offset = (page - 1) * limit;
 
-      const [comentarios] = await pool.query(
-        'SELECT * FROM Comentarios WHERE evento_id = ?',
-        [evento_id]
-      );
-  
-      res.json(comentarios);
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
-  };
+    // Consulta SQL con JOIN para incluir el nombre del usuario
+    const [comentarios] = await pool.query(
+      `
+      SELECT c.comentario_id, c.usuario_id, c.evento_id, c.comentario, c.fecha, u.nombre AS usuario_nombre
+      FROM comentarios c
+      JOIN usuarios u ON c.usuario_id = u.usuario_id
+      WHERE c.evento_id = ?
+      LIMIT ? OFFSET ?
+      `,
+      [evento_id, parseInt(limit), parseInt(offset)]
+    );
 
-// Función para verificar si el usuario existe
-const userExists = async (usuario_id) => {
-  const userCheckQuery = 'SELECT usuario_id FROM Usuarios WHERE usuario_id = ?'; // Usa 'usuario_id' en lugar de 'id'
-  const [userCheckResult] = await pool.query(userCheckQuery, [usuario_id]);
-  return userCheckResult.length > 0;
+    res.json(comentarios);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 };
+
+
 
 const createComentarios = async (req, res) => {
   try {
@@ -42,9 +68,21 @@ const createComentarios = async (req, res) => {
       return res.status(400).send('Faltan datos requeridos');
     }
 
+    // Verificar la existencia del evento
+    const [eventoExists] = await pool.query('SELECT 1 FROM eventos WHERE id = ?', [evento_id]);
+    if (eventoExists.length === 0) {
+      return res.status(404).send('Evento no encontrado');
+    }
+
+    // Verificar la existencia del usuario
+    const [usuarioExists] = await pool.query('SELECT 1 FROM usuarios WHERE id = ?', [usuario_id]);
+    if (usuarioExists.length === 0) {
+      return res.status(404).send('Usuario no encontrado');
+    }
+
     // CONSULTA
     const query = `
-      INSERT INTO Comentarios (evento_id, usuario_id, comentario, fecha)
+      INSERT INTO comentarios (evento_id, usuario_id, comentario, fecha)
       VALUES (?, ?, ?, ?)
     `;
     const values = [evento_id, usuario_id, comentario, fecha];
@@ -63,12 +101,12 @@ const createComentarios = async (req, res) => {
 
 
 
-  const deleteComentario = async (req, res) => {
+const deleteComentario = async (req, res) => {
     try {
       const { comentario_id } = req.params;
   
       const [existingComentario] = await pool.query(
-        'SELECT * FROM Comentarios WHERE comentario_id = ?',
+        'SELECT * FROM comentarios WHERE comentario_id = ?',
         [comentario_id]
       );
   
@@ -76,7 +114,7 @@ const createComentarios = async (req, res) => {
         return res.status(404).send('Comentario no encontrado');
       }
   
-      const query = 'DELETE FROM Comentarios WHERE comentario_id = ?';
+      const query = 'DELETE FROM comentarios WHERE comentario_id = ?';
       const [result] = await pool.query(query, [comentario_id]);
   
       if (result.affectedRows > 0) {
