@@ -114,7 +114,7 @@ const deleteComentario = async (req, res) => {
         return res.status(404).send('Comentario no encontrado');
       }
   
-      const query = 'DELETE FROM comentarios WHERE comentario_id = ?';
+      const query = 'DELETE FROM Comentarios WHERE comentario_id = ?';
       const [result] = await pool.query(query, [comentario_id]);
   
       if (result.affectedRows > 0) {
