@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const eventController = require("../controllers/eventController");
+const teoController = require("../controllers/teoController");
 const authMiddleware = require("../middlewares/authMiddleware");
 
 /**
@@ -209,5 +210,14 @@ router.post(
   authMiddleware,
   eventController.disapproveEvent
 );
+
+router.get('/get/img', teoController.getImgEvent);
+router.get('/get/img/:id', teoController.getIdImgEvent);
+router.get('/get/approved', teoController.getApprovedEvent);
+router.get('/get/pending', teoController.getPendingEvent);
+router.post('/post/img', teoController.postImgEvent);
+router.post('/post/pending', teoController.postPendingEvent);
+router.put('/put/img/:id', teoController.putImgEvent);
+
 
 module.exports = router;
