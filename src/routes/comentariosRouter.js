@@ -92,7 +92,7 @@ router.get('/list/:evento_id', comentariosController.getComentariosEvento);
 
 /**
  * @swagger
- * /api/comentario/create/{evento_id}/{usuario_id}:
+ * /api/comentario/create:
  *   post:
  *     summary: Registrar un nuevo usuario
  *     tags: 
@@ -129,7 +129,7 @@ router.get('/list/:evento_id', comentariosController.getComentariosEvento);
  *       500:
  *         description: Error creating user
  */
-router.post('/create/:evento_id/:usuario_id', comentariosController.createComentarios);
+router.post('/create', comentariosController.createComentarios);
 
 
 /**
