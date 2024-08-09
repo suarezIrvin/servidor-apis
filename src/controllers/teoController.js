@@ -287,7 +287,42 @@ const teoController = {
             console.error('Error al actualizar el estado del evento:', error);
             res.status(500).send('Error al actualizar el estado del evento');
         }
-    }
+    },
+
+    deleteImgEvent: async (req, res) => {
+        const connection = await pool.getConnection(); // Obtener una conexión del pool
+
+        try {
+            const { evento_id } = req.body;
+
+            await connection.beginTransaction(); // Iniciar transacción
+
+            // Luego, elimina las imágenes relacionadas
+            await connection.query('DELETE FROM Imagenes WHERE evento_id = ?', [evento_id]);
+
+            // Eliminar registros relacionados en las tablas 'Pagos', 'Escenario' y 'Detalles_Evento'
+            await connection.query('DELETE FROM Pagos WHERE evento_id = ?', [evento_id]);
+            await connection.query('DELETE FROM Escenario WHERE evento_id = ?', [evento_id]);
+            await connection.query('DELETE FROM Detalles_Evento WHERE evento_id = ?', [evento_id]);
+
+            // Finalmente, elimina el evento de la tabla 'Eventos'
+            const [result] = await connection.query('DELETE FROM Eventos WHERE evento_id = ?', [evento_id]);
+
+            if (result.affectedRows === 0) {
+                await connection.rollback(); // Deshacer transacción si no se encontró el evento
+                return res.status(404).send('Evento no encontrado');
+            }
+
+            await connection.commit(); // Confirmar transacción
+            res.status(200).send('Evento eliminado exitosamente');
+        } catch (error) {
+            await connection.rollback(); // Deshacer transacción en caso de error
+            console.error('Error al eliminar el evento:', error);
+            res.status(500).send('Error al eliminar el evento');
+        } finally {
+            connection.release(); // Liberar la conexión del pool
+        }
+    },
 }
 
 module.exports = teoController;
