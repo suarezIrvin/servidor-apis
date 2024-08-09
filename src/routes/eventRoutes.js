@@ -321,8 +321,6 @@ router.get('/get/pending', teoController.getPendingEvent);
  *               monto:
  *                 type: number
  *                 format: float
- *               forma:
- *                 type: string
  *               descripcion:
  *                 type: string
  *             required:
@@ -336,7 +334,6 @@ router.get('/get/pending', teoController.getPendingEvent);
  *               - max_per
  *               - imagen_url
  *               - monto
- *               - forma
  *               - descripcion
  *     responses:
  *       201:
@@ -425,8 +422,6 @@ router.post('/post/pending', teoController.postPendingEvent);
  *               monto:
  *                 type: number
  *                 format: float
- *               forma:
- *                 type: string
  *               descripcion:
  *                 type: string
  *             required:
@@ -440,7 +435,6 @@ router.post('/post/pending', teoController.postPendingEvent);
  *               - max_per
  *               - imagen_url
  *               - monto
- *               - forma
  *               - descripcion
  *     responses:
  *       200:

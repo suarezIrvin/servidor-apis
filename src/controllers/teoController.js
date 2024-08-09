@@ -61,10 +61,10 @@ const teoController = {
     },
 
     postImgEvent: async (req, res) => {
-        const { nombre, fecha_inicio, fecha_termino, hora, tipo_evento_id, categoria_id, ubicacion, max_per, imagen_url, monto, forma, descripcion } = req.body;
-
+        const { nombre, fecha_inicio, fecha_termino, hora, tipo_evento_id, categoria_id, ubicacion, max_per, imagen_url, monto, descripcion } = req.body;
+    
         // Validar que todos los campos necesarios estén presentes
-        if (!nombre || !fecha_inicio || !fecha_termino || !hora || !tipo_evento_id || !categoria_id || !ubicacion || !max_per || !imagen_url || !monto || !forma || !descripcion) {
+        if (!nombre || !fecha_inicio || !fecha_termino || !hora || !tipo_evento_id || !categoria_id || !ubicacion || !max_per || !imagen_url || !monto || !descripcion) {
             return res.status(400).send('Todos los campos son obligatorios');
         }
     
@@ -73,17 +73,11 @@ const teoController = {
         const validCategoriaIds = [1, 2, 3, 4];
     
         if (!validTipoEventoIds.includes(tipo_evento_id)) {
-            return res.status(400).send('Invalid tipo_evento_id');
+            return res.status(400).send('tipo_evento_id inválido');
         }
     
         if (!validCategoriaIds.includes(categoria_id)) {
-            return res.status(400).send('Invalid categoria_id');
-        }
-    
-        // Validar forma
-        const validFormas = ['Cuadrado', 'Redondo', 'Triangular'];
-        if (!validFormas.includes(forma)) {
-            return res.status(400).send('Invalid forma');
+            return res.status(400).send('categoria_id inválido');
         }
     
         try {
@@ -108,11 +102,11 @@ const teoController = {
                 [evento_id, monto]
             );
     
-            // Insertar la forma y asiento en la tabla Escenario
-            console.log(`Inserting forma: ${forma} with max_per: ${max_per} for evento_id: ${evento_id}`);
+            // Insertar en la tabla Escenario sin el campo forma
+            console.log(`Insertando escenario para evento_id: ${evento_id}`);
             await pool.query(
-                `INSERT INTO Escenario (evento_id, forma, asiento) VALUES (?, ?, ?)`,
-                [evento_id, forma, max_per]
+                `INSERT INTO Escenario (evento_id) VALUES (?)`,
+                [evento_id]
             );
     
             // Insertar la descripción en la tabla Detalles_Evento
@@ -128,13 +122,14 @@ const teoController = {
             res.status(500).send('Error al crear el evento');
         }
     },
+    
 
     putImgEvent: async (req, res) => {
         const { id } = req.params;
-        const { nombre, fecha_inicio, fecha_termino, hora, tipo_evento_id, categoria_id, ubicacion, max_per, imagen_url, monto, forma, descripcion } = req.body;
+        const { nombre, fecha_inicio, fecha_termino, hora, tipo_evento_id, categoria_id, ubicacion, max_per, imagen_url, monto, descripcion } = req.body;
     
         // Validar que todos los campos necesarios estén presentes
-        if (!nombre || !fecha_inicio || !fecha_termino || !hora || !tipo_evento_id || !categoria_id || !ubicacion || !max_per || !imagen_url || !monto || !forma || !descripcion) {
+        if (!nombre || !fecha_inicio || !fecha_termino || !hora || !tipo_evento_id || !categoria_id || !ubicacion || !max_per || !imagen_url || !monto || !descripcion) {
             return res.status(400).send('Todos los campos son obligatorios');
         }
     
@@ -143,17 +138,11 @@ const teoController = {
         const validCategoriaIds = [1, 2, 3, 4];
     
         if (!validTipoEventoIds.includes(tipo_evento_id)) {
-            return res.status(400).send('Invalid tipo_evento_id');
+            return res.status(400).send('tipo_evento_id inválido');
         }
     
         if (!validCategoriaIds.includes(categoria_id)) {
-            return res.status(400).send('Invalid categoria_id');
-        }
-    
-        // Validar forma
-        const validFormas = ['Cuadrado', 'Redondo', 'Triangular'];
-        if (!validFormas.includes(forma)) {
-            return res.status(400).send('Invalid forma');
+            return res.status(400).send('categoria_id inválido');
         }
     
         try {
@@ -181,13 +170,7 @@ const teoController = {
                 [monto, id]
             );
     
-            // Actualizar la forma y asiento en la tabla Escenario
-            await pool.query(
-                `UPDATE Escenario 
-                 SET forma = ?, asiento = ?
-                 WHERE evento_id = ?`,
-                [forma, max_per, id]
-            );
+            // No se actualiza la tabla Escenario ya que no se relaciona con forma y asiento
     
             // Actualizar la descripción en la tabla Detalles_Evento
             await pool.query(
@@ -204,6 +187,7 @@ const teoController = {
             res.status(500).send('Error al actualizar el evento');
         }
     },
+    
 
     getApprovedEvent: async (req, res) => {
         try {
