@@ -62,7 +62,6 @@ const teoController = {
 
     postImgEvent: async (req, res) => {
         const { nombre, fecha_inicio, fecha_termino, hora, tipo_evento_id, categoria_id, ubicacion, max_per, imagen_url, monto, descripcion } = req.body;
-    
         // Validar que todos los campos necesarios estén presentes
         if (!nombre || !fecha_inicio || !fecha_termino || !hora || !tipo_evento_id || !categoria_id || !ubicacion || !max_per || !imagen_url || !monto || !descripcion) {
             return res.status(400).send('Todos los campos son obligatorios');
@@ -116,7 +115,10 @@ const teoController = {
             );
     
             // Éxito al crear el evento
-            res.status(201).send('Evento creado correctamente');
+            res.status(201).json({
+                message: 'Evento creado correctamente',
+                evento_id: evento_id
+            });
         } catch (error) {
             console.error('Error al crear el evento:', error);
             res.status(500).send('Error al crear el evento');
