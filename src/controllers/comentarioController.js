@@ -2,29 +2,13 @@ const pool = require('../config/connection');
 
 const getComentarios = async (req, res) => {
   try {
-    // Obtener los parámetros de consulta o establecer valores predeterminados
-    let { page = 1, limit = 10 } = req.query;
-    
-    // Convertir page y limit a enteros
-    page = parseInt(page, 10);
-    limit = parseInt(limit, 10);
-
-    // Validar que page y limit sean números enteros positivos
-    if (isNaN(page) || page < 1) page = 1;
-    if (isNaN(limit) || limit < 1) limit = 10;
-
-    // Calcular el offset
-    const offset = (page - 1) * limit;
-
     // Consulta SQL con JOIN para incluir el nombre del usuario
     const [comentarios] = await pool.query(
       `
-      SELECT c.comentario_id, c.usuario_id, c.evento_id, c.comentario, c.fecha, u.nombre AS usuario_nombre
+      SELECT c.Comentario_id, c.Usuario_id, c.Evento_id, c.Comentario, c.Fecha, u.Nombre AS Usuario_nombre
       FROM Comentarios c
-      JOIN Usuarios u ON c.usuario_id = u.usuario_id
-      LIMIT ? OFFSET ?
-      `,
-      [limit, offset]
+      JOIN Usuarios u ON c.Usuario_id = u.Usuario_id
+      `
     );
 
     res.json(comentarios);
@@ -33,25 +17,26 @@ const getComentarios = async (req, res) => {
   }
 };
 
+
 const getComentariosEvento = async (req, res) => {
   try {
-    const { evento_id } = req.params;
-    const { page = 1, limit = 10 } = req.query;
-    const offset = (page - 1) * limit;
+    const { Evento_id } = req.params;
+    const { Page = 1, Limit = 10 } = req.query;
+    const Offset = (Page - 1) * Limit;
 
     // Consulta SQL con JOIN para incluir el nombre del usuario
-    const [comentarios] = await pool.query(
+    const [Comentarios] = await pool.query(
       `
-      SELECT c.comentario_id, c.usuario_id, c.evento_id, c.comentario, c.fecha, u.nombre AS usuario_nombre
+      SELECT c.Comentario_id, c.Usuario_id, c.Evento_id, c.Comentario, c.Fecha, u.Nombre AS Usuario_nombre
       FROM Comentarios c
-      JOIN Usuarios u ON c.usuario_id = u.usuario_id
-      WHERE c.evento_id = ?
+      JOIN Usuarios u ON c.Usuario_id = u.Usuario_id
+      WHERE c.Evento_id = ?
       LIMIT ? OFFSET ?
       `,
-      [evento_id, parseInt(limit), parseInt(offset)]
+      [Evento_id, parseInt(Limit), parseInt(Offset)]
     );
 
-    res.json(comentarios);
+    res.json(Comentarios);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -69,13 +54,13 @@ const createComentarios = async (req, res) => {
     }
 
     // Verificar la existencia del evento
-    const [eventoExists] = await pool.query('SELECT 1 FROM Eventos WHERE evento_id = ?', [evento_id]);
+    const [eventoExists] = await pool.query('SELECT 1 FROM Eventos WHERE id = ?', [evento_id]);
     if (eventoExists.length === 0) {
       return res.status(404).send('Evento no encontrado');
     }
 
     // Verificar la existencia del usuario
-    const [usuarioExists] = await pool.query('SELECT 1 FROM Usuarios WHERE usuario_id = ?', [usuario_id]);
+    const [usuarioExists] = await pool.query('SELECT 1 FROM Usuarios WHERE id = ?', [usuario_id]);
     if (usuarioExists.length === 0) {
       return res.status(404).send('Usuario no encontrado');
     }
@@ -98,7 +83,6 @@ const createComentarios = async (req, res) => {
     res.status(500).send('Error al crear el comentario');
   }
 };
-
 
 
 const deleteComentario = async (req, res) => {
