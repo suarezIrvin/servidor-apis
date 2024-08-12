@@ -101,13 +101,6 @@ const teoController = {
                 [evento_id, monto]
             );
     
-            // Insertar en la tabla Escenario sin el campo forma
-            console.log(`Insertando escenario para evento_id: ${evento_id}`);
-            await pool.query(
-                `INSERT INTO Escenario (evento_id) VALUES (?)`,
-                [evento_id]
-            );
-    
             // Insertar la descripción en la tabla Detalles_Evento
             await pool.query(
                 `INSERT INTO Detalles_Evento (evento_id, descripcion) VALUES (?, ?)`,
