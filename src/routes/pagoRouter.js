@@ -177,13 +177,13 @@ router.get('/historialpagos', pagoController.historialPagos);
  *                   - "usd"
  *               descripcion:
  *                 type: string
- *                 description: Descripcion del producto, nombre del evento o producto
+ *                 description: Descripcion del producto, nombre del evento o producto.
  *               usuario_id:
- *                 type: int
- *                 description: id del usuario que esta pagondo
+ *                 type: integer
+ *                 description: id del usuario que esta pagondo.
  *               evento_id:
- *                 type: int
- *                 description: id del evento que se compra
+ *                 type: integer
+ *                 description: id del evento que se compra.
  *     responses:
  *       '200':
  *         description: Respuesta exitosa. Devuelve el client_secret para confirmar el pago.
