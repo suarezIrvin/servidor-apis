@@ -46,14 +46,14 @@ router.get('/list', comentariosController.getComentarios);
 
 /**
  * @openapi
- * /api/comentario/list/{evento_id}:
+ * /api/comentario/list/{Evento_id}:
  *   get:
  *     summary: obtiene al usuario por id
  *     description: Obtiene un usuario por su ID.
  *     tags:
  *       - Comentarios
  *     parameters:
- *       - name: evento_id
+ *       - name: Evento_id
  *         in: path
  *         required: true
  *         schema:
