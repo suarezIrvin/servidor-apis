@@ -147,7 +147,7 @@ const historialPagosPorUsuarioID = async (req, res) => {
         SELECT Pagos.*, Pago_Tarjeta.numero_tarjeta, Pago_Tarjeta.fecha_expiracion, Pago_Tarjeta.cvv
         FROM Pagos
         LEFT JOIN Pago_Tarjeta ON Pagos.pago_id = Pago_Tarjeta.pago_id
-        WHERE Pagos.user_id = ?
+        WHERE Pagos.usuario_id = ?
     `,
     [usuario_id]
     );
