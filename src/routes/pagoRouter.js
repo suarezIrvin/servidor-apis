@@ -214,7 +214,7 @@ router.post('/pagar', pagoController.PagoMejorado);
 
 /**
  * @openapi
- * /api/pagos/historial/:usuario_id:
+ * /api/pagos/historial/{usuario_id}:
  *   get:
  *     summary: obtiene el historial de un usuario por medio de su id
  *     description: Obtiene el historial por medio del id del usuario
