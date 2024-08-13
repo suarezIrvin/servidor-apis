@@ -42,19 +42,29 @@ const pool = require("../config/connection");
 router.get("/", async (req, res) => {
   try {
     const [escenarios] = await pool.query("SELECT * FROM Escenario");
-    const escenariosConAsientos = await Promise.all(
-      escenarios.map(async (escenario) => {
-        const asientos = await getAsientosPorEscenarioId(
-          escenario.escenario_id
-        );
-        return { ...escenario, asientos };
-      })
-    );
+    const [asientos] = await pool.query("SELECT * FROM Asientos WHERE numero_asiento LIKE ?", [`%-%`]);
+
+    // Combina los datos
+    const escenariosConAsientos = escenarios.map(escenario => {
+      const asientosPorEscenario = asientos.filter(asiento => asiento.numero_asiento.startsWith(`${escenario.escenario_id}-`));
+      return { ...escenario, asientos: asientosPorEscenario };
+    });
+
     res.json(escenariosConAsientos);
   } catch (error) {
     manejarError(res, error);
   }
 });
+
+
+// Función para obtener asientos por escenario_id
+const getAsientosPorEscenarioId = async (escenario_id) => {
+  const [asientos] = await pool.query(
+    "SELECT * FROM Asientos WHERE numero_asiento LIKE ?",
+    [`${escenario_id}-%`]
+  );
+  return asientos;
+};
 
 
 /**
@@ -302,14 +312,7 @@ router.put("/:id", async (req, res) => {
 
 // Funciones auxiliares
 
-// Función para obtener asientos por escenario_id
-const getAsientosPorEscenarioId = async (escenario_id) => {
-  const [asientos] = await pool.query(
-    "SELECT * FROM Asientos WHERE numero_asiento LIKE ?",
-    [`${escenario_id}-%`]
-  );
-  return asientos;
-};
+
 
 // Función para obtener escenario por id
 const getEscenarioPorId = async (id) => {
