@@ -19,6 +19,9 @@ app.use(bodyParser.json());
 // Rutas
 app.use("/api", require("./routes/indexRouter"));
 app.use("/", swaggerRouter);
+app.get("/test", (req, res) => {
+  res.json({ message: "test api" });
+});
 
 // Ruta protegida por middleware de autenticación
 app.get("/dashboard", authMiddleware, (req, res) => {
