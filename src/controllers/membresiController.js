@@ -2,9 +2,12 @@ const Membresia = require('../models/membresiaModel');
 
 const membresiaController = {
   createMembresia: async (req, res) => {
-    const { tipo, descripcion, costo } = req.body;
+    const { tipo, descripcion, costo, meses } = req.body;
+    if (!tipo || !descripcion || !costo  || !meses) {
+      return res.status(400).json({ error: 'Faltan campos obligatorios' });
+    }
     try {
-      const result = await Membresia.create(tipo, descripcion, costo);
+      const result = await Membresia.create(tipo, descripcion, costo, meses);
       res.status(201).json({ message: 'Membresía creada correctamente', membresia_id: result.insertId });
     } catch (error) {
       console.error('Error al crear membresía:', error);
@@ -39,9 +42,9 @@ const membresiaController = {
 
   updateMembresia: async (req, res) => {
     const membresia_id = req.params.membresia_id;
-    const { tipo, descripcion, costo } = req.body;
+    const { tipo, descripcion, costo, meses } = req.body;
     try {
-      await Membresia.update(membresia_id, tipo, descripcion, costo);
+      await Membresia.update(membresia_id, tipo, descripcion, costo, meses);
       res.json({ message: 'Membresía actualizada correctamente' });
     } catch (error) {
       console.error('Error al actualizar membresía:', error);

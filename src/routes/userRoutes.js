@@ -515,6 +515,7 @@ router.put("/:id", async (req, res) => {
 
 router.put("/update-membresia/:id", async (req, res) => {
   const { id } = req.params;
+  const tipo = req.body.numeroMeses ?? 1;
   try {
     // Verificar si el usuario existe
     const [users] = await pool.query(
@@ -530,10 +531,23 @@ router.put("/update-membresia/:id", async (req, res) => {
 
     const membresia_id = req.body.membresia_id || user.membresia_id;
     const rol_id = 3; // Nuevo rol_id que queremos asignar
-    const values = [membresia_id, rol_id, id];
+    const fecha = new Date();
+    const fechaDevencia = new Date(fecha.setMonth(fecha.getMonth() + tipo));
+    
+    // Formatear la fecha a 'YYYY-MM-DD HH:MM:SS'
+    const pad = (n) => (n < 10 ? '0' : '') + n;
+    const fechaDevenciaFormatted = `${fechaDevencia.getFullYear()}-${pad(fechaDevencia.getMonth() + 1)}-${pad(fechaDevencia.getDate())} ${pad(fechaDevencia.getHours())}:${pad(fechaDevencia.getMinutes())}:${pad(fechaDevencia.getSeconds())}`;
+    let fechafinal = "";
+    if (membresia_id == 5) {
+      fechafinal = null;
+    }else{
+      fechafinal = fechaDevenciaFormatted
+    }
+
+    const values = [membresia_id, rol_id, fechafinal, id];
 
     const updateUserQuery =
-      "UPDATE Usuarios SET membresia_id = ?, rol_id = ? WHERE usuario_id = ?";
+      "UPDATE Usuarios SET membresia_id = ?, rol_id = ?, fecha_membresia = ? WHERE usuario_id = ?";
 
     const [result] = await pool.query(updateUserQuery, values);
 

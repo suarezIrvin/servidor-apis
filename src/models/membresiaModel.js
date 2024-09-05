@@ -1,10 +1,10 @@
 const pool = require('../config/connection');
 
 const Membresia = {
-  create: (tipo, descripcion, costo) => {
+  create: (tipo, descripcion, costo, meses) => {
     return pool.execute(
-      'INSERT INTO Membresia (tipo, descripcion, costo) VALUES (?, ?, ?)',
-      [tipo, descripcion, costo]
+      'INSERT INTO Membresia (tipo, descripcion, costo, meses) VALUES (?, ?, ?, ?)',
+      [tipo, descripcion, costo, meses]
     );
   },
 
@@ -19,10 +19,10 @@ const Membresia = {
     return pool.execute('SELECT * FROM Membresia');
   },
 
-  update: (membresia_id, tipo, descripcion, costo) => {
+  update: (membresia_id, tipo, descripcion, costo, meses) => {
     return pool.execute(
-      'UPDATE Membresia SET tipo = ?, descripcion = ?, costo = ? WHERE membresia_id = ?',
-      [tipo, descripcion, costo, membresia_id]
+      'UPDATE Membresia SET tipo = ?, descripcion = ?, costo = ?, meses = ? WHERE membresia_id = ?',
+      [tipo, descripcion, costo, meses, membresia_id]
     );
   },
 
