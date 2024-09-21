@@ -1,7 +1,7 @@
-const Membresia = require('../models/membresiaModel');
+const Membresia = require('../models/membershipModel');
 
-const membresiaController = {
-  createMembresia: async (req, res) => {
+const membershipController = {
+  createMembership: async (req, res) => {
     const { tipo, descripcion, costo, meses } = req.body;
     if (!tipo || !descripcion || !costo  || !meses) {
       return res.status(400).json({ error: 'Faltan campos obligatorios' });
@@ -15,7 +15,7 @@ const membresiaController = {
     }
   },
 
-  getMembresiaById: async (req, res) => {
+  getMembershipById: async (req, res) => {
     const membresia_id = req.params.membresia_id;
     try {
       const [rows, fields] = await Membresia.findById(membresia_id);
@@ -30,7 +30,7 @@ const membresiaController = {
     }
   },
 
-  getAllMembresias: async (req, res) => {
+  getAllMemberships: async (req, res) => {
     try {
       const [rows, fields] = await Membresia.findAll();
       res.json(rows);
@@ -40,7 +40,7 @@ const membresiaController = {
     }
   },
 
-  updateMembresia: async (req, res) => {
+  updateMembership: async (req, res) => {
     const membresia_id = req.params.membresia_id;
     const { tipo, descripcion, costo, meses } = req.body;
     try {
@@ -52,7 +52,7 @@ const membresiaController = {
     }
   },
 
-  deleteMembresia: async (req, res) => {
+  deleteMembership: async (req, res) => {
     const membresia_id = req.params.membresia_id;
     try {
       await Membresia.delete(membresia_id);
@@ -64,4 +64,4 @@ const membresiaController = {
   }
 };
 
-module.exports = membresiaController;
+module.exports = membershipController;

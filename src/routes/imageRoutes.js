@@ -1,7 +1,6 @@
-const multer = require('multer');
 const upload = require('../middlewares/multerConfig');
 const express = require("express");
-const { subirImagen } = require('../controllers/imagenController');
+const { uploadImage } = require('../controllers/imageController');
 
 const router = express.Router();
 
@@ -38,6 +37,6 @@ const router = express.Router();
  *       500:
  *         description: Internal server error
  */
-router.put("/upload/:usuario_id", upload.single('image'), subirImagen);
+router.put("/upload/:usuario_id", upload.single('image'), uploadImage);
 
 module.exports = router;

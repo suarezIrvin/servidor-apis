@@ -44,7 +44,7 @@ const updateDatabase = (url, usuarioId) => {
   });
 };
 
-const subirImagen = async (req, res) => {
+const uploadImage = async (req, res) => {
   console.log('Request received:', req.file);
 
   if (!req.file) {
@@ -71,5 +71,5 @@ const subirImagen = async (req, res) => {
 };
 
 module.exports = {
-  subirImagen
+  uploadImage
 };

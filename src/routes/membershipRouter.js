@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const membresiaController = require('../controllers/membresiController');
+const membershipController = require('../controllers/membershipController');
 
 // Rutas para membresías
 
@@ -40,7 +40,7 @@ const membresiaController = require('../controllers/membresiController');
  *       500:
  *         description: Error creating user
  */
-router.post('/', membresiaController.createMembresia);
+router.post('/', membershipController.createMembership);
 
 
 /**
@@ -84,7 +84,7 @@ router.post('/', membresiaController.createMembresia);
  *       500:
  *         description: Error al obtener el comentario.
  */
-router.get('/:membresia_id', membresiaController.getMembresiaById);
+router.get('/:membresia_id', membershipController.getMembershipById);
 
 /**
  * @openapi
@@ -120,7 +120,7 @@ router.get('/:membresia_id', membresiaController.getMembresiaById);
  *       500:
  *         description: Error al obtener las notificaciones.
  */
-router.get('/', membresiaController.getAllMembresias);
+router.get('/', membershipController.getAllMemberships);
 
 /**
  * @openapi
@@ -165,7 +165,7 @@ router.get('/', membresiaController.getAllMembresias);
  *       500:
  *         description: Internal server error
  */
-router.put('/:membresia_id', membresiaController.updateMembresia);
+router.put('/:membresia_id', membershipController.updateMembership);
 
 
 
@@ -191,6 +191,6 @@ router.put('/:membresia_id', membresiaController.updateMembresia);
  *       500:
  *         description: Error al eliminar el usuario.
  */
-router.delete('/:membresia_id', membresiaController.deleteMembresia);
+router.delete('/:membresia_id', membershipController.deleteMembership);
 
 module.exports = router;
