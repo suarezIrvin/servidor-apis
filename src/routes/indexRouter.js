@@ -4,7 +4,7 @@ const router = express.Router();
 // Importar y usar otras rutas
 const notificationRoutes = require("./notificationRouter");
 const eventoRoutes = require("./eventoRouter");
-const pagoRoutes = require("./pagoRouter");
+const paymentRouter = require("./paymentRouter");
 const resetPassowrdRouter = require("./resetPasswordRouter");
 const subirImagen = require("./imagenRoutes");
 const authRoutes = require("./authRoutes");
@@ -19,7 +19,7 @@ const detalleEventoRoute = require('./detallesEventoRoute');
 // Categorias de las rutas
 router.use("/notification", notificationRoutes);
 router.use("/eventos", eventoRoutes);
-router.use("/pagos", pagoRoutes);
+router.use("/payment", paymentRouter);
 router.use("/password", resetPassowrdRouter);
 router.use("/imagenes", subirImagen);
 router.use("/auth", authRoutes);

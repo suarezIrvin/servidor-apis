@@ -1,16 +1,16 @@
 const express = require('express');
 const router = express.Router();
-const pagoController = require('../controllers/pagoController');
+const paymentController = require('../controllers/paymentController');
 
 
 
 /**
  * @openapi
- * /api/pagos/pago:
+ * /api/payment/payment:
  *   post:
  *     summary: Crea un PaymentIntent con Stripe.
  *     tags:
- *       - Pagos
+ *       - payment
  *     requestBody:
  *       required: true
  *       content:
@@ -51,16 +51,16 @@ const pagoController = require('../controllers/pagoController');
  *                   type: string
  *                   description: Mensaje de error detallado.
  */
-router.post('/pago', pagoController.Pago);
+router.post('/payment', paymentController.payment);
 
 
 /**
  * @openapi
- * /api/pagos/confirmarpago:
+ * /api/payment/confirm-payment:
  *   post:
  *     summary: Confirma un PaymentIntent con Stripe.
  *     tags:
- *       - Pagos
+ *       - payment
  *     requestBody:
  *       required: true
  *       content:
@@ -101,17 +101,17 @@ router.post('/pago', pagoController.Pago);
  *                   type: string
  *                   description: Mensaje de error detallado.
  */
-router.post('/confirmarpago', pagoController.confirmarPago);
+router.post('/confirm-payment', paymentController.confirmPayment);
 
 
 
 /**
  * @openapi
- * /api/pagos/historialpagos:
+ * /api/payment/payment-history:
  *   get:
  *     summary: Obtiene el historial de pagos
  *     tags:
- *       - Pagos
+ *       - payment
  *     responses:
  *       '200':
  *         description: Respuesta exitosa. Devuelve un array de pagos.
@@ -148,18 +148,18 @@ router.post('/confirmarpago', pagoController.confirmarPago);
  *                       cvv:
  *                         type: string
  */
-router.get('/historialpagos', pagoController.historialPagos);
+router.get('/payment-history', paymentController.paymentHistory);
 
 
 
 
 /**
  * @openapi
- * /api/pagos/pagar:
+ * /api/payment/enhanced-payment:
  *   post:
  *     summary: Nuevo api de pagos mejorado con mas datos para pasar.
  *     tags:
- *       - Pagos
+ *       - payment
  *     requestBody:
  *       required: true
  *       content:
@@ -209,17 +209,17 @@ router.get('/historialpagos', pagoController.historialPagos);
  *                   type: string
  *                   description: Mensaje de error detallado.
  */
-router.post('/pagar', pagoController.PagoMejorado);
+router.post('/enhanced-payment', paymentController.enhancedPayment);
 
 
 /**
  * @openapi
- * /api/pagos/historial/{usuario_id}:
+ * /api/payment/history/{usuario_id}:
  *   get:
  *     summary: obtiene el historial de un usuario por medio de su id
  *     description: Obtiene el historial por medio del id del usuario
  *     tags:
- *       - Pagos
+ *       - payment
  *     parameters:
  *       - name: usuario_id
  *         in: path
@@ -265,6 +265,6 @@ router.post('/pagar', pagoController.PagoMejorado);
  *       500:
  *         description: Error al obtener el historial.
  */
-router.get('/historial/:usuario_id', pagoController.historialPagosPorUsuarioID);
+router.get('/history/:usuario_id', paymentController.paymentHistoryByUserID);
 
 module.exports = router;

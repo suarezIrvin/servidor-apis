@@ -3,7 +3,7 @@ const Stripe = require("stripe");
 const key = process.env.PRIVATE_KEY;
 const stripe = new Stripe(key);
 
-const Pago = async (req, res) => {
+const payment = async (req, res) => {
     const { body } = req;
     try{
         const paymentIntent = await stripe.paymentIntents.create({
@@ -51,7 +51,7 @@ const Pago = async (req, res) => {
 }
 
 
-const confirmarPago = async (req, res) => {
+const confirmPayment = async (req, res) => {
     const { paymentIntentId, paymentMethod } = req.body;
     try{
         const paymentIntent = await stripe.paymentIntents.confirm(
@@ -64,7 +64,7 @@ const confirmarPago = async (req, res) => {
     }
 }
 
-const historialPagos = async (req, res) => {
+const paymentHistory = async (req, res) => {
   try {
     const [result] = await pool.query(
     `
@@ -82,7 +82,7 @@ const historialPagos = async (req, res) => {
 
 //codigo mejorado
 
-const PagoMejorado = async (req, res) => {
+const enhancedPayment = async (req, res) => {
   const { body } = req;
 
   const { amount, currency, descripcion, usuario_id, evento_id } = body;
@@ -135,7 +135,7 @@ const PagoMejorado = async (req, res) => {
   }
 }
 
-const historialPagosPorUsuarioID = async (req, res) => {
+const paymentHistoryByUserID = async (req, res) => {
   const { usuario_id } = req.params;
 
   if (!usuario_id) {
@@ -159,9 +159,9 @@ const historialPagosPorUsuarioID = async (req, res) => {
 }
 
 module.exports = {
-    Pago,
-    confirmarPago,
-    historialPagos,
-    PagoMejorado,
-    historialPagosPorUsuarioID,
+  payment,
+    confirmPayment,
+    paymentHistory,
+    enhancedPayment,
+    paymentHistoryByUserID,
   };

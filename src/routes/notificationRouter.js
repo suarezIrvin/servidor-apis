@@ -33,7 +33,7 @@ router.post('/send', notificationController.receiveNotification);
 
 /**
  * @openapi
- * /api/notification/getAll:
+ * /api/notification/get-all:
  *   get:
  *     description: Obtiene todas las notificaciones.
  *     tags:
@@ -64,6 +64,6 @@ router.post('/send', notificationController.receiveNotification);
  *       500:
  *         description: Error al obtener las notificaciones.
  */
-router.get('/getAll', notificationController.viewNotifications);
+router.get('/get-all', notificationController.viewNotifications);
 
 module.exports = router;

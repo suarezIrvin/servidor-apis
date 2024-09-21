@@ -38,5 +38,4 @@ const viewNotifications = async (req, res) => {
 module.exports = {
   receiveNotification,
   viewNotifications
-
 };
