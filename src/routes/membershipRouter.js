@@ -6,7 +6,7 @@ const membershipController = require('../controllers/membershipController');
 
 /**
  * @swagger
- * /api/membresia:
+ * /api/membership:
  *   post:
  *     summary: Registrar un nuevo usuario
  *     tags: 
@@ -45,7 +45,7 @@ router.post('/', membershipController.createMembership);
 
 /**
  * @openapi
- * /api/membresia/{membresia_id}:
+ * /api/membership/{membresia_id}:
  *   get:
  *     summary: obtiene al usuario por id
  *     description: Obtiene un usuario por su ID.
@@ -88,7 +88,7 @@ router.get('/:membresia_id', membershipController.getMembershipById);
 
 /**
  * @openapi
- * /api/membresia:
+ * /api/membership:
  *   get:
  *     summary: obtiene todos las membresias
  *     description: Obtiene todas los membresias.
@@ -124,7 +124,7 @@ router.get('/', membershipController.getAllMemberships);
 
 /**
  * @openapi
- * /api/membresia/{membresia_id}:
+ * /api/membership/{membresia_id}:
  *   put:
  *     summary: Update an existing event
  *     tags: 
@@ -171,7 +171,7 @@ router.put('/:membresia_id', membershipController.updateMembership);
 
 /**
  * @openapi
- * /api/membresia/{membresia_id}:
+ * /api/membership/{membresia_id}:
  *   delete:
  *     summary: Elimina una membresia por su ID.
  *     tags:

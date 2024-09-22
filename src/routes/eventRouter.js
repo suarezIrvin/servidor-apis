@@ -16,211 +16,6 @@ const authMiddleware = require("../middlewares/authMiddleware");
 
 /**
  * @swagger
- * tags:
- *   name: Admin events - Team Brayan
- *   description: Rutas para la administración de eventos
- */
-
-
-/**
- * @swagger
- * /api/events/create:
- *   post:
- *     summary: Crear un nuevo evento
- *     tags: [Evento - Stephanie]
- *     security:
- *       - bearerAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - nombre
- *               - fecha_inicio
- *               - fecha_termino
- *               - hora
- *               - ubicacion
- *               - max_per
- *               - tipo_evento_id
- *               - categoria_id
- *             properties:
- *               nombre:
- *                 type: string
- *               fecha_inicio:
- *                 type: string
- *                 format: date
- *               fecha_termino:
- *                 type: string
- *                 format: date
- *               hora:
- *                 type: string
- *                 format: time
- *               ubicacion:
- *                 type: string
- *               max_per:
- *                 type: integer
- *               tipo_evento_id:
- *                 type: integer
- *               categoria_id:
- *                 type: integer
- *     responses:
- *       201:
- *         description: Event created successfully
- *       500:
- *         description: Internal server error
- */
-router.post("/create",  eventController.createEvent);
-
-/**
- * @swagger
- * /api/events/update/{evento_id}:
- *   put:
- *     summary: Update an existing event
- *     tags: [Evento - Stephanie]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: evento_id
- *         schema:
- *           type: integer
- *         required: true
- *         description: Event ID
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - nombre
- *               - fecha_inicio
- *               - fecha_termino
- *               - hora
- *               - ubicacion
- *               - max_per
- *               - tipo_evento_id
- *               - categoria_id
- *             properties:
- *               nombre:
- *                 type: string
- *               fecha_inicio:
- *                 type: string
- *                 format: date
- *               fecha_termino:
- *                 type: string
- *                 format: date
- *               hora:
- *                 type: string
- *                 format: time
- *               ubicacion:
- *                 type: string
- *               max_per:
- *                 type: integer
- *               tipo_evento_id:
- *                 type: integer
- *               categoria_id:
- *                 type: integer
- *     responses:
- *       200:
- *         description: Event updated successfully
- *       404:
- *         description: Event not found
- *       500:
- *         description: Internal server error
- */
-router.put("/update/:evento_id", authMiddleware, eventController.updateEvent);
-
-/**
- * @swagger
- * /api/events/organizer:
- *   get:
- *     summary: List organizer's events
- *     tags: [Evento - Stephanie]
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: List of events
- *       500:
- *         description: Internal server error
- */
-router.get("/organizer", authMiddleware, eventController.listOrganizerEvents);
-
-/**
- * @swagger
- * /api/events/pending:
- *   get:
- *     summary: List pending events
- *     tags: [Evento - Stephanie]
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: List of pending events
- *       500:
- *         description: Internal server error
- */
-router.get("/pending", eventController.listPendingEvents);
-
-/**
- * @swagger
- * /api/events/approve/{evento_id}:
- *   post:
- *     summary: Approve an event
- *     tags: [Evento - Stephanie]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: evento_id
- *         schema:
- *           type: integer
- *         required: true
- *         description: Event ID
- *     responses:
- *       200:
- *         description: Event approved successfully
- *       404:
- *         description: Event not found
- *       500:
- *         description: Internal server error
- */
-router.post("/approve/:evento_id", authMiddleware, eventController.approveEvent);
-
-/**
- * @swagger
- * /api/events/disapprove/{evento_id}:
- *   post:
- *     summary: Disapprove an event
- *     tags: [Evento - Stephanie]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: evento_id
- *         schema:
- *           type: integer
- *         required: true
- *         description: Event ID
- *     responses:
- *       200:
- *         description: Event disapproved successfully
- *       404:
- *         description: Event not found
- *       500:
- *         description: Internal server error
- */
-router.post(
-  "/disapprove/:evento_id",
-  authMiddleware,
-  eventController.disapproveEvent
-);
-
-/**
- * @swagger
  * /api/events/get/img:
  *   get:
  *     summary: Obtener la lista de eventos detallados
@@ -231,7 +26,7 @@ router.post(
  *       500:
  *         description: Error al obtener la lista de eventos
  */
-router.get('/get/img', teoController.getImgEvent);
+router.get('/get/', eventController.getEvent);
 
 /**
  * @swagger
@@ -254,7 +49,7 @@ router.get('/get/img', teoController.getImgEvent);
  *       500:
  *         description: Error al obtener el evento
  */
-router.get('/get/img/:id', teoController.getIdImgEvent);
+router.get('/get/:id', eventController.getIdEvent);
 /**
  * @swagger
  * /api/events/get/approved:
@@ -267,7 +62,7 @@ router.get('/get/img/:id', teoController.getIdImgEvent);
  *       500:
  *         description: Error al obtener la lista de eventos aprobados
  */
-router.get('/get/approved', teoController.getApprovedEvent);
+router.get('/approved', eventController.getApprovedEvent);
 
 /**
  * @swagger
@@ -281,7 +76,7 @@ router.get('/get/approved', teoController.getApprovedEvent);
  *       500:
  *         description: Error al obtener la lista de eventos pendientes
  */
-router.get('/get/pending', teoController.getPendingEvent);
+router.get('/pending', eventController.getPendingEvent);
 
 /**
  * @swagger
@@ -342,7 +137,7 @@ router.get('/get/pending', teoController.getPendingEvent);
  *       500:
  *         description: Error al crear el evento
  */
-router.post('/post/img', teoController.postImgEvent);
+router.post('/post/', eventController.postImgEvent);
 
 /**
  * @swagger
@@ -375,7 +170,7 @@ router.post('/post/img', teoController.postImgEvent);
  *       500:
  *         description: Error al actualizar el estado del evento
  */
-router.post('/post/pending', teoController.postPendingEvent);
+router.post('/post/pending', eventController.postPendingEvent);
 
 /**
  * @swagger
@@ -443,7 +238,7 @@ router.post('/post/pending', teoController.postPendingEvent);
  *       500:
  *         description: Error al actualizar el evento
  */
-router.put('/put/img/:id', teoController.putImgEvent);
+router.put('/put/:id', eventController.putEvent);
 
 /**
  * @swagger
@@ -486,7 +281,7 @@ router.put('/put/img/:id', teoController.putImgEvent);
  *               type: string
  *               example: Error al eliminar el evento
  */
-router.delete('/delete/img/', teoController.deleteImgEvent);
+router.delete('/delete/', eventController.deleteEvent);
 
 
 module.exports = router;

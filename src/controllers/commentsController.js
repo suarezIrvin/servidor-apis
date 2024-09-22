@@ -1,6 +1,6 @@
 const pool = require('../config/connection'); 
 
-const getComentarios = async (req, res) => {
+const getComment = async (req, res) => {
   try {
     // Consulta SQL con JOIN para incluir el nombre del usuario
     const [comentarios] = await pool.query(
@@ -17,7 +17,7 @@ const getComentarios = async (req, res) => {
   }
 };
 
-const getComentariosEvento = async (req, res) => {
+const getCommentEvent = async (req, res) => {
   try {
     const { evento_id } = req.params;
     const { page = 1, limit = 10 } = req.query;
@@ -43,7 +43,7 @@ const getComentariosEvento = async (req, res) => {
 
 
 
-const createComentarios = async (req, res) => {
+const createComment = async (req, res) => {
   try {
     const { evento_id, usuario_id, comentario, fecha } = req.body;
 
@@ -85,7 +85,7 @@ const createComentarios = async (req, res) => {
 
 
 
-const deleteComentario = async (req, res) => {
+const deleteComment = async (req, res) => {
     try {
       const { comentario_id } = req.params;
   
@@ -114,8 +114,8 @@ const deleteComentario = async (req, res) => {
   
   
 module.exports = {
-  getComentarios,
-  getComentariosEvento,
-  createComentarios,
-  deleteComentario,
+  getComment,
+  getCommentEvent,
+  createComment,
+  deleteComment
 };

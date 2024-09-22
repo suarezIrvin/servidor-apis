@@ -6,7 +6,7 @@ const router = express.Router();
 
 /**
  * @swagger
- * /api/imagenes/upload/{usuario_id}:
+ * /api/images/upload/{usuario_id}:
  *   put:
  *     summary: Sube una foto de perfil
  *     tags: [Usuario]

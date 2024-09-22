@@ -2,31 +2,31 @@ const express = require("express");
 const router = express.Router();
 
 // Importar y usar otras rutas
+const authRouter = require("./authRouter");
+const commentsRouter = require('./commentsRouter');
+const eventRouter = require("./eventRouter");
+const imageRouter = require("./imageRouter");
+const membershipRouter = require("./membershipRouter");
 const notificationRoutes = require("./notificationRouter");
-const eventRoutes = require("./eventRoutes");
 const paymentRouter = require("./paymentRouter");
-const resetPassowrdRouter = require("./resetPasswordRouter");
-const imageRoutes = require("./imageRoutes");
-const authRoutes = require("./authRoutes");
-const userRoutes = require("./userRoutes");
-const seatsRoutes = require("./seatsRouter");
+const resetPasswordRouter = require("./resetPasswordRouter");
 const sceneryRoutes = require("./sceneryRouter");
-const commentsRoutes = require('./commentsRouter');
-const membershipRoutes = require("./membershipRouter");
-//const detalleEventoRoute = require('./detallesEventoRoute'); -> Optimizar con events
+const seatsRouter = require("./seatsRouter");
+const userRoutes = require("./userRoutes");
 
-// Categorias de las rutas
+
+// Categorias de las rutas 
+router.use("/auth", authRouter);
+router.use('/comments', commentsRouter);
+router.use("/events", eventRouter);
+router.use("/images", imageRouter);
+router.use('/membership', membershipRouter);
 router.use("/notification", notificationRoutes);
-router.use("/events", eventRoutes);
 router.use("/payment", paymentRouter);
-router.use("/password", resetPassowrdRouter);
-router.use("/image", imageRoutes);
-router.use("/auth", authRoutes);
+router.use("/password", resetPasswordRouter);
+router.use("/scenarios", sceneryRoutes);
+router.use("/seats", seatsRouter);
 router.use("/users", userRoutes);
-router.use("/seats", seatsRoutes);
-router.use("/scenerios", sceneryRoutes);
-router.use('/comments', commentsRoutes);
-router.use('/memberships', membershipRoutes);
-//router.use('/detalle', detalleEventoRoute); -> Optimizar con events
+
 
 module.exports = router;
