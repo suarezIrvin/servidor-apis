@@ -1,9 +1,9 @@
 const pool = require("../config/connection");
 
 
-const teoController = {
+const eventController = {
 
-    getImgEvent: async (req, res) => {
+    getEvent: async (req, res) => {
         try {
             // Consulta SQL para obtener eventos con una sola imagen por evento y nombres correspondientes
             const [rows] = await pool.query(
@@ -30,7 +30,7 @@ const teoController = {
         }
     },
 
-    getIdImgEvent: async (req, res) => {
+    getIdEvent: async (req, res) => {
         try {
             const { id: evento_id } = req.params;
     
@@ -60,7 +60,7 @@ const teoController = {
         }
     },
 
-    postImgEvent: async (req, res) => {
+    postEvent: async (req, res) => {
         const { nombre, fecha_inicio, fecha_termino, hora, tipo_evento_id, categoria_id, ubicacion, max_per, imagen_url, monto, descripcion } = req.body;
         // Validar que todos los campos necesarios estén presentes
         if (!nombre || !fecha_inicio || !fecha_termino || !hora || !tipo_evento_id || !categoria_id || !ubicacion || !max_per || !imagen_url || !monto || !descripcion) {
@@ -119,7 +119,7 @@ const teoController = {
     },
     
 
-    putImgEvent: async (req, res) => {
+    putEvent: async (req, res) => {
         const { id } = req.params;
         const { nombre, fecha_inicio, fecha_termino, hora, tipo_evento_id, categoria_id, ubicacion, max_per, imagen_url, monto, descripcion } = req.body;
     
@@ -268,7 +268,7 @@ const teoController = {
         }
     },
 
-    deleteImgEvent: async (req, res) => {
+    deleteEvent: async (req, res) => {
         const connection = await pool.getConnection(); // Obtener una conexión del pool
 
         try {
@@ -304,4 +304,4 @@ const teoController = {
     },
 }
 
-module.exports = teoController;
+module.exports = eventController;

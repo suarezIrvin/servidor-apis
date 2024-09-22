@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const comentariosController = require('../controllers/comentarioController');
+const commentsController = require('../controllers/commentsController');
 
 // Ruta GET para obtener todos los comentarios
 
@@ -41,7 +41,7 @@ const comentariosController = require('../controllers/comentarioController');
  *       500:
  *         description: Error al obtener las notificaciones.
  */
-router.get('/list', comentariosController.getComentarios);
+router.get('/list', commentsController.getComment);
 
 
 /**
@@ -88,7 +88,7 @@ router.get('/list', comentariosController.getComentarios);
  *       500:
  *         description: Error al obtener el comentario.
  */
-router.get('/list/:evento_id', comentariosController.getComentariosEvento);
+router.get('/list/:evento_id', commentsController.getCommentEvent);
 
 /**
  * @swagger
@@ -129,7 +129,7 @@ router.get('/list/:evento_id', comentariosController.getComentariosEvento);
  *       500:
  *         description: Error creating user
  */
-router.post('/create', comentariosController.createComentarios);
+router.post('/create', commentsController.createComment);
 
 
 /**
@@ -154,5 +154,7 @@ router.post('/create', comentariosController.createComentarios);
  *       500:
  *         description: Error al eliminar el usuario.
  */
-router.delete('/delete/:comentario_id', comentariosController.deleteComentario);
+router.delete('/delete/:comentario_id', commentsController.deleteComment);
+
+
 module.exports = router;

@@ -2,33 +2,31 @@ const express = require("express");
 const router = express.Router();
 
 // Importar y usar otras rutas
-const notificationRoutes = require("./notificationRouter");
-const eventoRoutes = require("./eventoRouter");
-const paymentRouter = require("./paymentRouter");
-const resetPassowrdRouter = require("./resetPasswordRouter");
-const subirImagen = require("./imagenRoutes");
-const authRoutes = require("./authRoutes");
-const userRoutes = require("./userRoutes");
-const eventRoutes = require("./eventRoutes");
-const asientoRoutes = require("./asientoRouter");
-const escenarioRoutes = require("./escenarioRouter");
-const comentarioRoutes = require('./comentariosRouter');
+const authRouter = require("./authRouter");
+const commentsRouter = require('./commentsRouter');
+const eventRouter = require("./eventRouter");
+const subirImagen = require("./imagenRouter");
 const membresiaRoutes = require("./membresiaRouter");
-const detalleEventoRoute = require('./detallesEventoRoute');
+const notificationRoutes = require("./notificationRouter");
+const paymentRouter = require("./paymentRouter");
+const resetPasswordRouter = require("./resetPasswordRouter");
+const escenarioRoutes = require("./escenarioRouter");
+const asientoRoutes = require("./asientoRouter");
+const userRoutes = require("./userRoutes");
 
-// Categorias de las rutas
-router.use("/notification", notificationRoutes);
-router.use("/eventos", eventoRoutes);
-router.use("/payment", paymentRouter);
-router.use("/password", resetPassowrdRouter);
+
+// Categorias de las rutas 
+router.use("/auth", authRouter);
+router.use('/comments', commentsRouter);
+router.use("/events", eventRouter);
 router.use("/imagenes", subirImagen);
-router.use("/auth", authRoutes);
-router.use("/users", userRoutes);
-router.use("/events", eventRoutes);
-router.use("/asientos", asientoRoutes);
-router.use("/escenarios", escenarioRoutes);
-router.use('/comentario', comentarioRoutes);
 router.use('/membresia', membresiaRoutes);
-router.use('/detalle', detalleEventoRoute);
+router.use("/notification", notificationRoutes);
+router.use("/payment", paymentRouter);
+router.use("/password", resetPasswordRouter);
+router.use("/escenarios", escenarioRoutes);
+router.use("/asientos", asientoRoutes);
+router.use("/users", userRoutes);
+
 
 module.exports = router;
