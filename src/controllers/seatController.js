@@ -3,7 +3,7 @@ const { use } = require('../routes/seatsRouter');
 
 const seatController = {
 
-    createSeat: async (req, res) => {
+    create: async (req, res) => {
         const {numberSeat, status, userId} = req.body;
         console.log(numberSeat, status, userId);
         try {
@@ -32,7 +32,7 @@ const seatController = {
         }
     },
     
-    getSeatById: async (req, res) => {
+    getById: async (req, res) => {
         const seatId = req.params.seatId;
         try {
             let seat = await Seat.findById(seatId);
@@ -47,7 +47,7 @@ const seatController = {
         }
     },
 
-    getAllSeats: async (req, res) => {
+    getAll: async (req, res) => {
         try {
             const [rows, fields] = await Seat.findAll(); 
             res.json(rows);
@@ -57,7 +57,7 @@ const seatController = {
         }
     },
 
-    updateSeat: async (req, res) => {
+    update: async (req, res) => {
         const seatId = req.params.seatId;
         const { numberSeat,status,userId } = req.body;
         try {
@@ -82,7 +82,7 @@ const seatController = {
         }
     },
 
-    deleteSeat: async (req, res) => {
+    delete: async (req, res) => {
         const seatId = req.params.seatId;
         try {
             let seats = await Seat.findById(seatId);

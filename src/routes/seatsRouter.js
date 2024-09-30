@@ -38,7 +38,7 @@ const pool = require("../config/connection");
  *       500:
  *         description: Error al obtener las notificaciones.
  */
-router.get("/", seatController.getAllSeats);
+router.get("/", seatController.getAll);
 
 
 /**
@@ -81,7 +81,7 @@ router.get("/", seatController.getAllSeats);
  *       500:
  *         description: Error al obtener el asiento.
  */
-router.get("/:seatId", seatController.getSeatById);
+router.get("/:seatId", seatController.getById);
 
 
 /**
@@ -119,7 +119,7 @@ router.get("/:seatId", seatController.getSeatById);
  *       500:
  *         description: Error creating user
  */
-router.post("/", seatController.createSeat);
+router.post("/", seatController.create);
 
 /**
  * @openapi
@@ -163,7 +163,7 @@ router.post("/", seatController.createSeat);
  *       500:
  *         description: Internal server error
  */
-router.put("/:seatId", seatController.updateSeat);
+router.put("/:seatId", seatController.update);
 
 
 /**
@@ -188,6 +188,6 @@ router.put("/:seatId", seatController.updateSeat);
  *       500:
  *         description: Error al eliminar el usuario.
  */
-router.delete('/:seatId', seatController.deleteSeat);
+router.delete('/:seatId', seatController.delete);
 
 module.exports = router;
