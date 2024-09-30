@@ -1,7 +1,4 @@
-const pool = require("../config/connection");
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcryptjs");
-require("dotenv").config();
+const AuthModel = require("../models/authModel");
 
 const authController = {
   login: async (req, res) => {
@@ -12,27 +9,19 @@ const authController = {
     }
 
     try {
-      const [rows] = await pool.query(
-        "SELECT * FROM Usuarios WHERE email = ?",
-        [email]
-      );
-      const user = rows[0];
+      const user = await AuthModel.getUserByEmail(email);
 
       if (!user) {
         return res.status(401).json({ error: "User not found" });
       }
 
-      const isMatch = await bcrypt.compare(contrasena, user.contrasena);
+      const isMatch = await AuthModel.comparePasswords(contrasena, user.contrasena);
 
       if (!isMatch) {
         return res.status(401).json({ error: "Invalid credentials" });
-      }
+      } 
 
-      const token = jwt.sign(
-        { id: user.usuario_id, rol: user.rol_id },
-        process.env.JWT_SECRET,
-        { expiresIn: "1h" }
-      );
+      const token = await AuthModel.generateToken(user);
 
       return res.json({ token, user });
     } catch (error) {
