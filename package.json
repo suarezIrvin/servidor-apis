@@ -1,7 +1,7 @@
 {
   "name": "api-digitalevent",
   "version": "1.0.0",
-  "description": "",
+  "description": "- Ejecuta primero : npm install\r - Despues ejecuta : npm start",
   "main": "index.js",
   "scripts": {
     "start": "node src/index.js"

@@ -28,7 +28,7 @@ const notificationController = require('../controllers/notificationController');
  *       500:
  *         description: Error al procesar la notificación.
  */
-router.post('/send', notificationController.receiveNotification);
+router.post('/send', notificationController.create);
 
 
 /**
@@ -64,6 +64,6 @@ router.post('/send', notificationController.receiveNotification);
  *       500:
  *         description: Error al obtener las notificaciones.
  */
-router.get('/get-all', notificationController.viewNotifications);
+router.get('/get-all', notificationController.getAll);
 
 module.exports = router;

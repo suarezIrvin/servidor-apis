@@ -1,41 +1,32 @@
-const pool = require('../config/connection');
+const Notification = require('../models/notificationModel');
 
+const notificationController = {
+  create: async (req, res) => {
+    const { usuario_id, mensaje } = req.body;
+    if (!usuario_id || !mensaje) {
+      return res.status(400).json({ error: 'Missing fields' });
+    }
+    try {
+      await Notification.create(usuario_id, mensaje);
+      res.status(201).json({ message: 'Notification created successfully' });
+    } catch (error) {
+      console.error('Error creating notification:', error);
+      res.status(500).json({ error: 'Error creating notification' });
+    }
+  },
 
-//metodos de los teos
-const receiveNotification = async (req, res) => {
-  const { usuario_id, mensaje } = req.body;
-
-  try {
-    const [result] = await pool.query(
-      'INSERT INTO NotificacionO (usuario_id, mensaje) VALUES (?, ?)',
-      [usuario_id, mensaje]
-    );
-
-    console.log('Notificación guardada:', { id: result.insertId, usuario_id, mensaje });
-
-    res.status(200).send('Notificación recibida');
-  } catch (error) {
-    console.error('Error al guardar la notificación:', error);
-    res.status(500).send('Error al procesar la notificación');
+  getAll: async (req, res) => {
+    try {
+      const notifications = await Notification.findAll(); 
+      if (notifications.length === 0) {
+        return res.status(404).json({ message: 'No notifications found' });
+      }
+      res.status(200).json(notifications); 
+    } catch (error) {
+      console.error('Error fetching notifications:', error);
+      res.status(500).json({ error: 'Error fetching notifications' });
+    }
   }
 };
 
-
-const viewNotifications = async (req, res) => {
-  try {
-    const [result] = await pool.query(
-      'SELECT * FROM NotificacionO'
-    );
-    res.status(200).json(result);
-  } catch (error) {
-    console.error('Error al obtener las Notificaciones:', error);
-    res.status(500).send('Error al obtener las Notificaciones');
-  }
-};
-
-
-
-module.exports = {
-  receiveNotification,
-  viewNotifications
-};
+module.exports = notificationController;
