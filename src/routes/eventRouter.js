@@ -16,7 +16,7 @@ const authMiddleware = require("../middlewares/authMiddleware");
 
 /**
  * @swagger
- * /api/events/get/img:
+ * /api/events/get:
  *   get:
  *     summary: Obtener la lista de eventos detallados
  *     tags: [Admin events - Team Brayan]
@@ -26,11 +26,11 @@ const authMiddleware = require("../middlewares/authMiddleware");
  *       500:
  *         description: Error al obtener la lista de eventos
  */
-router.get('/get/', eventController.getEvent);
+router.get('/get', eventController.getEvent);
 
 /**
  * @swagger
- * /api/events/get/img/{id}:
+ * /api/events/get/{evento_id}:
  *   get:
  *     summary: Obtener un evento por ID 
  *     tags: [Admin events - Team Brayan]
@@ -49,7 +49,7 @@ router.get('/get/', eventController.getEvent);
  *       500:
  *         description: Error al obtener el evento
  */
-router.get('/get/:id', eventController.getIdEvent);
+router.get('/get/:evento_id', eventController.getIdEvent);
 /**
  * @swagger
  * /api/events/get/approved:
@@ -80,7 +80,7 @@ router.get('/pending', eventController.getPendingEvent);
 
 /**
  * @swagger
- * /api/events/post/img:
+ * /api/events/post:
  *   post:
  *     summary: Crear un nuevo evento - Organizador
  *     tags: [Admin events - Team Brayan]
@@ -174,7 +174,7 @@ router.post('/post/pending', eventController.postPendingEvent);
 
 /**
  * @swagger
- * /api/events/put/img/{id}:
+ * /api/events/put/{id}:
  *   put:
  *     summary: Actualizar un evento existente por ID
  *     tags: [Admin events - Team Brayan]
@@ -242,7 +242,7 @@ router.put('/put/:id', eventController.putEvent);
 
 /**
  * @swagger
- * /api/events/delete/img/:
+ * /api/events/delete/{evento_id}:
  *   delete:
  *     summary: Eliminar un evento 
  *     tags: [Admin events - Team Brayan]
@@ -281,7 +281,7 @@ router.put('/put/:id', eventController.putEvent);
  *               type: string
  *               example: Error al eliminar el evento
  */
-router.delete('/delete/', eventController.deleteEvent);
+router.delete('/delete/:evento_id', eventController.delete);
 
 
 module.exports = router;
