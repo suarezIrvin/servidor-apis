@@ -51,7 +51,7 @@ const paymentController = require('../controllers/paymentController');
  *                   type: string
  *                   description: Mensaje de error detallado.
  */
-router.post('/payment', paymentController.payment);
+router.post('/payment', paymentController.pay);
 
 
 /**
@@ -101,7 +101,7 @@ router.post('/payment', paymentController.payment);
  *                   type: string
  *                   description: Mensaje de error detallado.
  */
-router.post('/confirm-payment', paymentController.confirmPayment);
+router.post('/confirm-payment', paymentController.payConfirm);
 
 
 
@@ -148,68 +148,7 @@ router.post('/confirm-payment', paymentController.confirmPayment);
  *                       cvv:
  *                         type: string
  */
-router.get('/payment-history', paymentController.paymentHistory);
-
-
-
-
-/**
- * @openapi
- * /api/payment/enhanced-payment:
- *   post:
- *     summary: Nuevo api de pagos mejorado con mas datos para pasar.
- *     tags:
- *       - payment
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               amount:
- *                 type: integer
- *                 description: Monto del pago en centavos.
- *               currency:
- *                 type: string
- *                 description: Moneda del pago (ej. USD).
- *                 enum:
- *                   - "usd"
- *               descripcion:
- *                 type: string
- *                 description: Descripcion del producto, nombre del evento o producto.
- *               usuario_id:
- *                 type: integer
- *                 description: id del usuario que esta pagondo.
- *               evento_id:
- *                 type: integer
- *                 description: id del evento que se compra.
- *     responses:
- *       '200':
- *         description: Respuesta exitosa. Devuelve el client_secret para confirmar el pago.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   description: Mensaje de confirmación.
- *                 client_secret:
- *                   type: string
- *                   description: Clave secreta del cliente para confirmar el pago.
- *       '500':
- *         description: Error interno del servidor.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   description: Mensaje de error detallado.
- */
-router.post('/enhanced-payment', paymentController.enhancedPayment);
+router.get('/payment-history', paymentController.payHistory);
 
 
 /**
@@ -265,6 +204,6 @@ router.post('/enhanced-payment', paymentController.enhancedPayment);
  *       500:
  *         description: Error al obtener el historial.
  */
-router.get('/history/:usuario_id', paymentController.paymentHistoryByUserID);
+router.get('/history/:usuario_id', paymentController.payHistoryByUserId);
 
 module.exports = router;
