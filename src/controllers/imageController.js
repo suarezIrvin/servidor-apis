@@ -1,7 +1,8 @@
 const { v2: cloudinary } = require('cloudinary');
 const streamifier = require('streamifier');
-const pool = require("../config/connection");
+const {update }= require('../models/imageModel');
 require("dotenv").config();
+
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -24,28 +25,10 @@ const uploadStream = (file) => {
   });
 };
 
-// Función para actualizar la URL en la base de datos
-const updateDatabase = (url, usuarioId) => {
-  return new Promise((resolve, reject) => {
-    console.log('Executing database query with URL:', url, 'and usuario_id:', usuarioId);
-    pool.query(
-      'UPDATE Usuarios SET fotoPerfil = ? WHERE usuario_id = ?',
-      [url, usuarioId],
-      (err, results) => {
-        if (err) {
-          console.error('Error saving image URL in database:', err);
-          reject(err);
-        } else {
-          console.log('Database query result:', results);
-          resolve(results);
-        }
-      }
-    );
-  });
-};
 
 const uploadImage = async (req, res) => {
-  console.log('Request received:', req.file);
+  const { usuario_id } = req.params;
+  console.log('Archivo recibido:', req.file);
 
   if (!req.file) {
     console.log('No file uploaded');
@@ -61,9 +44,9 @@ const uploadImage = async (req, res) => {
     res.status(200).json({ message: 'Image uploaded successfully', url: result.secure_url });
 
     // Actualizar la base de datos después de enviar la respuesta
-    updateDatabase(result.secure_url, req.params.usuario_id)
-      .then(() => console.log('Image URL saved'))
-      .catch((err) => console.error('Error saving image URL in database:', err));
+    await update(result.secure_url, usuario_id);
+    console.log('URL de la imagen guardada en la base de datos');
+
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({ error: 'Failed to upload image' });
