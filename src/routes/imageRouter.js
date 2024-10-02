@@ -37,6 +37,6 @@ const router = express.Router();
  *       500:
  *         description: Internal server error
  */
-router.put("/upload/:usuario_id", upload.single('image'), uploadImage);
+router.put("/upload/:usuario_id", upload.single('file'), uploadImage);
 
 module.exports = router;

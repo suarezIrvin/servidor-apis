@@ -19,7 +19,7 @@ const userRoutes = require("./userRoutes");
 router.use("/auth", authRouter);
 router.use('/comments', commentsRouter);
 router.use("/events", eventRouter);
-router.use("/images", imageRouter);
+router.use("/image", imageRouter);
 router.use('/membership', membershipRouter);
 router.use("/notification", notificationRoutes);
 router.use("/payment", paymentRouter);

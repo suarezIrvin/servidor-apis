@@ -28,7 +28,7 @@ const uploadStream = (file) => {
 
 const uploadImage = async (req, res) => {
   const { usuario_id } = req.params;
-  console.log('Archivo recibido:', req.file);
+  console.log('File received:', req.file);
 
   if (!req.file) {
     console.log('No file uploaded');
@@ -45,7 +45,7 @@ const uploadImage = async (req, res) => {
 
     // Actualizar la base de datos después de enviar la respuesta
     await update(result.secure_url, usuario_id);
-    console.log('URL de la imagen guardada en la base de datos');
+    console.log('URL of the image saved in the database');
 
   } catch (error) {
     console.error('Error:', error);
