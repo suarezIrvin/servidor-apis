@@ -7,8 +7,8 @@ const pool = require("../config/connection");
  * @openapi
  * /api/escenarios:
  *   get:
- *     summary: obtiene todos los asientos
- *     description: Obtiene todas los asientos.
+ *     summary: Obtiene todos los asientos.
+ *     description: Obtiene todos los asientos de acuerdo a lo ingresado al crear un evento.
  *     tags:
  *       - Escenarios
  *     responses:
@@ -71,8 +71,8 @@ const getAsientosPorEscenarioId = async (escenario_id) => {
  * @openapi
  * /api/escenarios/{id}:
  *   get:
- *     summary: obtiene el escenario por id
- *     description: Obtiene un escenario por su ID.
+ *     summary: Obtiene el escenario por ID.
+ *     description: Obtiene un escenario por medio de su ID.
  *     tags:
  *       - Escenarios
  *     parameters:
@@ -127,7 +127,8 @@ router.get("/:id", async (req, res) => {
  * @swagger
  * /api/escenarios:
  *   post:
- *     summary: Registrar un nuevo Escenario
+ *     summary: Crear o registrar un nuevo escenario.
+ *     description: Esta ruta sirve para crear un nuevo escenario.
  *     tags: 
  *       - Escenarios
  *     requestBody:
@@ -198,7 +199,8 @@ router.post("/", async (req, res) => {
  * @openapi
  * /api/escenarios/{id}:
  *   delete:
- *     summary: Elimina un escenario por su ID.
+ *     summary: Elimina un escenario el ID.
+ *     description: Elimina une escenario por medio de su ID.
  *     tags:
  *       - Escenarios
  *     parameters:
@@ -237,7 +239,8 @@ router.delete("/:id", async (req, res) => {
  * @openapi
  * /api/escenarios/{id}:
  *   put:
- *     summary: edita un escenario, solo se puede editar la forma y evento_id
+ *     summary: Editar un escenario
+ *     description: Esta ruta sirve para editar un escenario, solamente la forma por medio el evento_id.
  *     tags: 
  *       - Escenarios
  *     parameters:

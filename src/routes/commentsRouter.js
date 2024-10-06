@@ -2,14 +2,13 @@ const express = require('express');
 const router = express.Router();
 const commentsController = require('../controllers/commentsController');
 
-// Ruta GET para obtener todos los comentarios
 
 /**
  * @openapi
  * /api/comentario/list:
  *   get:
- *     summary: obtiene todos los comentarios
- *     description: Obtiene todas los comentarios.
+ *     summary: Obtiene todos los comentarios.
+ *     description: Esta ruta obtiene todos los comentarios en general de los eventos hechos por los clientes.
  *     tags:
  *       - Comentarios
  *     responses:
@@ -48,8 +47,8 @@ router.get('/list', commentsController.getComment);
  * @openapi
  * /api/comentario/list/{evento_id}:
  *   get:
- *     summary: obtiene al usuario por id
- *     description: Obtiene un usuario por su ID.
+ *     summary: Obtiene al comentario por Id.
+ *     description: Esta ruta obtiene el comentario por el Id del evento. 
  *     tags:
  *       - Comentarios
  *     parameters:
@@ -94,7 +93,8 @@ router.get('/list/:evento_id', commentsController.getCommentEvent);
  * @swagger
  * /api/comentario/create:
  *   post:
- *     summary: Registrar un nuevo usuario
+ *     summary: Crear un nuevo comentario.
+ *     description: Esta ruta crea un nuevo comentario por el usuario Cliente.
  *     tags: 
  *       - Comentarios
  *     requestBody:
@@ -137,6 +137,7 @@ router.post('/create', commentsController.createComment);
  * /api/comentario/delete/{comentario_id}:
  *   delete:
  *     summary: Elimina un comentario por su ID.
+ *     description: Esta ruta elimina un comentario por medio de su Id.
  *     tags:
  *       - Comentarios
  *     parameters:

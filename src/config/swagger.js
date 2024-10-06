@@ -14,17 +14,17 @@ const options = {
   },
   apis: [
     "src/routes/notificationRouter.js",
-    "src/routes/eventoRouter.js",
-    "src/routes/pagoRouter.js",
+    "src/routes/eventRouter.js",
+    "src/routes/paymentRouter.js",
     "src/routes/resetPasswordRouter.js",
-    "src/routes/authRoutes.js",
-    "src/routes/eventRoutes.js",
-    "src/routes/imagenRoutes.js",
+    "src/routes/authRouter.js",
+    "src/routes/eventRouter.js",
+    "src/routes/imageRouter.js",
     "src/routes/userRoutes.js",
-    "src/routes/comentariosRouter.js",
+    "src/routes/commentsRouter.js",
     "src/routes/membresiaRouter.js",
-    "src/routes/asientoRouter.js",
-    "src/routes/escenarioRouter.js"
+    "src/routes/seatsRouter.js",
+    "src/routes/sceneryRouter.js"
   ],
 };
 

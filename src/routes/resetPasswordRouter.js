@@ -7,7 +7,8 @@ const resetPasswordController = require('../controllers/resetPasswordController'
  * @openapi
  * /api/password/forgot-password:
  *   post:
- *     description: reset password.
+ *     summary: Esta ruta sirve para reestablecer la contraseña por correo.
+ *     description: Esta ruta sirve para reestablecer la contraseña de un usuario ingresando el email.
  *     tags:
  *       - Reestablecer Contraseña
  *     requestBody:
@@ -52,7 +53,8 @@ router.post('/forgot-password', resetPasswordController.forgotPassword);
  * @openapi
  * /api/password/reset-password/{token}:
  *   post:
- *     description: reset password.
+ *     summary: Esta ruta reestablece la contraseña obteniendo el token.
+ *     description: Esta ruta sirve para reestablecer la contraseña de un usuario por medio del token obtenido.
  *     tags:
  *       - Reestablecer Contraseña
  *     parameters:

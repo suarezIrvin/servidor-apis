@@ -6,7 +6,8 @@ const authController = require("../controllers/authController");
  * @swagger
  * /api/auth/login:
  *   post:
- *     summary: Inicia sesión un usuario
+ *     summary: Inicia sesión de un usuario registrado exitosamente.
+ *     description: Esta ruta se trata de cuando un usuario desea realizar un inicio de sesión.
  *     tags: [Autorización]
  *     requestBody:
  *       required: true

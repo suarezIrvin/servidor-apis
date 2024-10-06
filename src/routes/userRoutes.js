@@ -51,7 +51,7 @@ router.post("/payment", async (req, res) => {
 
 router.post("/paymentTest", async (req, res) => {
   const { amount, title, userId } = req.body;
-  
+
   // Convertir amount y userId a números
   const amountNumber = parseFloat(amount) * 100; // Convertir a centavos
   const userIdNumber = parseInt(userId, 10);
@@ -149,6 +149,7 @@ router.get("/cancel", async (req, res) => {
  * @swagger
  * /api/users/register:
  *   post:
+ *     description: Esta ruta es para el registro de todos los usuarios
  *     summary: Registrar un nuevo usuario
  *     tags: [Usuario]
  *     requestBody:
@@ -192,13 +193,13 @@ router.post("/register", userController.register);
  * @openapi
  * /api/users:
  *   get:
- *     summary: obtiene todos los usuarios
- *     description: Obtiene todas las notificaciones.
+ *     summary: Obtiene todos los usuarios registrados
+ *     description: Esta ruta obtiene a todos los usuarios registrados.
  *     tags:
  *       - Usuario
  *     responses:
  *       200:
- *         description: Lista de notificaciones.
+ *         description: Lista de usuarios existentes.
  *         content:
  *           application/json:
  *             schema:
@@ -255,8 +256,8 @@ router.get("/", userController.getAll);
  * @openapi
  * /api/users/{id}:
  *   get:
- *     summary: obtiene al usuario por id
- *     description: Obtiene un usuario por su ID.
+ *     summary: Obtiene al usuario registrado por su Id.
+ *     description: Obtiene al usuario registrado ingresando el Id.
  *     tags:
  *       - Usuario
  *     parameters:
@@ -325,7 +326,8 @@ router.get("/:id", userController.getById);
  * @openapi
  * /api/users/{id}:
  *   delete:
- *     summary: Elimina un usuario por su ID.
+ *     summary: Elimina un usuario registrado por su ID.
+ *     description: Elimina al usuario registrado ingresando el Id.
  *     tags:
  *       - Usuario
  *     parameters:
@@ -351,6 +353,7 @@ router.delete("/:id", userController.delete);
  * /api/users/{id}:
  *   put:
  *     summary: Actualiza un usuario por su ID.
+ *     description: Actualiza los campos de un usuario registrado por medio de su ID.
  *     tags:
  *       - Usuario
  *     parameters:
@@ -420,14 +423,14 @@ router.put("/update-membresia/:id", async (req, res) => {
     const rol_id = 3; // Nuevo rol_id que queremos asignar
     const fecha = new Date();
     const fechaDevencia = new Date(fecha.setMonth(fecha.getMonth() + tipo));
-    
+
     // Formatear la fecha a 'YYYY-MM-DD HH:MM:SS'
     const pad = (n) => (n < 10 ? '0' : '') + n;
     const fechaDevenciaFormatted = `${fechaDevencia.getFullYear()}-${pad(fechaDevencia.getMonth() + 1)}-${pad(fechaDevencia.getDate())} ${pad(fechaDevencia.getHours())}:${pad(fechaDevencia.getMinutes())}:${pad(fechaDevencia.getSeconds())}`;
     let fechafinal = "";
     if (membresia_id == 5) {
       fechafinal = null;
-    }else{
+    } else {
       fechafinal = fechaDevenciaFormatted
     }
 

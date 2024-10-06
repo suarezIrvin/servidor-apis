@@ -1,7 +1,6 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
 const eventController = require("../controllers/eventController");
-const authMiddleware = require("../middlewares/authMiddleware");
 
 /**
  * @swagger
@@ -13,13 +12,20 @@ const authMiddleware = require("../middlewares/authMiddleware");
  *       bearerFormat: JWT
  */
 
-
 /**
  * @swagger
+ * tags:
+ *   name: Eventos
+ *   description: Rutas para la administración de eventos
+ */
+
+/**
+ * @openapi
  * /api/events/get:
  *   get:
- *     summary: Obtener la lista de eventos detallados
- *     tags: [Admin events - Team Brayan]
+ *     summary: Esta ruta obtiene todos los eventos disponibles.
+ *     description: Esta ruta sirve para obtener todos los eventos.
+ *     tags: [Eventos]
  *     responses:
  *       200:
  *         description: Lista de eventos obtenida con éxito
@@ -28,12 +34,14 @@ const authMiddleware = require("../middlewares/authMiddleware");
  */
 router.get('/get', eventController.getEvent);
 
+
 /**
  * @swagger
  * /api/events/get/{evento_id}:
  *   get:
- *     summary: Obtener un evento por ID 
- *     tags: [Admin events - Team Brayan]
+ *     summary: Esta ruta obtiene un evento por medio de su ID.
+ *     description: Esta ruta obtiene un evento por su ID.
+ *     tags: [Eventos]
  *     parameters:
  *       - in: path
  *         name: id
@@ -50,12 +58,14 @@ router.get('/get', eventController.getEvent);
  *         description: Error al obtener el evento
  */
 router.get('/get/:evento_id', eventController.getIdEvent);
+
 /**
  * @swagger
  * /api/events/get/approved:
  *   get:
- *     summary: Obtener la lista de eventos aprobados
- *     tags: [Admin events - Team Brayan]
+ *     summary: Obtiene la lista de eventos desaprobados para administradores.
+ *     description: Esta ruta sirve para obtener los eventos desaprobados por los administradores.
+ *     tags: [Eventos]
  *     responses:
  *       200:
  *         description: Lista de eventos aprobados obtenida con éxito
@@ -68,8 +78,9 @@ router.get('/approved', eventController.getApprovedEvent);
  * @swagger
  * /api/events/get/pending:
  *   get:
- *     summary: Obtener la lista de eventos pendientes
- *     tags: [Admin events - Team Brayan]
+ *     summary: Obtiene los eventos pendientes para aprobar o desaprobar para organizador.
+ *     description: Esta ruta sirve para obtener todos los eventos pendientes por aprobar o desaprobar.
+ *     tags: [Eventos]
  *     responses:
  *       200:
  *         description: Lista de eventos pendientes obtenida con éxito
@@ -82,8 +93,9 @@ router.get('/pending', eventController.getPendingEvent);
  * @swagger
  * /api/events/post:
  *   post:
- *     summary: Crear un nuevo evento - Organizador
- *     tags: [Admin events - Team Brayan]
+ *     summary: Esta ruta crea un nuevo evento exclusivamente para el organizador.
+ *     description: Esta ruta sirve para crear un nuevo evento por el organizador.
+ *     tags: [Eventos]
  *     requestBody:
  *       required: true
  *       content:
@@ -143,8 +155,9 @@ router.post('/post/', eventController.postPendingEvent);
  * @swagger
  * /api/events/post/pending:
  *   post:
- *     summary: Aprobar eventos - Administrador
- *     tags: [Admin events - Team Brayan]
+ *     summary: Esta ruta es exclusiva para los administradores, se trata de actualizar el estado del evento.
+ *     description: Esta ruta actualiza el estado de un evento.
+ *     tags: [Eventos]
  *     requestBody:
  *       required: true
  *       content:
@@ -176,8 +189,9 @@ router.post('/post/pending', eventController.postPendingEvent);
  * @swagger
  * /api/events/put/{id}:
  *   put:
- *     summary: Actualizar un evento existente por ID
- *     tags: [Admin events - Team Brayan]
+ *     summary: Actualizar un evento existente por ID del evento.
+ *     description: Esta ruta actualiza la información general de un evento por medio de su ID.
+ *     tags: [Eventos]
  *     parameters:
  *       - in: path
  *         name: id
@@ -244,8 +258,9 @@ router.put('/put/:id', eventController.putEvent);
  * @swagger
  * /api/events/delete/{evento_id}:
  *   delete:
- *     summary: Eliminar un evento 
- *     tags: [Admin events - Team Brayan]
+ *     summary: Eliminar un evento por su ID.
+ *     description: Esta ruta elimina un evento por su ID.
+ *     tags: [Eventos]
  *     requestBody:
  *       required: true
  *       content:

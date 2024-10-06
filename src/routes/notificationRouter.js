@@ -6,7 +6,8 @@ const notificationController = require('../controllers/notificationController');
  * @openapi
  * /api/notification/send:
  *   post:
- *     description: Recibe una notificación.
+ *     summary: Esta ruta envía notificaciones para los clientes.
+ *     description: Esta ruta sirve para que el organizador o administrador pueda enviar o crear una notificación.
  *     tags:
  *       - Notificacion
  *     requestBody:
@@ -35,7 +36,8 @@ router.post('/send', notificationController.create);
  * @openapi
  * /api/notification/get-all:
  *   get:
- *     description: Obtiene todas las notificaciones.
+ *     summary: Esta ruta obtiene todos las notificaciones enviadas.
+ *     description: Esta ruta obtiene todas las notificaciones enviadas por el organizador o administrador.
  *     tags:
  *       - Notificacion
  *     responses:
