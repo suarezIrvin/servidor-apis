@@ -28,7 +28,8 @@ const seatController = {
 
             
         } catch (error) {
-            
+            console.error('Error creating Seat:', error);
+            res.status(500).json({ error: 'Error creating Seat' });
         }
     },
     
