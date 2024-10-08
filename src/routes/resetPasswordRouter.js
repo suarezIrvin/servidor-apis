@@ -2,13 +2,11 @@ const express = require('express');
 const router = express.Router();
 const resetPasswordController = require('../controllers/resetPasswordController');
 
-
 /**
  * @openapi
  * /api/password/forgot-password:
  *   post:
- *     summary: Esta ruta sirve para reestablecer la contraseña por correo.
- *     description: Esta ruta sirve para reestablecer la contraseña de un usuario ingresando el email.
+ *     description: reset password.
  *     tags:
  *       - Reestablecer Contraseña
  *     requestBody:
@@ -32,9 +30,6 @@ const resetPasswordController = require('../controllers/resetPasswordController'
  *                 message:
  *                   type: string
  *                   description: Mensaje de confirmación.
- *                 hashedToken:
- *                   type: string
- *                   description: token para confirmar el cambio de password.
  *       '500':
  *         description: Error interno del servidor.
  *         content:
@@ -48,13 +43,11 @@ const resetPasswordController = require('../controllers/resetPasswordController'
  */
 router.post('/forgot-password', resetPasswordController.forgotPassword);
 
-
 /**
  * @openapi
  * /api/password/reset-password/{token}:
  *   post:
- *     summary: Esta ruta reestablece la contraseña obteniendo el token.
- *     description: Esta ruta sirve para reestablecer la contraseña de un usuario por medio del token obtenido.
+ *     description: reset password.
  *     tags:
  *       - Reestablecer Contraseña
  *     parameters:
@@ -84,9 +77,6 @@ router.post('/forgot-password', resetPasswordController.forgotPassword);
  *                 message:
  *                   type: string
  *                   description: Mensaje de confirmación.
- *                 hashedToken:
- *                   type: string
- *                   description: token para confirmar el cambio de password.
  *       '500':
  *         description: Error interno del servidor.
  *         content:
@@ -98,10 +88,7 @@ router.post('/forgot-password', resetPasswordController.forgotPassword);
  *                   type: string
  *                   description: Mensaje de error detallado.
  */
-router.post('/reset-password/:token', resetPasswordController.resetPassowrd);
-
-
+router.post('/reset-password/:token', resetPasswordController.resetPassword);
 router.get("/reset-password/:token", resetPasswordController.viewReset);
 
-
-module.exports = router;
+module.exports = router;  
