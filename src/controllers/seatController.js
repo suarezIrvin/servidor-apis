@@ -4,10 +4,10 @@ const { use } = require('../routes/seatsRouter');
 const seatController = {
 
     create: async (req, res) => {
-        const {numberSeat, status, userId} = req.body;
-        console.log(numberSeat, status, userId);
+        const {numberSeat, status, userId, scenaryId} = req.body;
+        console.log(numberSeat, status, userId, scenaryId);
         try {
-            if (!numberSeat || !status || !userId) {
+            if (!numberSeat || !status || !userId || !scenaryId) {
                 return res.status(400).json({ error: 'Faltan campos obligatorios' });
             }
             // let users = await User.findById(userId);
@@ -15,7 +15,7 @@ const seatController = {
             //     return res.status(404).json({ error: `Usuario con el id ${userId} no encontrado` });
                 
             // }
-           let seats = await Seat.create(numberSeat, status, userId);
+           let seats = await Seat.create(numberSeat, status, userId, scenaryId);
 
             res.status(201).json({ message: 'Asiento creado correctamente', 
                 Seat:{ 
@@ -34,7 +34,7 @@ const seatController = {
     },
     
     getById: async (req, res) => {
-        const seatId = req.params.seatId;
+        const {seatId} = req.params;
         try {
             const [rows, fields] = await Seat.findById(seatId);
             if (rows.length === 0) {
@@ -59,8 +59,8 @@ const seatController = {
     },
 
     update: async (req, res) => {
-        const seatId = req.params.seatId;
-        const { numberSeat,status,userId } = req.body;
+        const {seatId} = req.params;
+        const { numberSeat, status, userId, scenaryId } = req.body;
         try {
             let seats = await Seat.findById(seatId);
 
@@ -72,7 +72,7 @@ const seatController = {
             //     return res.status(404).json({ error: `Usuario con el id ${userId} no encontrado` });
                 
             // }
-            await Seat.update(numberSeat,status,userId,seatId);
+            await Seat.update(numberSeat, status, userId, seatId, scenaryId);
 
             const updatedSeat = await Seat.findById(seatId);
             const updatedSeats = updatedSeat[0];
