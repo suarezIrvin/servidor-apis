@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 
 // Importar y usar otras rutas
-const authRouter = require("./authRouter");
 const commentsRouter = require('./commentsRouter');
 const eventRouter = require("./eventRouter");
 const imageRouter = require("./imageRouter");
@@ -16,7 +15,6 @@ const userRoutes = require("./userRoutes");
 
 
 // Categorias de las rutas 
-router.use("/auth", authRouter);
 router.use('/comments', commentsRouter);
 router.use("/events", eventRouter);
 router.use("/image", imageRouter);
