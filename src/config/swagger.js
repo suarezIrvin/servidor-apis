@@ -24,7 +24,8 @@ const options = {
     "src/routes/commentsRouter.js",
     "src/routes/membresiaRouter.js",
     "src/routes/seatsRouter.js",
-    "src/routes/sceneryRouter.js"
+    "src/routes/sceneryRouter.js",
+    "src/routes/ticketRoutes.js"
   ],
 };
 
