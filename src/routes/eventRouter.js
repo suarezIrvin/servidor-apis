@@ -21,7 +21,7 @@ const eventController = require("../controllers/eventController");
 
 /**
  * @openapi
- * /api/events/get:
+ * /api/events:
  *   get:
  *     summary: Esta ruta obtiene todos los eventos disponibles.
  *     description: Esta ruta sirve para obtener todos los eventos.
@@ -32,12 +32,12 @@ const eventController = require("../controllers/eventController");
  *       500:
  *         description: Error al obtener la lista de eventos
  */
-router.get('/get', eventController.getEvent);
+router.get('/', eventController.getEvent);
 
 
 /**
  * @swagger
- * /api/events/get/{evento_id}:
+ * /api/events/{evento_id}:
  *   get:
  *     summary: Esta ruta obtiene un evento por medio de su ID.
  *     description: Esta ruta obtiene un evento por su ID.
@@ -57,7 +57,7 @@ router.get('/get', eventController.getEvent);
  *       500:
  *         description: Error al obtener el evento
  */
-router.get('/get/:evento_id', eventController.getIdEvent);
+router.get('/:evento_id', eventController.getIdEvent);
 
 /**
  * @swagger

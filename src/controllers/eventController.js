@@ -15,23 +15,36 @@ const eventController = {
 
     getIdEvent: async (req, res) => {
         const { evento_id } = req.params;
-        try {
-           
-    
-            const result = await Event.getEvetId(evento_id);
-    
-            res.status(200).json(result);
-        } catch (error) {
-            console.error('Error al obtener el evento:', error);
-            res.status(500).send('Error al obtener el evento');
+    try {
+        const result = await Event.getEvetId(evento_id);
+        if (!result) {
+            return res.status(404).json({ message: "Evento no encontrado" });
         }
+        res.status(200).json(result);
+    } catch (error) {
+        console.error('Error al obtener el evento:', error);
+        res.status(500).send('Error al obtener el evento');
+    }
     },
 
     postEvent: async (req, res) => {
-        const { nombre, fecha_inicio, fecha_termino, hora, tipo_evento_id, categoria_id, ubicacion, max_per, imagen_url, monto, descripcion } = req.body;
+        const { 
+            nombre, 
+            fecha_inicio, 
+            fecha_termino, 
+            tipo_evento_id, 
+            categoria_id, 
+            ubicacion, 
+            max_per, 
+            imagen_url, 
+            precio, 
+            descripcion, 
+            horarios 
+        } = req.body;
+    
         // Validar que todos los campos necesarios estén presentes
-        if (!nombre || !fecha_inicio || !fecha_termino || !hora || !tipo_evento_id || !categoria_id || !ubicacion || !max_per || !imagen_url || !monto || !descripcion) {
-            return res.status(400).send('Todos los campos son obligatorios');
+        if (!nombre || !fecha_inicio || !fecha_termino || !tipo_evento_id || !categoria_id || !ubicacion || !max_per || !imagen_url || !precio || !descripcion || !horarios || !horarios.length) {
+            return res.status(400).send('Todos los campos son obligatorios y debe haber al menos un horario.');
         }
     
         // Validar tipo_evento_id y categoria_id
@@ -47,19 +60,33 @@ const eventController = {
         }
     
         try {
-            // Insertar el evento
-            const resultEvento = await Event.postEvent(nombre, fecha_inicio, fecha_termino, hora, tipo_evento_id, categoria_id, ubicacion, max_per, imagen_url, monto, descripcion);
+            // Insertar el evento y sus horarios
+            const resultEvento = await Event.postEvent(
+                nombre, 
+                fecha_inicio, 
+                fecha_termino, 
+                tipo_evento_id, 
+                categoria_id, 
+                ubicacion, 
+                max_per, 
+                imagen_url, 
+                precio, 
+                descripcion, 
+                horarios
+            );
     
             // Éxito al crear el evento
             res.status(201).json({
                 message: 'Evento creado correctamente',
-                evento_id: evento_id
+                evento_id: resultEvento.insertId
             });
         } catch (error) {
             console.error('Error al crear el evento:', error);
             res.status(500).send('Error al crear el evento');
         }
     },
+    
+    
     
 
     putEvent: async (req, res) => {
