@@ -1,4 +1,5 @@
 const TicketModel = require("../models/ticketModel");
+const EventModel = require('../models/eventModel');
 const crypto = require("crypto");
 
 const ticketController = {
@@ -108,6 +109,36 @@ const ticketController = {
       res.status(500).send("Error updating the ticket");
     }
   },
+
+  scanTicket: async (req, res) => {
+    try {
+      const { ticketCode } = req.body;
+
+      if (!ticketCode) {
+        return res.status(400).send('Faltan datos requeridos');
+      }
+
+      const [ ticket ] = await TicketModel.getTicketByCode(ticketCode)
+
+      if (ticket[0]?.status == undefined) {
+        return res.status(200).send('Ticket inválido');
+      }
+      if (ticket[0]?.status === 1) {
+        return res.status(200).send('El ticket ya ha sido utilizado');
+      }
+
+      const data = { status: 1}
+      await TicketModel.update(ticket[0].ticket_id, data)
+      const getEvent = await  EventModel.getEventByTicket(ticket[0].ticket_id);
+  
+      res.status(200).json(getEvent);
+
+
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  },
+
 };
 
 module.exports = ticketController;

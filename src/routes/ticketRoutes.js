@@ -92,5 +92,8 @@ router.get('/event/:evento_id', ticketController.getTicketsByEvent2);
 // Actualizar el status de un ticket
 router.put('/:ticket_id', ticketController.updateStatusTicket);
 
+// scaner del QR
+router.post('/scan-ticket', ticketController.scanTicket);
+
 
 module.exports = router;
