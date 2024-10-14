@@ -88,7 +88,6 @@ router.get('/approved', eventController.getApprovedEvent);
  *         description: Error al obtener la lista de eventos pendientes
  */
 router.get('/pending', eventController.getPendingEvent);
-
 /**
  * @swagger
  * /api/events/post:
@@ -105,86 +104,118 @@ router.get('/pending', eventController.getPendingEvent);
  *             properties:
  *               nombre:
  *                 type: string
+ *                 description: Nombre del evento
+ *                 example: Concierto de Rock
  *               fecha_inicio:
  *                 type: string
  *                 format: date
+ *                 description: Fecha de inicio del evento
+ *                 example: 2024-11-20
  *               fecha_termino:
  *                 type: string
  *                 format: date
- *               hora:
+ *                 description: Fecha de término del evento
+ *                 example: 2024-11-21
+ *               requerimiento:
  *                 type: string
- *                 format: time
- *               tipo_evento_id:
+ *                 description: requerimientos
+ *                 example: requerimientos
+ *               organizador_id:
  *                 type: integer
+ *                 description: ID del organizador del evento
+ *                 example: 243
+ *               escenario:
+ *                 type: integer
+ *                 description: Escenario del evento
+ *                 example: 2
+ *               tipo_evento:
+ *                 type: integer
+ *                 description: Tipo de evento (ID)
+ *                 example: 1
  *               categoria_id:
  *                 type: integer
+ *                 description: ID de la categoría del evento
+ *                 example: 2
  *               ubicacion:
  *                 type: string
+ *                 description: Ubicación del evento
+ *                 example: Ciudad de México
  *               max_per:
  *                 type: integer
+ *                 description: Capacidad máxima de personas para el evento
+ *                 example: 5000
  *               imagen_url:
  *                 type: string
- *               monto:
+ *                 description: URL de la imagen del evento
+ *                 example: https://example.com/imagen_evento.jpg
+ *               precio:
  *                 type: number
  *                 format: float
+ *                 description: Precio del evento
+ *                 example: 150.00
  *               descripcion:
  *                 type: string
+ *                 description: Descripción del evento
+ *                 example: Un concierto de rock con bandas internacionales.
+ *               horarios:
+ *                 type: array
+ *                 description: Lista de horarios del evento
+ *                 items:
+ *                   type: object
+ *                   properties:
+ *                     hora_inicio:
+ *                       type: string
+ *                       format: time
+ *                       description: Hora de inicio
+ *                       example: 19:00:00
+ *                     hora_fin:
+ *                       type: string
+ *                       format: time
+ *                       description: Hora de término
+ *                       example: 21:00:00
  *             required:
  *               - nombre
  *               - fecha_inicio
  *               - fecha_termino
- *               - hora
- *               - tipo_evento_id
+ *               - requerimiento
+ *               - organizador_id
+ *               - escenario
+ *               - tipo_evento
  *               - categoria_id
  *               - ubicacion
  *               - max_per
  *               - imagen_url
- *               - monto
+ *               - precio
  *               - descripcion
+ *               - horarios
  *     responses:
  *       201:
  *         description: Evento creado correctamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
+ *               example: Evento creado correctamente
  *       400:
  *         description: Datos inválidos en la solicitud
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
+ *               example: Datos inválidos en la solicitud
  *       500:
  *         description: Error al crear el evento
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
+ *               example: Error al crear el evento
  */
-router.post('/post/', eventController.postPendingEvent);
 
-/**
- * @swagger
- * /api/events/post/pending:
- *   post:
- *     summary: Esta ruta es exclusiva para los administradores, se trata de actualizar el estado del evento.
- *     description: Esta ruta actualiza el estado de un evento.
- *     tags: [Eventos]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               evento_id:
- *                 type: integer
- *               estado:
- *                 type: string
- *                 enum: [Aprobado, Rechazado]
- *             required:
- *               - evento_id
- *               - estado
- *     responses:
- *       200:
- *         description: Estado del evento actualizado correctamente
- *       400:
- *         description: Estado inválido en la solicitud
- *       404:
- *         description: Evento no encontrado
- *       500:
- *         description: Error al actualizar el estado del evento
- */
+router.post('/post/', eventController.postEvent);
+
+
 router.post('/post/pending', eventController.postPendingEvent);
-
 /**
  * @swagger
  * /api/events/put/{id}:
@@ -208,50 +239,81 @@ router.post('/post/pending', eventController.postPendingEvent);
  *             properties:
  *               nombre:
  *                 type: string
+ *                 example: "Concierto de Rock Actualizado"
  *               fecha_inicio:
  *                 type: string
  *                 format: date
+ *                 example: "2024-11-22"
  *               fecha_termino:
  *                 type: string
  *                 format: date
- *               hora:
- *                 type: string
- *                 format: time
- *               tipo_evento_id:
+ *                 example: "2024-11-23"
+ *               escenario:
  *                 type: integer
+ *                 example: 2
+ *               tipo_evento:
+ *                 type: integer
+ *                 example: 1
  *               categoria_id:
  *                 type: integer
+ *                 example: 3
  *               ubicacion:
  *                 type: string
+ *                 example: "Ciudad de México"
  *               max_per:
  *                 type: integer
+ *                 example: 5000
  *               imagen_url:
  *                 type: string
- *               monto:
+ *                 example: "https://example.com/imagen_actualizada_evento.jpg"
+ *               precio:
  *                 type: number
  *                 format: float
+ *                 example: 180.00
  *               descripcion:
  *                 type: string
+ *                 example: "Un concierto de rock actualizado con bandas internacionales."
+ *               requerimientos:
+ *                 type: string
+ *                 example: "Sonido profesional actualizado, iluminación especial"
+ *               horarios:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *                   properties:
+ *                     hora_inicio:
+ *                       type: string
+ *                       format: time
+ *                       example: "18:00:00"
+ *                     hora_fin:
+ *                       type: string
+ *                       format: time
+ *                       example: "20:00:00"
  *             required:
  *               - nombre
  *               - fecha_inicio
  *               - fecha_termino
- *               - hora
- *               - tipo_evento_id
+ *               - escenario
+ *               - tipo_evento
  *               - categoria_id
  *               - ubicacion
  *               - max_per
  *               - imagen_url
- *               - monto
+ *               - precio
  *               - descripcion
+ *               - requerimientos
+ *               - horarios
  *     responses:
  *       200:
  *         description: Evento actualizado correctamente
  *       400:
  *         description: Datos inválidos en la solicitud
+ *       404:
+ *         description: Evento no encontrado
  *       500:
  *         description: Error al actualizar el evento
  */
+
 router.put('/put/:id', eventController.putEvent);
 
 /**
@@ -259,20 +321,15 @@ router.put('/put/:id', eventController.putEvent);
  * /api/events/delete/{evento_id}:
  *   delete:
  *     summary: Eliminar un evento por su ID.
- *     description: Esta ruta elimina un evento por su ID.
+ *     description: Esta ruta elimina un evento por su ID utilizando el parámetro `evento_id` en la URL.
  *     tags: [Eventos]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               evento_id:
- *                 type: integer
- *                 description: ID del evento que se desea eliminar
- *             required:
- *               - evento_id
+ *     parameters:
+ *       - in: path
+ *         name: evento_id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID del evento que se desea eliminar
  *     responses:
  *       200:
  *         description: Evento eliminado exitosamente
@@ -296,6 +353,7 @@ router.put('/put/:id', eventController.putEvent);
  *               type: string
  *               example: Error al eliminar el evento
  */
+
 router.delete('/delete/:evento_id', eventController.delete);
 
 

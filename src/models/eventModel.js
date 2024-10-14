@@ -134,87 +134,124 @@ const Event = {
         return event;
     },
 
-    postEvent: async (nombre, fecha_inicio, fecha_termino, tipo_evento_id, categoria_id, ubicacion, max_per, imagen_url, precio, descripcion, horarios) => {
-        const connection = await pool.getConnection(); // Iniciar una transacción
+    postEvent: async (nombre, fecha_inicio, fecha_termino, requerimientos, organizador_id, escenario, tipo_evento, categoria_id, ubicacion, max_per, imagen_url, precio, descripcion, horarios) => {
+        const connection = await pool.getConnection();
         try {
             await connection.beginTransaction();
-
-            // Insertar el evento principal con el estado 'Pendiente' por defecto
+    
+            // Insertar el evento con validacion_id por defecto en 2
             const [result] = await connection.query(
-                `INSERT INTO eventos (nombre, fecha_inicio, fecha_termino, tipo_evento_id, categoria_id, ubicacion, max_per, precio, descripcion, estado, autorizado_por, fecha_autorizacion, validacion_id)
-                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'Pendiente', NULL, NULL, NULL)`,
-                [nombre, fecha_inicio, fecha_termino, tipo_evento_id, categoria_id, ubicacion, max_per, precio, descripcion]
-            );
-
+                `INSERT INTO eventos (nombre, fecha_inicio, fecha_termino, requerimientos, organizador_id, escenario, tipo_evento, categoria_id, ubicacion, max_per, precio, descripcion, estado, validacion_id)
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Pendiente', 2)`,
+                [nombre, fecha_inicio, fecha_termino, requerimientos, organizador_id, escenario, tipo_evento, categoria_id, ubicacion, max_per, precio, descripcion]
+              );
+              
             const evento_id = result.insertId;
-
+    
             // Insertar la imagen asociada al evento
             await connection.query(
                 `INSERT INTO imagenes (evento_id, imagen_url) VALUES (?, ?)`,
                 [evento_id, imagen_url]
             );
-
-            // Insertar los horarios asociados al evento
-            for (const horario of horarios) {
-                await connection.query(
-                    `INSERT INTO horarios (evento_id, hora_inicio, hora_fin) VALUES (?, ?, ?)`,
-                    [evento_id, horario.hora_inicio, horario.hora_fin]
-                );
+    
+            // Insertar los horarios si existen
+            if (Array.isArray(horarios) && horarios.length > 0) {
+                for (const horario of horarios) {
+                    await connection.query(
+                        `INSERT INTO horarios (evento_id, hora_inicio, hora_fin) VALUES (?, ?, ?)`,
+                        [evento_id, horario.hora_inicio, horario.hora_fin]
+                    );
+                }
             }
-
+    
             await connection.commit(); // Confirmar la transacción
             return result;
         } catch (error) {
-            await connection.rollback(); // Revertir la transacción en caso de error
+            await connection.rollback(); // Revertir en caso de error
             throw error;
         } finally {
             connection.release(); // Liberar la conexión
         }
     },
-
-    updateEvent: async (id, nombre, fecha_inicio, fecha_termino, hora, ubicacion, max_per, imagen_url, monto, descripcion) => {
-        const [result] = await pool.query(
-            `UPDATE Eventos 
-             SET nombre = ?, fecha_inicio = ?, fecha_termino = ?, hora = ?, tipo_evento_id = ?, categoria_id = ?, ubicacion = ?, max_per = ?
-             WHERE evento_id = ?`,
-            [nombre, fecha_inicio, fecha_termino, hora, ubicacion, max_per, id]
-        );
-
-        // Actualizar la imagen asociada al evento
-        await pool.query(
-            `UPDATE Imagenes 
-             SET imagen_url = ?
-             WHERE evento_id = ?`,
-            [imagen_url, id]
-        );
-
-        // Actualizar el pago asociado al evento
-        await pool.query(
-            `UPDATE Pagos 
-             SET monto = ?
-             WHERE evento_id = ?`,
-            [monto, id]
-        );
-
-        // No se actualiza la tabla Escenario ya que no se relaciona con forma y asiento
-
-        // Actualizar la descripción en la tabla Detalles_Evento
-        await pool.query(
-            `UPDATE Detalles_Evento 
-             SET descripcion = ?
-             WHERE evento_id = ?`,
-            [descripcion, id]
-        );
-
-        return result;
+    
+    
+    
+    updateEvent: async (evento_id, nombre, fecha_inicio, fecha_termino, escenario, tipo_evento, categoria_id, ubicacion, max_per, imagen_url, precio, descripcion, requerimientos, horarios) => {
+        const connection = await pool.getConnection();
+        try {
+            await connection.beginTransaction();
+    
+            // Actualizar el evento
+            const [result] = await connection.query(
+                `UPDATE eventos 
+                 SET nombre = ?, fecha_inicio = ?, fecha_termino = ?, escenario = ?, 
+                     tipo_evento = ?, categoria_id = ?, ubicacion = ?, max_per = ?, precio = ?, descripcion = ?, requerimientos = ?
+                 WHERE evento_id = ?`,
+                [nombre, fecha_inicio, fecha_termino, escenario, tipo_evento, categoria_id, ubicacion, max_per, precio, descripcion, requerimientos, evento_id]
+            );
+            
+            // Actualizar la imagen asociada al evento
+            await connection.query(
+                `UPDATE imagenes 
+                 SET imagen_url = ? 
+                 WHERE evento_id = ?`,
+                [imagen_url, evento_id]
+            );
+    
+            // Eliminar los horarios actuales del evento para poder insertar los nuevos
+            await connection.query(
+                `DELETE FROM horarios WHERE evento_id = ?`,
+                [evento_id]
+            );
+    
+            // Insertar los nuevos horarios si existen
+            if (Array.isArray(horarios) && horarios.length > 0) {
+                for (const horario of horarios) {
+                    await connection.query(
+                        `INSERT INTO horarios (evento_id, hora_inicio, hora_fin) VALUES (?, ?, ?)`,
+                        [evento_id, horario.hora_inicio, horario.hora_fin]
+                    );
+                }
+            }
+    
+            await connection.commit(); // Confirmar la transacción
+            return result;
+        } catch (error) {
+            await connection.rollback(); // Revertir en caso de error
+            throw error;
+        } finally {
+            connection.release(); // Liberar la conexión
+        }
     },
-
+    
+    
     deleteEvent: async (evento_id) => {
-        const [result] = await pool.query('DELETE FROM Eventos WHERE evento_id = ?', [evento_id]);
-
-
-        return result;
-    }
+        const connection = await pool.getConnection();
+        try {
+            await connection.beginTransaction();
+    
+            // Eliminar los horarios asociados al evento
+            await connection.query(
+                `DELETE FROM horarios WHERE evento_id = ?`,
+                [evento_id]
+            );
+    
+            // Ahora eliminar el evento
+            const [result] = await connection.query(
+                `DELETE FROM eventos WHERE evento_id = ?`,
+                [evento_id]
+            );
+    
+            await connection.commit(); // Confirmar la transacción
+            return result;
+        } catch (error) {
+            await connection.rollback(); // Revertir en caso de error
+            throw error;
+        } finally {
+            connection.release(); // Liberar la conexión
+        }
+    },
+    
 
 
 }

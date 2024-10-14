@@ -26,13 +26,15 @@ const eventController = {
         res.status(500).send('Error al obtener el evento');
     }
     },
-
     postEvent: async (req, res) => {
         const { 
             nombre, 
             fecha_inicio, 
             fecha_termino, 
-            tipo_evento_id, 
+            requerimiento,        
+            organizador_id,      
+            escenario,           
+            tipo_evento,  
             categoria_id, 
             ubicacion, 
             max_per, 
@@ -42,17 +44,23 @@ const eventController = {
             horarios 
         } = req.body;
     
+        // Depuración para ver qué se está recibiendo
+        console.log('Horarios recibidos:', horarios);
+        console.log('Cuerpo de la solicitud:', req.body);
+    
         // Validar que todos los campos necesarios estén presentes
-        if (!nombre || !fecha_inicio || !fecha_termino || !tipo_evento_id || !categoria_id || !ubicacion || !max_per || !imagen_url || !precio || !descripcion || !horarios || !horarios.length) {
+        if (!nombre || !fecha_inicio || !fecha_termino || !requerimiento || !organizador_id || !escenario ||
+            !tipo_evento || !categoria_id || !ubicacion || !max_per || !imagen_url || !precio || !descripcion || 
+            !horarios || !Array.isArray(horarios) || horarios.length === 0) {
             return res.status(400).send('Todos los campos son obligatorios y debe haber al menos un horario.');
         }
     
-        // Validar tipo_evento_id y categoria_id
-        const validTipoEventoIds = [1, 2];
-        const validCategoriaIds = [1, 2, 3, 4];
+        // Validar tipo_evento y categoria_id
+        const validTipoEventoIds = [1, 2];  // Tipos de evento válidos
+        const validCategoriaIds = [1, 2, 3, 4];  // Ids válidos de categorías
     
-        if (!validTipoEventoIds.includes(tipo_evento_id)) {
-            return res.status(400).send('tipo_evento_id inválido');
+        if (!validTipoEventoIds.includes(tipo_evento)) {
+            return res.status(400).send('tipo_evento inválido');
         }
     
         if (!validCategoriaIds.includes(categoria_id)) {
@@ -65,7 +73,10 @@ const eventController = {
                 nombre, 
                 fecha_inicio, 
                 fecha_termino, 
-                tipo_evento_id, 
+                requerimiento,
+                organizador_id,    
+                escenario,         
+                tipo_evento,  
                 categoria_id, 
                 ubicacion, 
                 max_per, 
@@ -86,22 +97,47 @@ const eventController = {
         }
     },
     
-    
-    
-
     putEvent: async (req, res) => {
         const { id } = req.params;
-        const { evento_nombre, fecha_inicio, fecha_termino, hora, ubicacion,  categoria_id, max_per, estado, autorizado_por, fecha_autorizacion, validacion_id, imagen_url, monto, descripcion, forma_escenario } = req.body;
+        const { 
+            nombre, 
+            fecha_inicio, 
+            fecha_termino, 
+            requerimientos, // Agregado en lugar de hora y hora_termino
+            escenario, 
+            ubicacion,  
+            categoria_id, 
+            max_per, 
+            imagen_url, 
+            precio, 
+            descripcion, 
+            tipo_evento,
+            horarios // Asegúrate de que este valor sea correcto
+        } = req.body;
     
         // Validar que todos los campos necesarios estén presentes
-       
-    
-    
+        if (!nombre || !fecha_inicio || !fecha_termino || !requerimientos || !escenario || !ubicacion || !categoria_id || !max_per || !imagen_url || !precio || !descripcion || !tipo_evento) {
+            return res.status(400).send('Todos los campos obligatorios deben estar presentes');
+        }
     
         try {
-            // Actualizar el evento
-        const result = await Event.updateEvent(id, evento_nombre, fecha_inicio, fecha_termino, hora, ubicacion, categoria_id, max_per, estado, autorizado_por, fecha_autorizacion, validacion_id, imagen_url, monto, descripcion, forma_escenario );
-
+            // Actualizar el evento usando el método updateEvent
+            const result = await Event.updateEvent(
+                id, 
+                nombre, 
+                fecha_inicio, 
+                fecha_termino, 
+                escenario, 
+                tipo_evento, 
+                categoria_id, 
+                ubicacion, 
+                max_per, 
+                imagen_url, 
+                precio, 
+                descripcion, 
+                requerimientos, // Agregado en lugar de hora y hora_termino
+                horarios // Asegúrate de que este valor sea correcto
+            );
     
             // Éxito al actualizar
             res.status(200).send('Evento actualizado correctamente');
@@ -110,7 +146,6 @@ const eventController = {
             res.status(500).send('Error al actualizar el evento');
         }
     },
-    
     
 
     getApprovedEvent: async (req, res) => {
