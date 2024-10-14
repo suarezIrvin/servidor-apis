@@ -169,7 +169,7 @@ const Event = {
    
     
 
-    postEvent: async (nombre, fecha_inicio, fecha_termino, tipo_evento_id, categoria_id, ubicacion, max_per, imagen_url, precio, descripcion, horarios) => {
+    postEvent: async (nombre, fecha_inicio, fecha_termino, requerimientos, organizador_id, escenario, tipo_evento, categoria_id, ubicacion, max_per, imagen_url, precio, descripcion, horarios) => {
         const connection = await pool.getConnection(); // Iniciar una transacción
         try {
             await connection.beginTransaction();

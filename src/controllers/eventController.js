@@ -127,7 +127,7 @@ const eventController = {
             nombre, 
             fecha_inicio, 
             fecha_termino, 
-            requerimientos, // Agregado en lugar de hora y hora_termino
+            requerimientos, 
             escenario, 
             ubicacion,  
             categoria_id, 
@@ -140,13 +140,10 @@ const eventController = {
         } = req.body;
     
         // Validar que todos los campos necesarios estén presentes
-<<<<<<< HEAD
         if (!nombre || !fecha_inicio || !fecha_termino || !requerimientos || !escenario || !ubicacion || !categoria_id || !max_per || !imagen_url || !precio || !descripcion || !tipo_evento) {
             return res.status(400).send('Todos los campos obligatorios deben estar presentes');
         }
     
-=======
->>>>>>> 3605651ec5a9ed051b62a85723bb68779b67fa8c
         try {
             // Actualizar el evento usando el método updateEvent
             const result = await Event.updateEvent(

@@ -118,7 +118,7 @@ router.get('/pending', eventController.getPendingEvent);
  *                 format: date
  *                 description: Fecha de término del evento
  *                 example: 2024-11-21
- *               requerimiento:
+ *               requerimientos:
  *                 type: string
  *                 description: requerimientos
  *                 example: requerimientos
@@ -179,7 +179,7 @@ router.get('/pending', eventController.getPendingEvent);
  *               - nombre
  *               - fecha_inicio
  *               - fecha_termino
- *               - requerimiento
+ *               - requerimientos
  *               - organizador_id
  *               - escenario
  *               - tipo_evento
