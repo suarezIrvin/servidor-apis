@@ -136,37 +136,116 @@ const Event = {
 
     
 
-        searchFilter: async (name, location, start_date, end_date) => {
-            
-            let query = 'SELECT nombre,fecha_inicio,fecha_termino,ubicacion FROM eventos WHERE 1=1';
-            let queryParams = [];
-
-            // Filtro por nombre del evento
-            if (name) {
-                query += ' AND nombre LIKE ?';
-                queryParams.push(`%${name}%`);
+    searchFilter: async (name, location, start_date, end_date, category_id, event_type) => {
+        let query = `
+            SELECT 
+                evento_id, 
+                nombre, 
+                fecha_inicio, 
+                fecha_termino, 
+                ubicacion, 
+                categoria_id, 
+                tipo_evento, 
+                max_per, 
+                descripcion, 
+                precio  
+            FROM 
+                eventos 
+            WHERE 
+                1=1`;
+        
+        let queryParams = [];
+    
+        // Filtro por nombre del evento
+        if (name) {
+            query += ' AND nombre LIKE ?';
+            queryParams.push(`%${name}%`);
+        }
+    
+        // Filtro por ubicación del evento
+        if (location) {
+            query += ' AND ubicacion LIKE ?';
+            queryParams.push(`%${location}%`);
+        }
+    
+        // Filtro por rango de fechas (fecha de inicio y fecha de término)
+        if (start_date) {
+            query += ' AND fecha_inicio >= ?';
+            queryParams.push(start_date);
+        }
+        if (end_date) {
+            query += ' AND fecha_termino <= ?';
+            queryParams.push(end_date);
+        }
+    
+        // Filtro por categoría
+        if (category_id) {
+            query += ' AND categoria_id = ?';
+            queryParams.push(category_id);
+        }
+    
+        // Filtro por tipo de evento
+        if (event_type) {
+            query += ' AND tipo_evento = ?';
+            queryParams.push(event_type);
+        }
+    
+        // Obtener los eventos filtrados
+        const [events] = await pool.query(query, queryParams);
+    
+        // Si no hay eventos, retornar un array vacío
+        if (events.length === 0) {
+            return [];
+        }
+    
+        // Obtener los horarios para todos los eventos encontrados
+        const [horarios] = await pool.query(
+            `SELECT 
+                evento_id, 
+                hora_inicio, 
+                hora_fin
+            FROM 
+                horarios
+            WHERE 
+                evento_id IN (?)
+            ORDER BY 
+                evento_id, 
+                hora_inicio`,
+            [events.map(event => event.evento_id)]  // Obtener solo los horarios de los eventos encontrados
+        );
+    
+        // Mapear los eventos con sus horarios
+        const eventMap = new Map();
+        events.forEach(event => {
+            eventMap.set(event.evento_id, {
+                ...event,
+                horarios: []
+            });
+        });
+    
+        horarios.forEach(horario => {
+            if (eventMap.has(horario.evento_id)) {
+                const event = eventMap.get(horario.evento_id);
+                event.horarios.push(horario);
             }
-
-            // Filtro por ubicación del evento
-            if (location) {
-                query += ' AND ubicacion LIKE ?';
-                queryParams.push(`%${location}%`);
-            }
-
-            // Filtro por rango de fechas (fecha de inicio y fecha de término)
-            if (start_date) {
-                query += ' AND fecha_inicio >= ?';
-                queryParams.push(start_date);
-            }
-            if (end_date) {
-                query += ' AND fecha_termino <= ?';
-                queryParams.push(end_date);
-            }
-
-            const [result] = await pool.query(query, queryParams);
-            return result
-        },
-   
+        });
+    
+        // Formatear los eventos con horarios en propiedades individuales
+        const result = [];
+        eventMap.forEach(event => {
+            let count = 1;
+            event.horarios.forEach(horario => {
+                event[`horario_inicio_${count}`] = horario.hora_inicio;
+                event[`horario_fin_${count}`] = horario.hora_fin;
+                count++;
+            });
+            delete event.horarios; // Opcional: eliminar el array original de horarios si no es necesario
+            result.push(event);
+        });
+    
+        return result;
+    },
+    
     
 
     postEvent: async (nombre, fecha_inicio, fecha_termino, requerimientos, organizador_id, escenario, tipo_evento, categoria_id, ubicacion, max_per, imagen_url, precio, descripcion, horarios) => {

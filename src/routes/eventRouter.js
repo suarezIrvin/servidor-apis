@@ -37,14 +37,14 @@ router.get('/', eventController.getEvent);
 
 /**
  * @swagger
- * /api/events/{evento_id}:
+ * /api/events/find/{evento_id}:
  *   get:
  *     summary: Esta ruta obtiene un evento por medio de su ID.
  *     description: Esta ruta obtiene un evento por su ID.
  *     tags: [Eventos]
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: evento_id 
  *         required: true
  *         schema:
  *           type: integer
@@ -58,6 +58,78 @@ router.get('/', eventController.getEvent);
  *         description: Error al obtener el evento
  */
 router.get('/find/:evento_id', eventController.getIdEvent);
+
+/**
+ * @swagger
+ * /api/events/search:
+ *   get:
+ *     summary: Search for events based on various filters.
+ *     description: This endpoint allows searching for events using different filters such as name, location, date range, category, and event type.
+ *     tags: [Eventos]
+ *     parameters:
+ *       - in: query
+ *         name: name
+ *         schema:
+ *           type: string
+ *         description: Name of the event.
+ *       - in: query
+ *         name: location
+ *         schema:
+ *           type: string
+ *         description: Location of the event.
+ *       - in: query
+ *         name: start_date
+ *         schema:
+ *           type: string
+ *           format: date
+ *         description: The start date of the event (YYYY-MM-DD).
+ *       - in: query
+ *         name: end_date
+ *         schema:
+ *           type: string
+ *           format: date
+ *         description: The end date of the event (YYYY-MM-DD).
+ *       - in: query
+ *         name: category_id
+ *         schema:
+ *           type: integer
+ *         description: The ID of the event's category.
+ *       - in: query
+ *         name: event_type
+ *         schema:
+ *           type: string
+ *         description: The type of the event.
+ *     responses:
+ *       200:
+ *         description: List of events that match the search criteria.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   nombre:
+ *                     type: string
+ *                     description: Name of the event.
+ *                   fecha_inicio:
+ *                     type: string
+ *                     format: date
+ *                     description: Start date of the event.
+ *                   fecha_termino:
+ *                     type: string
+ *                     format: date
+ *                     description: End date of the event.
+ *                   ubicacion:
+ *                     type: string
+ *                     description: Location of the event.
+ *       400:
+ *         description: At least one search parameter must be provided.
+ *       404:
+ *         description: No events found matching the search criteria.
+ *       500:
+ *         description: Error while filtering events.
+ */
 
 router.get('/search', eventController.searchFilter);
 

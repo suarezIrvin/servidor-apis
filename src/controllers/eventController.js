@@ -28,15 +28,16 @@ const eventController = {
     },
 
     searchFilter: async (req, res) => {
-        const { name, location, start_date, end_date } = req.query; // Cambiar params a query
+        const { name, location, start_date, end_date, category_id, event_type } = req.query; 
+
     
         // Verificar si al menos uno de los campos está presente
-        if (!name && !location && !start_date && !end_date) {
-            return res.status(400).json({ error: 'Debes proporcionar al menos uno de los siguientes campos: nombre, ubicacion,fecha' });
+        if (!name && !location && !start_date && !end_date && !category_id && !event_type) {
+            return res.status(400).json({ error: 'Debes proporcionar al menos uno de los siguientes campos: nombre, ubicacion,fecha,categoria o tipo de evento' });
         }
     
         try {
-            const result = await Event.searchFilter(name, location, start_date, end_date);
+            const result = await Event.searchFilter(name, location, start_date, end_date,category_id, event_type);
 
             if (result.length === 0) {
                 return res.status(404).json({ message: 'No se encontraron eventos que coincidan con los criterios de búsqueda.' });
