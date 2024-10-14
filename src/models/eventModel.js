@@ -134,8 +134,43 @@ const Event = {
         return event;
     },
 
-    postEvent: async (nombre, fecha_inicio, fecha_termino, requerimientos, organizador_id, escenario, tipo_evento, categoria_id, ubicacion, max_per, imagen_url, precio, descripcion, horarios) => {
-        const connection = await pool.getConnection();
+    
+
+        searchFilter: async (name, location, start_date, end_date) => {
+            
+            let query = 'SELECT nombre,fecha_inicio,fecha_termino,ubicacion FROM eventos WHERE 1=1';
+            let queryParams = [];
+
+            // Filtro por nombre del evento
+            if (name) {
+                query += ' AND nombre LIKE ?';
+                queryParams.push(`%${name}%`);
+            }
+
+            // Filtro por ubicación del evento
+            if (location) {
+                query += ' AND ubicacion LIKE ?';
+                queryParams.push(`%${location}%`);
+            }
+
+            // Filtro por rango de fechas (fecha de inicio y fecha de término)
+            if (start_date) {
+                query += ' AND fecha_inicio >= ?';
+                queryParams.push(start_date);
+            }
+            if (end_date) {
+                query += ' AND fecha_termino <= ?';
+                queryParams.push(end_date);
+            }
+
+            const [result] = await pool.query(query, queryParams);
+            return result
+        },
+   
+    
+
+    postEvent: async (nombre, fecha_inicio, fecha_termino, tipo_evento_id, categoria_id, ubicacion, max_per, imagen_url, precio, descripcion, horarios) => {
+        const connection = await pool.getConnection(); // Iniciar una transacción
         try {
             await connection.beginTransaction();
     
@@ -256,69 +291,69 @@ const Event = {
 
 }
 
-const eventModel = {
-    getApprovedEvents: async () => {
-        try {
-            const [rows] = await pool.query(
-                `SELECT e.evento_id, e.nombre AS evento_nombre, e.fecha_inicio, e.fecha_termino, e.hora, 
-                        te.nombre AS tipo_evento, c.nombre AS categoria, 
-                        e.ubicacion, e.max_per, e.estado, e.autorizado_por, e.fecha_autorizacion, e.validacion_id, 
-                        (SELECT i.imagen_url FROM Imagenes i WHERE i.evento_id = e.evento_id LIMIT 1) AS imagen_url,
-                        (SELECT p.monto FROM Pagos p WHERE p.evento_id = e.evento_id LIMIT 1) AS monto,
-                        (SELECT s.forma FROM Escenario s WHERE s.evento_id = e.evento_id LIMIT 1) AS forma_escenario,
-                        (SELECT d.descripcion FROM Detalles_Evento d WHERE d.evento_id = e.evento_id LIMIT 1) AS descripcion
-                 FROM Eventos e
-                 JOIN Tipos_Evento te ON e.tipo_evento_id = te.tipo_evento_id
-                 JOIN Categorias c ON e.categoria_id = c.categoria_id
-                 WHERE e.estado = 'Aprobado'`
-            );
+// const eventModel = {
+//     getApprovedEvents: async () => {
+//         try {
+//             const [rows] = await pool.query(
+//                 `SELECT e.evento_id, e.nombre AS evento_nombre, e.fecha_inicio, e.fecha_termino, e.hora, 
+//                         te.nombre AS tipo_evento, c.nombre AS categoria, 
+//                         e.ubicacion, e.max_per, e.estado, e.autorizado_por, e.fecha_autorizacion, e.validacion_id, 
+//                         (SELECT i.imagen_url FROM Imagenes i WHERE i.evento_id = e.evento_id LIMIT 1) AS imagen_url,
+//                         (SELECT p.monto FROM Pagos p WHERE p.evento_id = e.evento_id LIMIT 1) AS monto,
+//                         (SELECT s.forma FROM Escenario s WHERE s.evento_id = e.evento_id LIMIT 1) AS forma_escenario,
+//                         (SELECT d.descripcion FROM Detalles_Evento d WHERE d.evento_id = e.evento_id LIMIT 1) AS descripcion
+//                  FROM Eventos e
+//                  JOIN Tipos_Evento te ON e.tipo_evento_id = te.tipo_evento_id
+//                  JOIN Categorias c ON e.categoria_id = c.categoria_id
+//                  WHERE e.estado = 'Aprobado'`
+//             );
 
-            return rows; // Devolvemos los datos obtenidos en la consulta
-        } catch (error) {
-            console.error('Error al obtener la lista de eventos aprobados:', error);
-            throw error; // Lanzamos el error para que pueda ser manejado por el controlador
-        }
+//             return rows; // Devolvemos los datos obtenidos en la consulta
+//         } catch (error) {
+//             console.error('Error al obtener la lista de eventos aprobados:', error);
+//             throw error; // Lanzamos el error para que pueda ser manejado por el controlador
+//         }
 
-    },
+//     },
 
-    getPendingEvents: async () => {
-        try {
-            const [rows] = await pool.query(
-                `SELECT e.evento_id, e.nombre AS evento_nombre, e.fecha_inicio, e.fecha_termino, e.hora, 
-                        te.nombre AS tipo_evento, c.nombre AS categoria, 
-                        e.ubicacion, e.max_per, e.estado, e.autorizado_por, e.fecha_autorizacion, e.validacion_id, 
-                        (SELECT i.imagen_url FROM Imagenes i WHERE i.evento_id = e.evento_id LIMIT 1) AS imagen_url,
-                        (SELECT p.monto FROM Pagos p WHERE p.evento_id = e.evento_id LIMIT 1) AS monto,
-                        (SELECT s.forma FROM Escenario s WHERE s.evento_id = e.evento_id LIMIT 1) AS forma_escenario,
-                        (SELECT d.descripcion FROM Detalles_Evento d WHERE d.evento_id = e.evento_id LIMIT 1) AS descripcion
-                 FROM Eventos e
-                 JOIN Tipos_Evento te ON e.tipo_evento_id = te.tipo_evento_id
-                 JOIN Categorias c ON e.categoria_id = c.categoria_id
-                 WHERE e.estado = 'Pendiente'`
-            );
-            return rows;
-        } catch (error) {
-            console.error('Error al obtener la lista de eventos pendientes:', error);
-            throw error;
-        }
-    },
+//     getPendingEvents: async () => {
+//         try {
+//             const [rows] = await pool.query(
+//                 `SELECT e.evento_id, e.nombre AS evento_nombre, e.fecha_inicio, e.fecha_termino, e.hora, 
+//                         te.nombre AS tipo_evento, c.nombre AS categoria, 
+//                         e.ubicacion, e.max_per, e.estado, e.autorizado_por, e.fecha_autorizacion, e.validacion_id, 
+//                         (SELECT i.imagen_url FROM Imagenes i WHERE i.evento_id = e.evento_id LIMIT 1) AS imagen_url,
+//                         (SELECT p.monto FROM Pagos p WHERE p.evento_id = e.evento_id LIMIT 1) AS monto,
+//                         (SELECT s.forma FROM Escenario s WHERE s.evento_id = e.evento_id LIMIT 1) AS forma_escenario,
+//                         (SELECT d.descripcion FROM Detalles_Evento d WHERE d.evento_id = e.evento_id LIMIT 1) AS descripcion
+//                  FROM Eventos e
+//                  JOIN Tipos_Evento te ON e.tipo_evento_id = te.tipo_evento_id
+//                  JOIN Categorias c ON e.categoria_id = c.categoria_id
+//                  WHERE e.estado = 'Pendiente'`
+//             );
+//             return rows;
+//         } catch (error) {
+//             console.error('Error al obtener la lista de eventos pendientes:', error);
+//             throw error;
+//         }
+//     },
 
-    updateEventStatus: async (evento_id, estado) => {
-        try {
-            const [result] = await pool.query(
-                `UPDATE Eventos SET estado = ? WHERE evento_id = ?`,
-                [estado, evento_id]
-            );
-            return result;
-        } catch (error) {
-            console.error('Error al actualizar el estado del evento:', error);
-            throw error;
-        }
-    },
+//     updateEventStatus: async (evento_id, estado) => {
+//         try {
+//             const [result] = await pool.query(
+//                 `UPDATE Eventos SET estado = ? WHERE evento_id = ?`,
+//                 [estado, evento_id]
+//             );
+//             return result;
+//         } catch (error) {
+//             console.error('Error al actualizar el estado del evento:', error);
+//             throw error;
+//         }
+//     },
 
 
 
-}
+// }
 
 
 module.exports = Event;

@@ -26,6 +26,30 @@ const eventController = {
         res.status(500).send('Error al obtener el evento');
     }
     },
+
+    searchFilter: async (req, res) => {
+        const { name, location, start_date, end_date } = req.query; // Cambiar params a query
+    
+        // Verificar si al menos uno de los campos está presente
+        if (!name && !location && !start_date && !end_date) {
+            return res.status(400).json({ error: 'Debes proporcionar al menos uno de los siguientes campos: nombre, ubicacion,fecha' });
+        }
+    
+        try {
+            const result = await Event.searchFilter(name, location, start_date, end_date);
+
+            if (result.length === 0) {
+                return res.status(404).json({ message: 'No se encontraron eventos que coincidan con los criterios de búsqueda.' });
+            }
+           
+            res.status(200).json(result);
+        } catch (error) {
+         console.error('Error al filtrar los eventos:', error);
+        res.status(500).send('Error al filtrar los eventos');
+        }
+    },
+    
+
     postEvent: async (req, res) => {
         const { 
             nombre, 
@@ -116,10 +140,13 @@ const eventController = {
         } = req.body;
     
         // Validar que todos los campos necesarios estén presentes
+<<<<<<< HEAD
         if (!nombre || !fecha_inicio || !fecha_termino || !requerimientos || !escenario || !ubicacion || !categoria_id || !max_per || !imagen_url || !precio || !descripcion || !tipo_evento) {
             return res.status(400).send('Todos los campos obligatorios deben estar presentes');
         }
     
+=======
+>>>>>>> 3605651ec5a9ed051b62a85723bb68779b67fa8c
         try {
             // Actualizar el evento usando el método updateEvent
             const result = await Event.updateEvent(

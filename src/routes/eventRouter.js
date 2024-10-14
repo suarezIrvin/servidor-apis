@@ -57,7 +57,9 @@ router.get('/', eventController.getEvent);
  *       500:
  *         description: Error al obtener el evento
  */
-router.get('/:evento_id', eventController.getIdEvent);
+router.get('/find/:evento_id', eventController.getIdEvent);
+
+router.get('/search', eventController.searchFilter);
 
 /**
  * @swagger
