@@ -78,4 +78,19 @@ router.get('/list', ticketController.getTickets);
  */
 router.post('/create', ticketController.createTicket);
 
+
+/* NEW CODE */
+// Eliminar un ticket
+router.delete('/:ticket_id', ticketController.deleteTicket);
+
+// Obtener un ticket por su ID
+router.get('/:ticket_id', ticketController.getTicketById);
+
+// Obtener los tickets de un evento
+router.get('/event/:evento_id', ticketController.getTicketsByEvent2);  
+
+// Actualizar el status de un ticket
+router.put('/:ticket_id', ticketController.updateStatusTicket);
+
+
 module.exports = router;

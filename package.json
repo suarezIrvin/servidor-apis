@@ -4,7 +4,8 @@
   "description": "- Ejecuta primero : npm install\r - Despues ejecuta : npm start",
   "main": "index.js",
   "scripts": {
-    "start": "node src/index.js"
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js"
   },
   "keywords": [],
   "author": "",
