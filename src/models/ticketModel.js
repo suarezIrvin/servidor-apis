@@ -71,6 +71,25 @@ const TicketModel = {
     const values = [status, ticket_id];
     return pool.execute(query, values);
   },
+
+  update: (id, data) => {
+    const fields = Object.keys(data);
+    const setClause = fields.map(field => `${field} = ?`).join(', ');
+    const query = `
+        UPDATE tickets
+        SET ${setClause}
+        WHERE ticket_id = ?;
+    `;
+    const values = [...Object.values(data), id];
+
+    return pool.execute(query, values);
+  },
+
+  getTicketByCode: (code) => {
+    const query = `SELECT * FROM tickets WHERE code = ?`;
+    return pool.execute( query, [code] );
+  }
+  
 };
 
 module.exports = TicketModel;
