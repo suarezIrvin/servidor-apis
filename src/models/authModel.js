@@ -6,7 +6,7 @@ require("dotenv").config();
 class AuthModel {
   static async getUserByEmail(email) {
     //
-    const [rows] = await pool.query("SELECT * FROM Usuarios WHERE email = ?", [
+    const [rows] = await pool.query("SELECT * FROM usuarios WHERE email = ?", [
       email,
     ]);
     return rows[0];

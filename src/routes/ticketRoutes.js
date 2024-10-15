@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const ticketController = require('../controllers/ticketController');
+const {validateRole} = require('../middlewares/validateRole')
 
 /**
  * @openapi
@@ -41,7 +42,7 @@ const ticketController = require('../controllers/ticketController');
  *       500:
  *         description: Error al obtener los tickets.
  */
-router.get('/list', ticketController.getTickets);
+router.get('/list', validateRole([2, 3]), ticketController.getTickets);
 
 
 /**
@@ -76,7 +77,7 @@ router.get('/list', ticketController.getTickets);
  *       500:
  *         description: Error al crear el ticket.
  */
-router.post('/create', ticketController.createTicket);
+router.post('/create', validateRole([3]),ticketController.createTicket);
 
 
 /* NEW CODE */
