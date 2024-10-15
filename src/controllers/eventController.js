@@ -1,5 +1,5 @@
 const Event = require("../models/eventModel");
-
+const eventModel = require("../models/eventModel");
 
 const eventController = {
 
@@ -15,31 +15,77 @@ const eventController = {
 
     getIdEvent: async (req, res) => {
         const { evento_id } = req.params;
-        try {
-           
-    
-            const result = await Event.getEvetId(evento_id);
-    
-            res.status(200).json(result);
-        } catch (error) {
-            console.error('Error al obtener el evento:', error);
-            res.status(500).send('Error al obtener el evento');
+    try {
+        const result = await Event.getEvetId(evento_id);
+        if (!result) {
+            return res.status(404).json({ message: "Evento no encontrado" });
         }
+        res.status(200).json(result);
+    } catch (error) {
+        console.error('Error al obtener el evento:', error);
+        res.status(500).send('Error al obtener el evento');
+    }
     },
 
-    postEvent: async (req, res) => {
-        const { nombre, fecha_inicio, fecha_termino, hora, tipo_evento_id, categoria_id, ubicacion, max_per, imagen_url, monto, descripcion } = req.body;
-        // Validar que todos los campos necesarios estén presentes
-        if (!nombre || !fecha_inicio || !fecha_termino || !hora || !tipo_evento_id || !categoria_id || !ubicacion || !max_per || !imagen_url || !monto || !descripcion) {
-            return res.status(400).send('Todos los campos son obligatorios');
+    searchFilter: async (req, res) => {
+        const { name, location, start_date, end_date, category_id, event_type } = req.query; 
+
+    
+        // Verificar si al menos uno de los campos está presente
+        if (!name && !location && !start_date && !end_date && !category_id && !event_type) {
+            return res.status(400).json({ error: 'Debes proporcionar al menos uno de los siguientes campos: nombre, ubicacion,fecha,categoria o tipo de evento' });
         }
     
-        // Validar tipo_evento_id y categoria_id
-        const validTipoEventoIds = [1, 2];
-        const validCategoriaIds = [1, 2, 3, 4];
+        try {
+            const result = await Event.searchFilter(name, location, start_date, end_date,category_id, event_type);
+
+            if (result.length === 0) {
+                return res.status(404).json({ message: 'No se encontraron eventos que coincidan con los criterios de búsqueda.' });
+            }
+           
+            res.status(200).json(result);
+        } catch (error) {
+         console.error('Error al filtrar los eventos:', error);
+        res.status(500).send('Error al filtrar los eventos');
+        }
+    },
     
-        if (!validTipoEventoIds.includes(tipo_evento_id)) {
-            return res.status(400).send('tipo_evento_id inválido');
+
+    postEvent: async (req, res) => {
+        const { 
+            nombre, 
+            fecha_inicio, 
+            fecha_termino, 
+            requerimiento,        
+            organizador_id,      
+            escenario,           
+            tipo_evento,  
+            categoria_id, 
+            ubicacion, 
+            max_per, 
+            imagen_url, 
+            precio, 
+            descripcion, 
+            horarios 
+        } = req.body;
+    
+        // Depuración para ver qué se está recibiendo
+        console.log('Horarios recibidos:', horarios);
+        console.log('Cuerpo de la solicitud:', req.body);
+    
+        // Validar que todos los campos necesarios estén presentes
+        if (!nombre || !fecha_inicio || !fecha_termino || !requerimiento || !organizador_id || !escenario ||
+            !tipo_evento || !categoria_id || !ubicacion || !max_per || !imagen_url || !precio || !descripcion || 
+            !horarios || !Array.isArray(horarios) || horarios.length === 0) {
+            return res.status(400).send('Todos los campos son obligatorios y debe haber al menos un horario.');
+        }
+    
+        // Validar tipo_evento y categoria_id
+        const validTipoEventoIds = [1, 2];  // Tipos de evento válidos
+        const validCategoriaIds = [1, 2, 3, 4];  // Ids válidos de categorías
+    
+        if (!validTipoEventoIds.includes(tipo_evento)) {
+            return res.status(400).send('tipo_evento inválido');
         }
     
         if (!validCategoriaIds.includes(categoria_id)) {
@@ -47,13 +93,28 @@ const eventController = {
         }
     
         try {
-            // Insertar el evento
-            const resultEvento = await Event.postEvent(nombre, fecha_inicio, fecha_termino, hora, tipo_evento_id, categoria_id, ubicacion, max_per, imagen_url, monto, descripcion);
+            // Insertar el evento y sus horarios
+            const resultEvento = await Event.postEvent(
+                nombre, 
+                fecha_inicio, 
+                fecha_termino, 
+                requerimiento,
+                organizador_id,    
+                escenario,         
+                tipo_evento,  
+                categoria_id, 
+                ubicacion, 
+                max_per, 
+                imagen_url, 
+                precio, 
+                descripcion, 
+                horarios
+            );
     
             // Éxito al crear el evento
             res.status(201).json({
                 message: 'Evento creado correctamente',
-                evento_id: evento_id
+                evento_id: resultEvento.insertId
             });
         } catch (error) {
             console.error('Error al crear el evento:', error);
@@ -61,20 +122,47 @@ const eventController = {
         }
     },
     
-
     putEvent: async (req, res) => {
         const { id } = req.params;
-        const { evento_nombre, fecha_inicio, fecha_termino, hora, ubicacion,  categoria_id, max_per, estado, autorizado_por, fecha_autorizacion, validacion_id, imagen_url, monto, descripcion, forma_escenario } = req.body;
+        const { 
+            nombre, 
+            fecha_inicio, 
+            fecha_termino, 
+            requerimientos, 
+            escenario, 
+            ubicacion,  
+            categoria_id, 
+            max_per, 
+            imagen_url, 
+            precio, 
+            descripcion, 
+            tipo_evento,
+            horarios // Asegúrate de que este valor sea correcto
+        } = req.body;
     
         // Validar que todos los campos necesarios estén presentes
-       
-    
-    
+        if (!nombre || !fecha_inicio || !fecha_termino || !requerimientos || !escenario || !ubicacion || !categoria_id || !max_per || !imagen_url || !precio || !descripcion || !tipo_evento) {
+            return res.status(400).send('Todos los campos obligatorios deben estar presentes');
+        }
     
         try {
-            // Actualizar el evento
-        const result = await Event.updateEvent(id, evento_nombre, fecha_inicio, fecha_termino, hora, ubicacion, categoria_id, max_per, estado, autorizado_por, fecha_autorizacion, validacion_id, imagen_url, monto, descripcion, forma_escenario );
-
+            // Actualizar el evento usando el método updateEvent
+            const result = await Event.updateEvent(
+                id, 
+                nombre, 
+                fecha_inicio, 
+                fecha_termino, 
+                escenario, 
+                tipo_evento, 
+                categoria_id, 
+                ubicacion, 
+                max_per, 
+                imagen_url, 
+                precio, 
+                descripcion, 
+                requerimientos, // Agregado en lugar de hora y hora_termino
+                horarios // Asegúrate de que este valor sea correcto
+            );
     
             // Éxito al actualizar
             res.status(200).send('Evento actualizado correctamente');
@@ -84,20 +172,24 @@ const eventController = {
         }
     },
     
-    
 
     getApprovedEvent: async (req, res) => {
         try {
-            const events = await eventModel.getApprovedEvents();
+            // Llama al método del modelo para obtener los eventos aprobados
+            const events = await Event.getApprovedEvents();
+            
+            // Devuelve la lista de eventos aprobados en formato JSON
             res.status(200).json(events);
         } catch (error) {
+            // Maneja errores y envía una respuesta de error
+            console.error('Error al obtener la lista de eventos aprobados:', error);
             res.status(500).send('Error al obtener la lista de eventos aprobados');
         }
     },
     
     getPendingEvent: async (req, res) => {
         try {
-            const events = await eventModel.getPendingEvents();
+            const events = await Event.getPendingEvents();
             res.status(200).json(events);
         } catch (error) {
             res.status(500).send('Error al obtener la lista de eventos pendientes');
@@ -114,7 +206,7 @@ const eventController = {
 
         try {
             
-            const result = await eventModel.updateEventStatus(evento_id, estado);
+            const result = await Event.updateEventStatus(evento_id, estado);
 
             
             if (result.affectedRows === 0) {
@@ -162,7 +254,7 @@ const eventController = {
 
         try {
             // Actualizar el estado del evento a través del modelo
-            const result = await eventModel.updateEventStatus(evento_id, estado);
+            const result = await Event.updateEventStatus(evento_id, estado);
 
             // Verificar si el evento fue encontrado y actualizado
             if (result.affectedRows === 0) {
