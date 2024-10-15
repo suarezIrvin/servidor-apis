@@ -176,7 +176,7 @@ const eventController = {
     getApprovedEvent: async (req, res) => {
         try {
             // Llama al método del modelo para obtener los eventos aprobados
-            const events = await eventModel.getApprovedEvents();
+            const events = await Event.getApprovedEvents();
             
             // Devuelve la lista de eventos aprobados en formato JSON
             res.status(200).json(events);
@@ -189,7 +189,7 @@ const eventController = {
     
     getPendingEvent: async (req, res) => {
         try {
-            const events = await eventModel.getPendingEvents();
+            const events = await Event.getPendingEvents();
             res.status(200).json(events);
         } catch (error) {
             res.status(500).send('Error al obtener la lista de eventos pendientes');
@@ -206,7 +206,7 @@ const eventController = {
 
         try {
             
-            const result = await eventModel.updateEventStatus(evento_id, estado);
+            const result = await Event.updateEventStatus(evento_id, estado);
 
             
             if (result.affectedRows === 0) {
@@ -254,7 +254,7 @@ const eventController = {
 
         try {
             // Actualizar el estado del evento a través del modelo
-            const result = await eventModel.updateEventStatus(evento_id, estado);
+            const result = await Event.updateEventStatus(evento_id, estado);
 
             // Verificar si el evento fue encontrado y actualizado
             if (result.affectedRows === 0) {

@@ -365,13 +365,8 @@ const Event = {
             connection.release(); // Liberar la conexión
         }
     },
-    
 
-
-}
-
-const eventModel = {
-     getApprovedEvents: async () => {
+    getApprovedEvents: async () => {
         // Obtener eventos con estado "Aprobado"
         const [events] = await pool.query(
             `SELECT 
@@ -443,7 +438,9 @@ const eventModel = {
         return result;
     },
     
+}
 
+// const eventModel = {
 //     getPendingEvents: async () => {
 //         try {
 //             const [rows] = await pool.query(
@@ -478,10 +475,7 @@ const eventModel = {
 //             throw error;
 //         }
 //     },
-
-
-}
+// }
 
 
 module.exports = Event;
-module.exports = eventModel;
