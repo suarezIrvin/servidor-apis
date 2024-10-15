@@ -1,6 +1,7 @@
 const express = require("express");
 const userController = require("../controllers/userController");
 const pool = require("../config/connection");
+const authController = require("../controllers/authController");
 const Stripe = require("stripe");
 const stripe = new Stripe("sk_test_4eC39HqLyjWDarjtT1zdp7dc");
 
@@ -188,6 +189,45 @@ router.get("/cancel", async (req, res) => {
  */
 router.post("/register", userController.register);
 
+/* ------------------------------------------------------------------- */
+
+/**
+ * @swagger
+ * /api/users/login:
+ *   post:
+ *     summary: Inicia sesión de un usuario registrado exitosamente.
+ *     description: Esta ruta se trata de cuando un usuario desea realizar un inicio de sesión.
+ *     tags: [Autorización]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - contrasena
+ *             properties:
+ *               email:
+ *                 type: string
+ *               contrasena:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Successfully logged in
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 token:
+ *                   type: string
+ *       400:
+ *         description: Email and password are required
+ *       401:
+ *         description: User not found or invalid credentials
+ */
+router.post("/login", authController.login);
 
 /**
  * @openapi
