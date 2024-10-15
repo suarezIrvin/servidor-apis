@@ -370,30 +370,79 @@ const Event = {
 
 }
 
-// const eventModel = {
-//     getApprovedEvents: async () => {
-//         try {
-//             const [rows] = await pool.query(
-//                 `SELECT e.evento_id, e.nombre AS evento_nombre, e.fecha_inicio, e.fecha_termino, e.hora, 
-//                         te.nombre AS tipo_evento, c.nombre AS categoria, 
-//                         e.ubicacion, e.max_per, e.estado, e.autorizado_por, e.fecha_autorizacion, e.validacion_id, 
-//                         (SELECT i.imagen_url FROM Imagenes i WHERE i.evento_id = e.evento_id LIMIT 1) AS imagen_url,
-//                         (SELECT p.monto FROM Pagos p WHERE p.evento_id = e.evento_id LIMIT 1) AS monto,
-//                         (SELECT s.forma FROM Escenario s WHERE s.evento_id = e.evento_id LIMIT 1) AS forma_escenario,
-//                         (SELECT d.descripcion FROM Detalles_Evento d WHERE d.evento_id = e.evento_id LIMIT 1) AS descripcion
-//                  FROM Eventos e
-//                  JOIN Tipos_Evento te ON e.tipo_evento_id = te.tipo_evento_id
-//                  JOIN Categorias c ON e.categoria_id = c.categoria_id
-//                  WHERE e.estado = 'Aprobado'`
-//             );
-
-//             return rows; // Devolvemos los datos obtenidos en la consulta
-//         } catch (error) {
-//             console.error('Error al obtener la lista de eventos aprobados:', error);
-//             throw error; // Lanzamos el error para que pueda ser manejado por el controlador
-//         }
-
-//     },
+const eventModel = {
+     getApprovedEvents: async () => {
+        // Obtener eventos con estado "Aprobado"
+        const [events] = await pool.query(
+            `SELECT 
+                e.evento_id, 
+                e.nombre AS evento_nombre, 
+                e.fecha_inicio, 
+                e.fecha_termino,   
+                e.ubicacion,
+                e.descripcion,
+                e.validacion_id, 
+                e.escenario,  
+                e.precio,  
+                e.max_per, 
+                e.estado, 
+                e.autorizado_por, 
+                e.fecha_autorizacion, 
+                i.imagen_url,
+                s.forma AS forma_escenario
+            FROM 
+                eventos e
+            LEFT JOIN imagenes i ON i.evento_id = e.evento_id
+            LEFT JOIN escenario s ON s.evento_id = e.evento_id
+            WHERE 
+                e.estado = 'Aprobado'` // Filtrar eventos con estado "Aprobado"
+        );
+    
+        // Obtener horarios
+        const [horarios] = await pool.query(
+            `SELECT 
+                evento_id, 
+                hora_inicio, 
+                hora_fin
+            FROM 
+                horarios
+            ORDER BY 
+                evento_id, 
+                hora_inicio;`
+        );
+    
+        // Mapear horarios a eventos
+        const eventMap = new Map();
+        events.forEach(event => {
+            eventMap.set(event.evento_id, {
+                ...event,
+                horarios: []
+            });
+        });
+    
+        horarios.forEach(horario => {
+            if (eventMap.has(horario.evento_id)) {
+                const event = eventMap.get(horario.evento_id);
+                event.horarios.push(horario);
+            }
+        });
+    
+        // Convertir el mapa a un array y formatear horarios
+        const result = [];
+        eventMap.forEach(event => {
+            let count = 1;
+            event.horarios.forEach(horario => {
+                event[`horario_inicio_${count}`] = horario.hora_inicio;
+                event[`horario_fin_${count}`] = horario.hora_fin;
+                count++;
+            });
+            delete event.horarios; // Opcional: Eliminar el array original si no es necesario
+            result.push(event);
+        });
+    
+        return result;
+    },
+    
 
 //     getPendingEvents: async () => {
 //         try {
@@ -431,8 +480,8 @@ const Event = {
 //     },
 
 
-
-// }
+}
 
 
 module.exports = Event;
+module.exports = eventModel;

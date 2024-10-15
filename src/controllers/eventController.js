@@ -1,5 +1,5 @@
 const Event = require("../models/eventModel");
-
+const eventModel = require("../models/eventModel");
 
 const eventController = {
 
@@ -175,9 +175,14 @@ const eventController = {
 
     getApprovedEvent: async (req, res) => {
         try {
+            // Llama al método del modelo para obtener los eventos aprobados
             const events = await eventModel.getApprovedEvents();
+            
+            // Devuelve la lista de eventos aprobados en formato JSON
             res.status(200).json(events);
         } catch (error) {
+            // Maneja errores y envía una respuesta de error
+            console.error('Error al obtener la lista de eventos aprobados:', error);
             res.status(500).send('Error al obtener la lista de eventos aprobados');
         }
     },
