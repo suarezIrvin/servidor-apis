@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const paymentController = require('../controllers/paymentController');
+const { validateRole } = require('../middlewares/validateRole');
 
 
 
@@ -204,6 +205,6 @@ router.get('/payment-history', paymentController.payHistory);
  *       500:
  *         description: Error al obtener el historial.
  */
-router.get('/history/:usuario_id', paymentController.payHistoryByUserId);
+router.get('/history/', validateRole([2]), paymentController.payHistoryByUserId);
 
 module.exports = router;
