@@ -108,7 +108,7 @@ router.post('/confirm-payment', paymentController.payConfirm);
 
 /**
  * @openapi
- * /api/payment/payment-history:
+ * /api/payment/history:
  *   get:
  *     summary: Obtiene el historial de pagos
  *     tags:

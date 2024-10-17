@@ -135,10 +135,10 @@ router.get('/search', eventController.searchFilter);
 
 /**
  * @swagger
- * /api/events/get/approved:
+ * /api/events/approved:
  *   get:
- *     summary: Obtiene la lista de eventos desaprobados para administradores.
- *     description: Esta ruta sirve para obtener los eventos desaprobados por los administradores.
+ *     summary: Obtiene la lista de eventos aprobados para clientes.
+ *     description: Esta ruta sirve para obtener los eventos aprobados por clientes.
  *     tags: [Eventos]
  *     responses:
  *       200:
@@ -150,7 +150,7 @@ router.get('/approved', eventController.getApprovedEvent);
 
 /**
  * @swagger
- * /api/events/get/pending:
+ * /api/events/pending:
  *   get:
  *     summary: Obtiene los eventos pendientes para aprobar o desaprobar para organizador.
  *     description: Esta ruta sirve para obtener todos los eventos pendientes por aprobar o desaprobar.
