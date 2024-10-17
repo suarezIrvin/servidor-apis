@@ -13,6 +13,7 @@ const sceneryRoutes = require("./sceneryRouter");
 const seatsRouter = require("./seatsRouter");
 const userRoutes = require("./userRoutes");
 const ticketRoutes = require("./ticketRoutes");
+const scheduleRoutes = require("./scheduleRoutes");
 
 
 // Categorias de las rutas 
@@ -27,6 +28,7 @@ router.use("/scenarios", sceneryRoutes);
 router.use("/seats", seatsRouter);
 router.use("/users", userRoutes);
 router.use("/ticket", ticketRoutes);
+router.use("/schedule", scheduleRoutes);
 
 
 module.exports = router;
