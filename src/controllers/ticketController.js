@@ -186,23 +186,39 @@ const ticketController = {
 
   redeemTickets: async (req, res) => {
     try {
-      const { evento_id } = req.body;
+      const { evento_id, code } = req.body;
   
-
       if (!evento_id) {
         return res.status(400).json({
-          message: 'Se requiere el id del evento'
+          message: 'Se requiere el id del evento',
         });
       }
+  
       // Inserta el pago en la base de datos utilizando el modelo TicketModel
       await TicketModel.confirmPayTicket(evento_id);
   
-      // Responder con un mensaje de pago exitoso
+      // Obtener el último ID de pago insertado
+      const [rows] = await TicketModel.addPayTicket();
+      const payId = rows[0]?.pago_id; // Extraer el valor de pago_id
+  
+      if (!payId) {
+        return res.status(500).json({
+          error: 'Error al obtener el ID de pago',
+        });
+      }
+  
+      // Actualizar el ticket con el ID de pago
+      await TicketModel.updateTicketWithPagoId(payId, code);
+  
+      // Responder con un mensaje de éxito
       res.json({ message: 'Pago exitoso' });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
   },
+  
+
+
 
 };
 
