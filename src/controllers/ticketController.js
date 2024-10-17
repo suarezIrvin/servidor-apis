@@ -141,19 +141,64 @@ const ticketController = {
 
   checkTicket: async (req, res) => {
     try {
-      // const id = req.user.id
-      const { ticketCode } = req.body;
-      if (!ticketCode) {
-        return res.status(400).send('Faltan datos requeridos');
+      const { code } = req.body;
+  
+      // Verificar si el código fue enviado en la solicitud
+      if (!code) {
+        return res.status(400).json({
+          message: 'El código del cupón es requerido.'
+        });
       }
-      if (ticket[0]?.status === 1) {
-        return res.status(200).send('El ticket ya ha sido utilizado');
+  
+      // Verificar si el cupón existe en la base de datos
+      const [result] = await TicketModel.validateTicket(code); // Consulta el cupón
+  
+      // Si no hay resultados, el cupón no existe
+      if (result.length === 0) {
+        return res.status(404).json({
+          message: 'El cupón no existe. Por favor, verifica el código ingresado.'
+        });
       }
-   
-      const [result] = await TicketModel.getTicketByCode(ticketCode);
+  
+      const ticket = result[0];
+  
+      // Verificar si el cupón ya ha sido utilizado
+      if (ticket.redeem === 1) {
+        return res.status(200).json({
+          message: 'El cupón ya ha sido canjeado.'
+        });
+      }
+  
+      // El cupón es válido y no ha sido utilizado
+      res.status(200).json({
+        message: 'El cupón es válido y puede ser canjeado.'
+      });
+    } catch (error) {
+      // Manejo de errores
+      res.status(500).json({
+        status: 'error',
+        message: 'Error del servidor. Por favor, intenta nuevamente más tarde.',
+        error: error.message
+      });
+    }
+  },
+  
 
+  redeemTickets: async (req, res) => {
+    try {
+      const { evento_id } = req.body;
+  
 
-      res.json(result);
+      if (!evento_id) {
+        return res.status(400).json({
+          message: 'Se requiere el id del evento'
+        });
+      }
+      // Inserta el pago en la base de datos utilizando el modelo TicketModel
+      await TicketModel.confirmPayTicket(evento_id);
+  
+      // Responder con un mensaje de pago exitoso
+      res.json({ message: 'Pago exitoso' });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }

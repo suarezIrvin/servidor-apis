@@ -100,6 +100,11 @@ router.put('/:ticket_id', ticketController.updateStatusTicket);
 // scaner del QR
 router.post('/scan', ticketController.scanTicket);
 
-//verificar el Código del cupón
+//verificar el Código del cupón - cliente
 router.post('/check', ticketController.checkTicket);
+
+//verificar el Código del cupón
+router.post('/redeem', ticketController.redeemTickets);
+
+
 module.exports = router;
