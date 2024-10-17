@@ -1,5 +1,6 @@
 const pool = require("../config/connection");
 
+
 const TicketModel = {
   getAllTickets: () => {
     return pool.execute(
@@ -88,7 +89,7 @@ const TicketModel = {
   getTicketByCode: (code) => {
     const query = `SELECT * FROM tickets WHERE code = ?`;
     return pool.execute( query, [code] );
-  }
+  },
   
 };
 

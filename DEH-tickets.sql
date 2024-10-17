@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Servidor: 127.0.0.1
--- Tiempo de generación: 23-09-2024 a las 20:56:23
--- Versión del servidor: 8.0.39
--- Versión de PHP: 8.2.12
+-- Servidor: bwh1r0f2mxgu8hnh0qpy-mysql.services.clever-cloud.com:3306
+-- Tiempo de generación: 16-10-2024 a las 19:10:41
+-- Versión del servidor: 8.0.22-13
+-- Versión de PHP: 8.2.8
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `bgivundzrylpnlvsapmh`
+-- Base de datos: `bwh1r0f2mxgu8hnh0qpy`
 --
 
 -- --------------------------------------------------------
@@ -33,7 +33,7 @@ CREATE TABLE `asientos` (
   `estado` varchar(20) DEFAULT 'Disponible',
   `usuario_id` int DEFAULT NULL,
   `escenario_id` int DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `asientos`
@@ -387,7 +387,7 @@ CREATE TABLE `asistentes` (
   `usuario_id` int DEFAULT NULL,
   `evento_id` int DEFAULT NULL,
   `estado_inscripcion` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `asistentes`
@@ -406,7 +406,7 @@ INSERT INTO `asistentes` (`asistente_id`, `usuario_id`, `evento_id`, `estado_ins
 CREATE TABLE `categorias` (
   `categoria_id` int NOT NULL,
   `nombre` varchar(100) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `categorias`
@@ -430,7 +430,7 @@ CREATE TABLE `comentarios` (
   `evento_id` int DEFAULT NULL,
   `comentario` text,
   `fecha` timestamp NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `comentarios`
@@ -444,15 +444,13 @@ INSERT INTO `comentarios` (`comentario_id`, `usuario_id`, `evento_id`, `comentar
 (16, 70, 1, 'buen evento ', '2024-08-18 22:17:30'),
 (17, 70, 1, 'ya ', '2024-08-18 22:18:21'),
 (18, 42, 1, 'g', '2024-08-19 16:41:09'),
-(19, 190, 42, 'hola', '2024-08-19 00:00:00'),
 (37, 190, 1, 'hola', '2024-08-21 00:00:00'),
 (46, 231, 1, 'este es el comentado de germán xd', '2024-08-22 00:00:00'),
 (47, 233, 49, 'que emoción, me gusta este evento', '2024-08-22 00:00:00'),
 (51, 233, 1, 'Hola evento', '2024-08-22 13:41:03'),
 (52, 10, 49, 'sis', '2024-08-22 00:00:00'),
 (53, 246, 1, 'hola ', '2024-09-19 00:00:00'),
-(54, 190, 1, 'hola', '2024-09-20 00:00:00'),
-(55, 190, 5, 'hola', '2024-09-20 00:00:00');
+(54, 190, 1, 'hola', '2024-09-20 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -465,7 +463,7 @@ CREATE TABLE `errores_logs` (
   `usuario_id` int DEFAULT NULL,
   `mensaje` text,
   `fecha` timestamp NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `errores_logs`
@@ -486,7 +484,7 @@ CREATE TABLE `escenario` (
   `asiento` int DEFAULT NULL,
   `forma` enum('Redondo','Cuadrado','Triangular') DEFAULT NULL,
   `evento_id` int DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `escenario`
@@ -495,10 +493,8 @@ CREATE TABLE `escenario` (
 INSERT INTO `escenario` (`escenario_id`, `asiento`, `forma`, `evento_id`) VALUES
 (1, 15, 'Cuadrado', 1),
 (2, 30, 'Redondo', 2),
-(3, 20, 'Triangular', 5),
 (4, 30, 'Cuadrado', 7),
 (5, 20, 'Cuadrado', 25),
-(6, 30, 'Cuadrado', 42),
 (10, 1, 'Cuadrado', 46),
 (11, 1, 'Triangular', 47),
 (12, 1, 'Cuadrado', 48),
@@ -518,41 +514,71 @@ CREATE TABLE `eventos` (
   `nombre` varchar(100) DEFAULT NULL,
   `fecha_inicio` date DEFAULT NULL,
   `fecha_termino` date DEFAULT NULL,
-  `hora` time DEFAULT NULL,
-  `hora_termino` datetime DEFAULT NULL,
   `organizador_id` int DEFAULT NULL,
   `categoria_id` int DEFAULT NULL,
   `ubicacion` varchar(255) DEFAULT NULL,
   `max_per` int DEFAULT NULL,
-  `estado` varchar(50) DEFAULT NULL,
+  `estado` enum('Pendiente','Aprobado','Rechazado') DEFAULT 'Pendiente',
   `fecha_autorizacion` datetime DEFAULT NULL,
   `autorizado_por` int DEFAULT NULL,
   `validacion_id` int DEFAULT NULL,
   `tipo_evento` int NOT NULL DEFAULT '1',
   `descripcion` varchar(250) NOT NULL DEFAULT 'descripcion',
   `requerimientos` varchar(250) DEFAULT 'requerimientos',
-  `precio` float DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+  `precio` float DEFAULT '0',
+  `escenario` tinyint(1) DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `eventos`
 --
 
-INSERT INTO `eventos` (`evento_id`, `nombre`, `fecha_inicio`, `fecha_termino`, `hora`, `hora_termino`, `organizador_id`, `categoria_id`, `ubicacion`, `max_per`, `estado`, `fecha_autorizacion`, `autorizado_por`, `validacion_id`, `tipo_evento`, `descripcion`, `requerimientos`, `precio`) VALUES
-(1, 'Conferencia de tecnología', '2024-09-08', '2024-09-10', '04:00:00', NULL, 3, 1, 'UTP Maxcanú', 15, 'Aprobado', '2024-07-01 10:00:00', 1, 1, 1, 'descripcion', 'requerimientos', 0),
-(2, 'Taller de Programación', '2024-08-17', '2024-08-17', '06:00:00', NULL, 3, 1, 'Centro de Convenciones', 30, 'Aprobado', '2024-05-01 10:00:00', 2, 1, 1, 'descripcion', 'requerimientos', 0),
-(5, 'Mauricio Vila', '2024-08-13', '2024-08-14', '03:00:00', NULL, 3, 2, 'UTP Maxcanú', 20, 'Aprobado', '2024-08-05 22:30:13', 3, 1, 1, 'descripcion', 'requerimientos', 0),
-(7, 'Concierto Espinoza Paz', '2024-08-20', '2024-08-20', '09:00:00', NULL, NULL, 3, 'Maxcanu', 30, 'Aprobado', NULL, NULL, NULL, 1, 'descripcion', 'requerimientos', 0),
-(25, 'Expo Gastronomica', '2024-08-13', '2024-08-13', '05:00:00', NULL, NULL, 3, 'Universidad tecnologica del poniente', 20, 'Aprobado', NULL, NULL, NULL, 1, 'descripcion', 'requerimientos', 0),
-(38, 'Comic con', '2023-08-10', '2023-08-12', '10:00:00', NULL, NULL, 1, 'Siglo XXI, Mérida', 60, 'Aprobado', NULL, NULL, NULL, 1, 'descripcion', 'requerimientos', 0),
-(42, 'Leones de Yucatan ', '2024-08-31', '2024-08-31', '09:00:00', NULL, NULL, 4, 'Estadio Kukulcán Alamo', 30, 'Aprobado', NULL, NULL, NULL, 1, 'descripcion', 'requerimientos', 0),
-(46, 'Prueba mejorando el diseño', '2024-08-18', '2024-08-19', '16:04:00', NULL, NULL, 2, 'Mérida, Yucatán', 1, 'Pendiente', NULL, NULL, NULL, 1, 'descripcion', 'requerimientos', 0),
-(47, 'Partido de la selección', '2024-08-27', '2024-08-28', '16:20:00', NULL, NULL, 4, 'Mérida, Yucatán', 1, 'Pendiente', NULL, NULL, NULL, 1, 'descripcion', 'requerimientos', 0),
-(48, 'Evento sobre Pruebas2', '2024-08-19', '2024-08-20', '16:38:00', NULL, NULL, 3, 'Mérida, Yucatán', 1, 'Rechazado', NULL, NULL, NULL, 1, 'descripcion', 'requerimientos', 0),
-(49, 'Graduacion ingenieria 2025', '2025-11-12', '2025-11-12', '18:14:00', NULL, NULL, 1, 'UTP Maxcanú', 100, 'Aprobado', NULL, NULL, NULL, 1, 'descripcion', 'requerimientos', 0),
-(61, 'HolaTest', '2024-09-01', '2024-09-20', '06:20:00', NULL, NULL, 1, 'Merida', 2, 'Pendiente', NULL, NULL, NULL, 1, 'descripcion', 'requerimientos', 0),
-(62, 'brawl stars', '2024-09-02', '2024-09-04', '20:06:00', NULL, NULL, 1, 'merida', 2, 'Pendiente', NULL, NULL, NULL, 1, 'descripcion', 'requerimientos', 0),
-(63, 'noche mexicana', '2024-09-06', '2024-09-12', '04:11:00', NULL, NULL, 3, 'utp', 50, 'Aprobado', NULL, NULL, NULL, 1, 'descripcion', 'requerimientos', 0);
+INSERT INTO `eventos` (`evento_id`, `nombre`, `fecha_inicio`, `fecha_termino`, `organizador_id`, `categoria_id`, `ubicacion`, `max_per`, `estado`, `fecha_autorizacion`, `autorizado_por`, `validacion_id`, `tipo_evento`, `descripcion`, `requerimientos`, `precio`, `escenario`) VALUES
+(1, 'Conferencia de tecnología', '2024-09-08', '2024-09-10', 3, 1, 'UTP Maxcanú', 15, 'Aprobado', '2024-07-01 10:00:00', 1, 1, 1, 'descripcion', 'requerimientos', 0, 1),
+(2, 'Taller de Programación', '2024-08-17', '2024-08-17', 3, 1, 'Centro de Convenciones', 30, 'Aprobado', '2024-05-01 10:00:00', 2, 1, 1, 'descripcion', 'requerimientos', 0, 1),
+(7, 'Concierto Espinoza Paz', '2024-08-20', '2024-08-20', NULL, 3, 'Maxcanu', 30, 'Aprobado', NULL, NULL, NULL, 1, 'descripcion', 'requerimientos', 0, 1),
+(25, 'Expo Gastronomica', '2024-08-13', '2024-08-13', NULL, 3, 'Universidad tecnologica del poniente', 20, 'Aprobado', NULL, NULL, NULL, 1, 'descripcion', 'requerimientos', 0, 1),
+(38, 'Comic con', '2023-08-10', '2023-08-12', NULL, 1, 'Siglo XXI, Mérida', 60, 'Aprobado', NULL, NULL, NULL, 1, 'descripcion', 'requerimientos', 0, 1),
+(46, 'Prueba mejorando el diseño', '2024-08-18', '2024-08-19', NULL, 2, 'Mérida, Yucatán', 1, 'Pendiente', NULL, NULL, NULL, 1, 'descripcion', 'requerimientos', 0, 1),
+(47, 'Partido de la selección', '2024-08-27', '2024-08-28', NULL, 4, 'Mérida, Yucatán', 1, 'Pendiente', NULL, NULL, NULL, 1, 'descripcion', 'requerimientos', 0, 1),
+(48, 'Evento sobre Pruebas2', '2024-08-19', '2024-08-20', NULL, 3, 'Mérida, Yucatán', 1, 'Rechazado', NULL, NULL, NULL, 1, 'descripcion', 'requerimientos', 120, 1),
+(49, 'Graduacion ingenieria 2025', '2025-11-12', '2025-11-12', NULL, 1, 'UTP Maxcanú', 100, 'Aprobado', NULL, NULL, NULL, 1, 'descripcion', 'requerimientos', 0, 1),
+(61, 'HolaTest', '2024-09-01', '2024-09-20', NULL, 1, 'Merida', 2, 'Pendiente', NULL, NULL, NULL, 1, 'descripcion', 'requerimientos', 0, 1),
+(62, 'brawl stars', '2024-09-02', '2024-09-04', NULL, 1, 'merida', 2, 'Pendiente', NULL, NULL, NULL, 1, 'descripcion', 'requerimientos', 0, 1),
+(63, 'Concierto de Rock', '2025-10-20', '2025-10-20', NULL, 1, 'Auditorio Nacional', 5000, 'Pendiente', NULL, NULL, NULL, 2, 'Un increíble concierto de rock con bandas internacionales.', 'requerimientos', 300, 1),
+(64, 'Concierto de Rock', '2025-10-20', '2025-10-20', NULL, 1, 'Auditorio Nacional', 5000, 'Pendiente', NULL, NULL, NULL, 2, 'Un increíble concierto de rock con bandas internacionales.', 'requerimientos', 300, 1),
+(67, 'Concierto irvin', '2024-11-25', '2024-11-23', 243, 3, 'Ciudad de toluca', 5000, 'Pendiente', NULL, NULL, 2, 1, 'Un concierto de rock actualizado con bandas internacionales.', 'Sonido profesional actualizado, iluminación especial', 180, 2),
+(68, 'por el amor de dios busquen una base de datos', '2024-11-22', '2024-11-23', 243, 3, 'Ciudad de México', 5000, 'Pendiente', NULL, NULL, 2, 1, 'Un concierto de rock actualizado con bandas internacionales.', 'Sonido profesional actualizado, iluminación especial', 180, 2),
+(69, 'Concierto de Rock', '2024-11-20', '2024-11-21', 243, 2, 'Ciudad de México', 5000, 'Pendiente', NULL, NULL, 2, 1, 'Un concierto de rock con bandas internacionales.', 'requerimientos', 150, 2);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `horarios`
+--
+
+CREATE TABLE `horarios` (
+  `horario_id` int NOT NULL,
+  `evento_id` int DEFAULT NULL,
+  `hora_inicio` time DEFAULT NULL,
+  `hora_fin` time DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `horarios`
+--
+
+INSERT INTO `horarios` (`horario_id`, `evento_id`, `hora_inicio`, `hora_fin`) VALUES
+(1, 1, '09:00:00', '11:00:00'),
+(2, 1, '20:00:00', '22:00:00'),
+(3, 2, '09:00:00', '10:00:00'),
+(10, 63, '18:00:00', '20:00:00'),
+(11, 63, '20:30:00', '22:00:00'),
+(12, 64, '18:00:00', '20:00:00'),
+(13, 64, '20:30:00', '22:00:00'),
+(22, 67, '18:00:00', '20:00:00'),
+(24, 68, '18:00:00', '20:00:00'),
+(25, 69, '19:00:00', '21:00:00');
 
 -- --------------------------------------------------------
 
@@ -566,7 +592,7 @@ CREATE TABLE `imagenes` (
   `evento_id` int DEFAULT NULL,
   `imagen_url` varchar(255) DEFAULT NULL,
   `tipo_img` int DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `imagenes`
@@ -575,18 +601,39 @@ CREATE TABLE `imagenes` (
 INSERT INTO `imagenes` (`imagen_id`, `usuario_id`, `evento_id`, `imagen_url`, `tipo_img`) VALUES
 (1, 1, 1, 'https://images.pexels.com/photos/2004161/pexels-photo-2004161.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1', 1),
 (2, 2, 2, 'https://images.pexels.com/photos/7897470/pexels-photo-7897470.jpeg?auto=compress&cs=tinysrgb&w=600', 0),
-(3, NULL, 5, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQOOVqL9m-GmDdmxv_AglVhxstLnEmDz50Uxg&s', 0),
 (5, NULL, 7, 'https://www.leon-mexico.com/wp-content/uploads/2024/01/1400x728px-15.jpg', 0),
 (23, NULL, 25, 'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1', 0),
 (36, NULL, 38, 'https://trekmovie.com/wp-content/uploads/2023/09/nycc23-stu-head.jpg', 0),
-(40, NULL, 42, 'https://www.leones.mx/wp-content/uploads/2024/02/Mesa-de-trabajo-1.png', 0),
 (44, NULL, 46, 'https://images.pexels.com/photos/1181265/pexels-photo-1181265.jpeg?auto=compress&cs=tinysrgb&w=600', 0),
 (45, NULL, 47, 'https://images.pexels.com/photos/46798/the-ball-stadion-football-the-pitch-46798.jpeg?auto=compress&cs=tinysrgb&w=600', 0),
 (46, NULL, 48, 'https://i.scdn.co/image/ab6761610000e5ebd642648235ebf3460d2d1f6a', 0),
 (47, NULL, 49, 'https://images.pexels.com/photos/2004161/pexels-photo-2004161.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1', 0),
 (55, NULL, 61, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQOOVqL9m-GmDdmxv_AglVhxstLnEmDz50Uxg&s', 0),
 (56, NULL, 62, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5lqUq7l70SxuDedk72cd68lSKRDBlhHvQpQ&usqp=CAU', 0),
-(57, NULL, 63, 'https://waldos.com.mx/cdn/shop/articles/fiesta-mexicana-3.jpg?v=1659482053&width=1200', 0);
+(57, NULL, 63, 'https://example.com/imagen_concierto.jpg', 0),
+(58, NULL, 64, 'https://example.com/imagen_concierto.jpg', 0),
+(61, NULL, 67, 'https://res.cloudinary.com/dkdapj1br/image/upload/v1729046048/tbo0futh4qp1niarrwwp.jpg', 1),
+(62, NULL, 68, 'https://res.cloudinary.com/dkdapj1br/image/upload/v1729045301/gzzjrjlxgpvxnktp9bwa.jpg', 0),
+(63, NULL, 69, 'https://res.cloudinary.com/dkdapj1br/image/upload/v1729046343/l5yjogknjivi66st18ya.jpg', 1),
+(64, NULL, NULL, 'https://res.cloudinary.com/dkdapj1br/image/upload/v1729048778/a43jmx5svhomfnlxfqzw.jpg', 0),
+(65, NULL, NULL, 'https://res.cloudinary.com/dkdapj1br/image/upload/v1729049011/nsynaxu6zwq7jwss6mdo.jpg', 0),
+(66, NULL, NULL, 'https://res.cloudinary.com/dkdapj1br/image/upload/v1729049083/zglimttqbz70hbsllcam.jpg', 0),
+(67, NULL, NULL, 'https://res.cloudinary.com/dkdapj1br/image/upload/v1729049309/nbmn0lmsii2nvzirh1vc.jpg', 0),
+(68, NULL, NULL, 'https://res.cloudinary.com/dkdapj1br/image/upload/v1729049310/x6ge2afv4urdtyjbkej9.jpg', 0),
+(69, NULL, NULL, 'https://res.cloudinary.com/dkdapj1br/image/upload/v1729049331/hkoerldcdocs7aikuroj.jpg', 0),
+(70, NULL, NULL, 'https://res.cloudinary.com/dkdapj1br/image/upload/v1729049401/kwdfkaiefcpedlkh5red.jpg', 0),
+(71, NULL, NULL, 'https://res.cloudinary.com/dkdapj1br/image/upload/v1729049560/tlf1dindnsyrqmospgdk.jpg', 0),
+(72, NULL, NULL, 'https://res.cloudinary.com/dkdapj1br/image/upload/v1729049813/kt36mwhsdvmvvf7rasjw.jpg', 0),
+(73, NULL, NULL, 'https://res.cloudinary.com/dkdapj1br/image/upload/v1729050020/uy5mangbj4osso3wbn0d.jpg', 0),
+(74, NULL, NULL, 'https://res.cloudinary.com/dkdapj1br/image/upload/v1729050180/e7x8aqjbgvcqwwb9bwh2.jpg', 0),
+(75, NULL, NULL, 'https://res.cloudinary.com/dkdapj1br/image/upload/v1729050440/xdfbnymbob3rjeo5mjea.jpg', 0),
+(76, 2, 67, 'https://res.cloudinary.com/dkdapj1br/image/upload/v1729050902/e0girgojaxpnnnppaeia.jpg', 0),
+(77, 2, 69, 'https://res.cloudinary.com/dkdapj1br/image/upload/v1729050965/srctzowx2uttmgh24idu.jpg', 0),
+(78, 2, 69, 'https://res.cloudinary.com/dkdapj1br/image/upload/v1729051151/ffmyuccwqqrwnfre0yh5.webp', 0),
+(79, 2, 25, 'https://res.cloudinary.com/dkdapj1br/image/upload/v1729052217/mxxrcxordiw7venzypgu.jpg', 0),
+(80, 2, 25, 'https://res.cloudinary.com/dkdapj1br/image/upload/v1729052216/sqmoad0scfwpdzjtfenz.webp', 0),
+(81, 2, 68, 'https://res.cloudinary.com/dkdapj1br/image/upload/v1729052534/ljob6sa5mxptxl6owfhh.jpg', 0),
+(82, 2, 68, 'https://res.cloudinary.com/dkdapj1br/image/upload/v1729052930/hsyarvkj5putyne3ln6m.jpg', 0);
 
 -- --------------------------------------------------------
 
@@ -600,7 +647,7 @@ CREATE TABLE `membresia` (
   `descripcion` text,
   `costo` decimal(10,2) DEFAULT NULL,
   `meses` int NOT NULL DEFAULT '1'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `membresia`
@@ -623,7 +670,7 @@ CREATE TABLE `notificaciono` (
   `usuario_id` int NOT NULL,
   `mensaje` varchar(255) NOT NULL,
   `fecha_envio` timestamp NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `notificaciono`
@@ -651,7 +698,7 @@ CREATE TABLE `pagos` (
   `evento_id` int DEFAULT NULL,
   `f_inicio_ep` datetime DEFAULT NULL,
   `f_FIN_ep` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `pagos`
@@ -662,16 +709,12 @@ INSERT INTO `pagos` (`pago_id`, `monto`, `fecha`, `usuario_id`, `evento_id`, `f_
 (2, 50.00, NULL, NULL, 1, NULL, NULL),
 (3, 29.00, NULL, NULL, 2, NULL, NULL),
 (4, 29.00, NULL, NULL, 2, NULL, NULL),
-(5, 50.00, NULL, NULL, 5, NULL, NULL),
-(6, 50.00, NULL, NULL, 5, NULL, NULL),
 (7, 900.00, NULL, NULL, 7, NULL, NULL),
 (8, 5000.00, '2024-08-16', 10, 1, NULL, NULL),
 (9, 5000.00, '2024-08-16', 10, 1, NULL, NULL),
 (10, 99.99, NULL, NULL, 25, NULL, NULL),
 (11, 99.99, NULL, NULL, 25, NULL, NULL),
 (12, 5000.00, '2024-08-16', 1, 1, NULL, NULL),
-(13, 300.00, NULL, NULL, 42, NULL, NULL),
-(14, 300.00, NULL, NULL, 42, NULL, NULL),
 (15, 5000.00, '2024-08-16', 1, 1, NULL, NULL),
 (16, 5000.00, '2024-08-16', 1, 1, NULL, NULL),
 (17, 5000.00, '2024-08-16', 1, 1, NULL, NULL),
@@ -757,8 +800,6 @@ INSERT INTO `pagos` (`pago_id`, `monto`, `fecha`, `usuario_id`, `evento_id`, `f_
 (99, 5000.00, '2024-08-21', 1, 1, NULL, NULL),
 (100, 5000.00, '2024-08-21', 1, 1, NULL, NULL),
 (101, 10000.00, '2024-08-21', 1, 1, NULL, NULL),
-(102, 5000.00, '2024-08-21', 66, 42, NULL, NULL),
-(103, 5000.00, '2024-08-21', 79, 5, NULL, NULL),
 (104, 5000.00, '2024-08-21', 79, 38, NULL, NULL),
 (105, 9999.00, '2024-08-21', 1, 1, NULL, NULL),
 (106, 5000.00, '2024-08-21', 1, 1, NULL, NULL),
@@ -785,7 +826,6 @@ INSERT INTO `pagos` (`pago_id`, `monto`, `fecha`, `usuario_id`, `evento_id`, `f_
 (127, 5000.00, '2024-08-22', 10, 1, NULL, NULL),
 (128, 1.00, NULL, NULL, 49, NULL, NULL),
 (129, 2900.00, '2024-08-22', 1, 1, NULL, NULL),
-(130, 5000.00, '2024-08-22', 66, 42, NULL, NULL),
 (131, 10000.00, '2024-08-22', 70, 1, NULL, NULL),
 (132, 5000.00, '2024-08-22', 1, 1, NULL, NULL),
 (133, 5000.00, '2024-08-22', 10, 1, NULL, NULL),
@@ -806,21 +846,15 @@ INSERT INTO `pagos` (`pago_id`, `monto`, `fecha`, `usuario_id`, `evento_id`, `f_
 (155, 10.00, NULL, NULL, 62, NULL, NULL),
 (156, 100.00, NULL, NULL, 63, NULL, NULL),
 (157, 5000.00, '2024-09-13', 242, 38, NULL, NULL),
-(158, 5000.00, '2024-09-13', 242, 42, NULL, NULL),
-(159, 5000.00, '2024-09-18', 242, 42, NULL, NULL),
-(160, 5000.00, '2024-09-18', 242, 42, NULL, NULL),
 (161, 5000.00, '2024-09-19', 246, 7, NULL, NULL),
 (162, 5000.00, '2024-09-19', 1, 1, NULL, NULL),
-(163, 5000.00, '2024-09-20', 246, 5, NULL, NULL),
-(164, 5000.00, '2024-09-20', 246, 5, NULL, NULL),
-(165, 5000.00, '2024-09-20', 246, 5, NULL, NULL),
 (166, 5000.00, '2024-09-20', 1, 1, NULL, NULL),
 (167, 5000.00, '2024-09-20', 1, 1, NULL, NULL),
 (168, 2900.00, '2024-09-20', 1, 1, NULL, NULL),
 (169, 2900.00, '2024-09-20', 1, 1, NULL, NULL),
 (170, 2900.00, '2024-09-20', 1, 1, NULL, NULL),
 (171, 5000.00, '2024-09-20', 1, 1, NULL, NULL),
-(172, 5000.00, '2024-09-20', 1, 1, NULL, NULL);
+(172, 0.00, '2024-09-20', 1, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -831,7 +865,7 @@ INSERT INTO `pagos` (`pago_id`, `monto`, `fecha`, `usuario_id`, `evento_id`, `f_
 CREATE TABLE `permisos` (
   `permiso_id` int NOT NULL,
   `nombre` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `permisos`
@@ -854,7 +888,7 @@ INSERT INTO `permisos` (`permiso_id`, `nombre`) VALUES
 CREATE TABLE `roles` (
   `rol_id` int NOT NULL,
   `nombre` varchar(50) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `roles`
@@ -875,7 +909,7 @@ INSERT INTO `roles` (`rol_id`, `nombre`) VALUES
 CREATE TABLE `roles_permisos` (
   `rol_id` int NOT NULL,
   `permiso_id` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `roles_permisos`
@@ -889,6 +923,49 @@ INSERT INTO `roles_permisos` (`rol_id`, `permiso_id`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `tickets`
+--
+
+CREATE TABLE `tickets` (
+  `ticket_id` int NOT NULL,
+  `info` varchar(300) DEFAULT NULL,
+  `code` varchar(60) DEFAULT NULL,
+  `status` tinyint(1) DEFAULT NULL,
+  `id_horario` int DEFAULT NULL,
+  `pago_id` int DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `tickets`
+--
+
+INSERT INTO `tickets` (`ticket_id`, `info`, `code`, `status`, `id_horario`, `pago_id`) VALUES
+(1, 'info', 'AS3452SA7', 1, 1, NULL),
+(2, 'info', 'AS34R2TA8', 1, 2, NULL),
+(3, 'Ticket para evento prueba', 'UTP-DEH-2024-2024-10-13-7f030813', 1, 1, NULL),
+(4, 'Ticket prueba', 'UTP-DEH-2024-10-13-1bc65433', 0, 2, 172);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura Stand-in para la vista `ticket_event_view`
+-- (Véase abajo para la vista actual)
+--
+CREATE TABLE `ticket_event_view` (
+`ticket_id` int
+,`code` varchar(60)
+,`status` tinyint(1)
+,`hora_inicio` time
+,`hora_fin` time
+,`evento_nombre` varchar(100)
+,`ubicacion` varchar(255)
+,`descripcion` varchar(250)
+,`evento_id` int
+);
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `tokens`
 --
 
@@ -897,7 +974,7 @@ CREATE TABLE `tokens` (
   `usuario_id` int DEFAULT NULL,
   `token` varchar(255) DEFAULT NULL,
   `expiracion` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `tokens`
@@ -938,15 +1015,15 @@ CREATE TABLE `usuarios` (
   `resetPasswordToken` varchar(255) DEFAULT NULL,
   `fotoPerfil` varchar(255) DEFAULT NULL,
   `fecha_membresia` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `usuarios`
 --
 
 INSERT INTO `usuarios` (`usuario_id`, `nombre`, `email`, `contrasena`, `telefono`, `rol_id`, `membresia_id`, `activo`, `last_name`, `resetPasswordExpire`, `resetPasswordToken`, `fotoPerfil`, `fecha_membresia`) VALUES
-(1, 'Juan Pérez', 'juan.perez@example.com', '$2b$10$IJAqk1ORz9DocBW9cxkHWu2Gw6nG3YCvLOx8syDyyj4mKlsZ.G9bS', '1234567890', 1, 2, 1, 'Perez', NULL, NULL, 'https://dthezntil550i.cloudfront.net/q8/latest/q82101300842435290002299533/1280_960/1d732acd-87d9-4ac6-a938-953df4387725.jpg', NULL),
-(2, 'Maria García', 'maria.garcia@12example.com', '$2b$10$aGF58TCWr9bRIw3Sqj5Q3eU09XIkPYZDK/vN6HZaNZGPRqdjf4B0a', '9971079785', 2, NULL, 1, 'Garcia', NULL, NULL, 'https://media.istockphoto.com/id/1268988213/es/vector/ilustraci%C3%B3n-de-una-mujer-joven-en-traje-tama%C3%B1o-de-la-foto-de-identificaci%C3%B3n.jpg?s=612x612&w=0&k=20&c=vpazVHEkWrHpcxakkGk1rlv68PxrRHdjfbzG8tvcdmI=', NULL),
+(1, 'Juan Pérez', 'juan.perez@example.com', '$2b$10$IJAqk1ORz9DocBW9cxkHWu2Gw6nG3YCvLOx8syDyyj4mKlsZ.G9bS', '1234567890', 1, 2, 1, 'Perez', NULL, NULL, 'https://res.cloudinary.com/dkdapj1br/image/upload/v1729044769/bhukbzebn58bxhpfohnt.jpg', NULL),
+(2, 'Maria García', 'maria.garcia@12example.com', '$2b$10$aGF58TCWr9bRIw3Sqj5Q3eU09XIkPYZDK/vN6HZaNZGPRqdjf4B0a', '9971079785', 2, NULL, 1, 'Garcia', NULL, NULL, 'https://res.cloudinary.com/dkdapj1br/image/upload/v1729044423/ibkzqkgxi7fmtk8byx7s.jpg', NULL),
 (3, 'Carlos Francisco', 'carlos.lopez@example.com', '$2b$10$pF4gae8ZlgJKFmyPUHkIVO7fgcUm.DYuGAF5nIDbcf/k0S5viFC2.', '1122334455', 3, 3, 1, 'Lopez Can', NULL, NULL, 'https://www.pngkit.com/png/detail/888-8880443_personas-png.png', NULL),
 (4, 'Alan', 'alan@gmail.com', '$2b$10$5SIgk4ygEhvfMqo7UVKj1O1q4atWF2aeeLPVnaPGqIEqvVFc0qx.2', '123456789', 1, NULL, 1, 'Perez', NULL, NULL, 'https://res.cloudinary.com/dkdapj1br/image/upload/v1722714641/igmqnjox2tex2jgsa6uy.png', NULL),
 (5, 'Jose', 'jose@gmail.com', '$2b$10$7AqJIGk3zQTCcxsSmqCIZ.RSqD5rwWASCCxG1RWcCTu.hSkivJyuy', '123456789', 1, NULL, 1, 'Perez', NULL, NULL, 'https://res.cloudinary.com/dkdapj1br/image/upload/v1722721825/gzrb7ifnpdw7li6fuwvy.png', NULL),
@@ -983,7 +1060,7 @@ INSERT INTO `usuarios` (`usuario_id`, `nombre`, `email`, `contrasena`, `telefono
 (67, 'usuarioejemplo', 'usere@gmail.com', '$2b$10$CsvmDos7tjfag3HNyr1vEu.alUQZTUoMb68BuWV6qEES936OhTTkS', '12345', 2, NULL, 1, 'ejemplo', NULL, NULL, NULL, NULL),
 (68, 'miguel', 'miguel@gmail.com', '$2b$10$SC8zM0uS3zjEvy7BjIHDEOu8RSirt7L.NfdnZVFB6fLfaPRNg0pt.', '12345', 2, NULL, 1, 'gomez', NULL, NULL, NULL, NULL),
 (69, 'antonio', 'antonio@gmail.com', '$2b$10$13dh2MCRe7c3zydMUqERmeiZp8cH.L7koIswenXSKSUiMNRYBTiZu', '12345', 2, NULL, 1, 'ejemplo', NULL, NULL, NULL, NULL),
-(70, 'David', 'cendavid919@gmail.com', '$2b$10$IEQPR.X9HTVzi1F87wI5Y.sBH7t/yw98cr5lHNPMWCV74D.zTiP4e', '9971334404', 2, NULL, 1, 'Cen', NULL, NULL, 'https://res.cloudinary.com/dkdapj1br/image/upload/v1724217053/vlre0c5xlyoyd88p5ytl.jpg', NULL),
+(70, 'David', 'cendavid919@gmail.com', '$2b$10$IEQPR.X9HTVzi1F87wI5Y.sBH7t/yw98cr5lHNPMWCV74D.zTiP4e', '9971334404', 2, NULL, 1, 'Cen', '2024-10-17', '690f7aef7d32805079687b34f35d7645ff594963c395f440190275586e5a06de', 'https://res.cloudinary.com/dkdapj1br/image/upload/v1724217053/vlre0c5xlyoyd88p5ytl.jpg', NULL),
 (71, 'nicol', 'nicol@gmail.com', '$2b$10$xBTcixs19eqJWeCUxsf3ku2jjzQgP78HGAeQfDjvGL1Pe1dtbfx7C', '9971345678', 3, NULL, 1, 'hernandez', NULL, NULL, NULL, NULL),
 (74, 'nicol', 'hernandeznicol@gmail.com', '$2b$10$pdXkUUm15yxprpBW.kG3uuk.s1R68Fi7WfbmJ9Siv0N7I590jkFhe', '9971345678', 2, NULL, 1, 'hernandez', NULL, NULL, NULL, NULL),
 (75, 'Edgar', 'edgar78@gmail.com', '$2b$10$8ydUIRaBp17wXy5TTYIFpeLyXkx/s8rY9AHO3sKAzKqzRjgWwE5gm', '9971324567', 3, NULL, 1, 'Mena', NULL, NULL, NULL, NULL),
@@ -1125,7 +1202,7 @@ CREATE TABLE `validacion` (
   `validacion_id` int NOT NULL,
   `estado` varchar(50) DEFAULT NULL,
   `comentarios` text
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `validacion`
@@ -1135,6 +1212,15 @@ INSERT INTO `validacion` (`validacion_id`, `estado`, `comentarios`) VALUES
 (1, 'Aprobado', 'Validado por el sistema.'),
 (2, 'Pendiente', 'En espera de revisión.'),
 (3, 'Rechazado', 'No cumple con los requisitos.');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura para la vista `ticket_event_view`
+--
+DROP TABLE IF EXISTS `ticket_event_view`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`ug2pwvx9bo99xznl`@`%` SQL SECURITY DEFINER VIEW `ticket_event_view`  AS SELECT `t`.`ticket_id` AS `ticket_id`, `t`.`code` AS `code`, `t`.`status` AS `status`, `h`.`hora_inicio` AS `hora_inicio`, `h`.`hora_fin` AS `hora_fin`, `e`.`nombre` AS `evento_nombre`, `e`.`ubicacion` AS `ubicacion`, `e`.`descripcion` AS `descripcion`, `e`.`evento_id` AS `evento_id` FROM ((`tickets` `t` join `horarios` `h` on((`t`.`id_horario` = `h`.`horario_id`))) join `eventos` `e` on((`h`.`evento_id` = `e`.`evento_id`))) ;
 
 --
 -- Índices para tablas volcadas
@@ -1195,6 +1281,13 @@ ALTER TABLE `eventos`
   ADD KEY `fk_validacion_id` (`validacion_id`);
 
 --
+-- Indices de la tabla `horarios`
+--
+ALTER TABLE `horarios`
+  ADD PRIMARY KEY (`horario_id`),
+  ADD KEY `evento_id` (`evento_id`);
+
+--
 -- Indices de la tabla `imagenes`
 --
 ALTER TABLE `imagenes`
@@ -1241,6 +1334,14 @@ ALTER TABLE `roles`
 ALTER TABLE `roles_permisos`
   ADD PRIMARY KEY (`rol_id`,`permiso_id`),
   ADD KEY `permiso_id` (`permiso_id`);
+
+--
+-- Indices de la tabla `tickets`
+--
+ALTER TABLE `tickets`
+  ADD PRIMARY KEY (`ticket_id`),
+  ADD KEY `id_horario` (`id_horario`),
+  ADD KEY `fk_pago` (`pago_id`);
 
 --
 -- Indices de la tabla `tokens`
@@ -1316,13 +1417,19 @@ ALTER TABLE `escenario`
 -- AUTO_INCREMENT de la tabla `eventos`
 --
 ALTER TABLE `eventos`
-  MODIFY `evento_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
+  MODIFY `evento_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
+
+--
+-- AUTO_INCREMENT de la tabla `horarios`
+--
+ALTER TABLE `horarios`
+  MODIFY `horario_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT de la tabla `imagenes`
 --
 ALTER TABLE `imagenes`
-  MODIFY `imagen_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
+  MODIFY `imagen_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=83;
 
 --
 -- AUTO_INCREMENT de la tabla `membresia`
@@ -1340,7 +1447,7 @@ ALTER TABLE `notificaciono`
 -- AUTO_INCREMENT de la tabla `pagos`
 --
 ALTER TABLE `pagos`
-  MODIFY `pago_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=173;
+  MODIFY `pago_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=174;
 
 --
 -- AUTO_INCREMENT de la tabla `permisos`
@@ -1353,6 +1460,12 @@ ALTER TABLE `permisos`
 --
 ALTER TABLE `roles`
   MODIFY `rol_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT de la tabla `tickets`
+--
+ALTER TABLE `tickets`
+  MODIFY `ticket_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `tokens`
@@ -1425,6 +1538,12 @@ ALTER TABLE `eventos`
   ADD CONSTRAINT `fk_validacion_id` FOREIGN KEY (`validacion_id`) REFERENCES `validacion` (`validacion_id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
+-- Filtros para la tabla `horarios`
+--
+ALTER TABLE `horarios`
+  ADD CONSTRAINT `horarios_ibfk_1` FOREIGN KEY (`evento_id`) REFERENCES `eventos` (`evento_id`);
+
+--
 -- Filtros para la tabla `imagenes`
 --
 ALTER TABLE `imagenes`
@@ -1450,6 +1569,13 @@ ALTER TABLE `pagos`
 ALTER TABLE `roles_permisos`
   ADD CONSTRAINT `Roles_Permisos_ibfk_1` FOREIGN KEY (`rol_id`) REFERENCES `roles` (`rol_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `Roles_Permisos_ibfk_2` FOREIGN KEY (`permiso_id`) REFERENCES `permisos` (`permiso_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `tickets`
+--
+ALTER TABLE `tickets`
+  ADD CONSTRAINT `fk_pago` FOREIGN KEY (`pago_id`) REFERENCES `pagos` (`pago_id`),
+  ADD CONSTRAINT `tickets_ibfk_1` FOREIGN KEY (`id_horario`) REFERENCES `horarios` (`horario_id`);
 
 --
 -- Filtros para la tabla `tokens`

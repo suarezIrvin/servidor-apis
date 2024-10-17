@@ -45,6 +45,10 @@ const {validateRole} = require('../middlewares/validateRole')
 router.get('/list', validateRole([2, 3]), ticketController.getTickets);
 
 
+
+router.get('/check',validateRole([2]), ticketController.checkTicket);
+
+
 /**
  * @openapi
  * /api/ticket/create:
@@ -94,7 +98,8 @@ router.get('/event/:evento_id', ticketController.getTicketsByEvent2);
 router.put('/:ticket_id', ticketController.updateStatusTicket);
 
 // scaner del QR
-router.post('/scan-ticket', ticketController.scanTicket);
+router.post('/scan', ticketController.scanTicket);
 
-
+//verificar el Código del cupón
+router.post('/check', ticketController.checkTicket);
 module.exports = router;

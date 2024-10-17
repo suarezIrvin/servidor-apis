@@ -139,6 +139,26 @@ const ticketController = {
     }
   },
 
+  checkTicket: async (req, res) => {
+    try {
+      // const id = req.user.id
+      const { ticketCode } = req.body;
+      if (!ticketCode) {
+        return res.status(400).send('Faltan datos requeridos');
+      }
+      if (ticket[0]?.status === 1) {
+        return res.status(200).send('El ticket ya ha sido utilizado');
+      }
+   
+      const [result] = await TicketModel.getTicketByCode(ticketCode);
+
+
+      res.json(result);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  },
+
 };
 
 module.exports = ticketController;
