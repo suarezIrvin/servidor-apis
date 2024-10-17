@@ -1182,7 +1182,7 @@ CREATE TABLE `usuario_membresias` (
   `fecha_fin` datetime DEFAULT NULL,
   `nombre_plan` varchar(100) DEFAULT NULL,
   `confirmacion_compra` tinyint(1) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `usuario_membresias`

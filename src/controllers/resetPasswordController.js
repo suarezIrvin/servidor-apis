@@ -49,7 +49,7 @@ const resetPasswordController = {
         to: user.email,
         subject: "Restablecimiento de Contraseña",
         html: `
-          <p>Has solicitado restablecer tu contraseña. Por favor, haz clic en el botón siguiente para establecer una nueva contraseña:</p>
+          <p>Hola ${user.nombre} ${user.last_name}, has solicitado restablecer tu contraseña. Por favor, haz clic en el botón siguiente para establecer una nueva contraseña:</p>
           <a href="${resetUrl}" style="background-color: #4CAF50; color: white; padding: 14px 20px; text-align: center; text-decoration: none; display: inline-block; border-radius: 8px;">Restablecer Contraseña</a>
         `,
       };

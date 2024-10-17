@@ -23,7 +23,7 @@ const authController = {
 
       const token = await AuthModel.generateToken(user);
 
-      return res.json({ token, user });
+      return res.json({ token });
     } catch (error) {
       console.error("Error logging in:", error);
       return res.status(500).json({ error: "Internal server error" });

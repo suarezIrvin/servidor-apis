@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const dotenv = require("dotenv");
 const authMiddleware = require("./middlewares/authMiddleware");
 const swaggerRouter = require("./config/swagger");
+const path = require("path");
 
 dotenv.config();
 
@@ -15,6 +16,7 @@ app.use(express.json());
 app.use(morgan("dev"));
 app.use(cors());
 app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Rutas
 app.use("/api", require("./routes/indexRouter"));
