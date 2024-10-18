@@ -186,7 +186,7 @@ const ticketController = {
 
   redeemTickets: async (req, res) => {
     try {
-      const { evento_id, code } = req.body;
+      const { evento_id, code, horario_id } = req.body;
   
       if (!evento_id) {
         return res.status(400).json({
@@ -209,6 +209,10 @@ const ticketController = {
   
       // Actualizar el ticket con el ID de pago
       await TicketModel.updateTicketWithPagoId(payId, code);
+
+      // Actualizar el ticket con horario_id
+      await TicketModel.updateTicketHorarioId(horario_id, code)
+      
   
       // Responder con un mensaje de éxito
       res.json({ message: 'Pago exitoso' });

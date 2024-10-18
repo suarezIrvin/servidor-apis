@@ -57,6 +57,8 @@ router.get('/check',validateRole([2]), ticketController.checkTicket);
  *     description: Esta ruta crea un nuevo ticket asociado a un horario, generando automáticamente el código y el status.
  *     tags:
  *       - Tickets
+ *     security:
+ *       - bearerAuth: []  # Requiere autenticación con token
  *     requestBody:
  *       required: true
  *       content:
@@ -78,6 +80,10 @@ router.get('/check',validateRole([2]), ticketController.checkTicket);
  *         description: Ticket creado exitosamente.
  *       400:
  *         description: Faltan datos requeridos.
+ *       401:
+ *         description: No autorizado, token no válido o no presente.
+ *       403:
+ *         description: No tienes permiso para acceder a este recurso.
  *       500:
  *         description: Error al crear el ticket.
  */

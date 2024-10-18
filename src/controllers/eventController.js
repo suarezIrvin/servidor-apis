@@ -56,7 +56,7 @@ const eventController = {
             nombre, 
             fecha_inicio, 
             fecha_termino, 
-            requerimiento,        
+            requerimientos,        
             organizador_id,      
             escenario,           
             tipo_evento,  
@@ -74,7 +74,7 @@ const eventController = {
         console.log('Cuerpo de la solicitud:', req.body);
     
         // Validar que todos los campos necesarios estén presentes
-        if (!nombre || !fecha_inicio || !fecha_termino || !requerimiento || !organizador_id || !escenario ||
+        if (!nombre || !fecha_inicio || !fecha_termino || !requerimientos || !organizador_id || !escenario ||
             !tipo_evento || !categoria_id || !ubicacion || !max_per || !imagen_url || !precio || !descripcion || 
             !horarios || !Array.isArray(horarios) || horarios.length === 0) {
             return res.status(400).send('Todos los campos son obligatorios y debe haber al menos un horario.');
@@ -98,7 +98,7 @@ const eventController = {
                 nombre, 
                 fecha_inicio, 
                 fecha_termino, 
-                requerimiento,
+                requerimientos,
                 organizador_id,    
                 escenario,         
                 tipo_evento,  
