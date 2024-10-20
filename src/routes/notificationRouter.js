@@ -24,13 +24,14 @@ const notificationController = require('../controllers/notificationController');
  *                 type: string
  *                 example: "Notification message"
  *     responses:
- *       200:
- *         description: Notificación recibida.
+ *       201:
+ *         description: Notificación creada con éxito.
+ *       400:
+ *         description: Faltan campos obligatorios.
  *       500:
  *         description: Error al procesar la notificación.
  */
 router.post('/send', notificationController.create);
-
 
 /**
  * @openapi
@@ -42,7 +43,7 @@ router.post('/send', notificationController.create);
  *       - Notificacion
  *     responses:
  *       200:
- *         description: Lista de notificaciones.
+ *         description: Lista de notificaciones obtenida con éxito.
  *         content:
  *           application/json:
  *             schema:

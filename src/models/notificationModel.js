@@ -4,22 +4,22 @@ const Notification = {
   create: async (usuario_id, mensaje) => {
     try {
       const [result] = await pool.execute(
-        'INSERT INTO NotificacionO (usuario_id, mensaje) VALUES (?, ?)',
+        'INSERT INTO notificaciono (usuario_id, mensaje) VALUES (?, ?)',
         [usuario_id, mensaje]
       );
       return result;
     } catch (error) {
-      console.error('Error creating notification:', error);
+      console.error('Error al crear la notificación:', error);
       throw error;
     }
   },
 
   findAll: async () => {
     try {
-      const [rows] = await pool.execute('SELECT * FROM NotificacionO');
+      const [rows] = await pool.execute('SELECT * FROM notificaciono');
       return rows; 
     } catch (error) {
-      console.error('Error fetching notifications:', error);
+      console.error('Error al obtener las notificaciones:', error);
       throw error;
     }
   },
