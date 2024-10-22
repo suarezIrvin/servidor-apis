@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const eventController = require("../controllers/eventController");
+const { validateRole } = require('../middlewares/validateRole');
+
 
 /**
  * @swagger
@@ -21,19 +23,20 @@ const eventController = require("../controllers/eventController");
 
 /**
  * @openapi
- * /api/events:
+ * /api/events/events:
  *   get:
  *     summary: Esta ruta obtiene todos los eventos disponibles.
  *     description: Esta ruta sirve para obtener todos los eventos.
  *     tags: [Eventos]
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       200:
  *         description: Lista de eventos obtenida con éxito
  *       500:
  *         description: Error al obtener la lista de eventos
  */
-router.get('/', eventController.getEvent);
-
+router.get('/events', validateRole([1]), eventController.getEvent);
 
 /**
  * @swagger
@@ -148,20 +151,7 @@ router.get('/search', eventController.searchFilter);
  */
 router.get('/approved', eventController.getApprovedEvent);
 
-/**
- * @swagger
- * /api/events/pending:
- *   get:
- *     summary: Obtiene los eventos pendientes para aprobar o desaprobar para organizador.
- *     description: Esta ruta sirve para obtener todos los eventos pendientes por aprobar o desaprobar.
- *     tags: [Eventos]
- *     responses:
- *       200:
- *         description: Lista de eventos pendientes obtenida con éxito
- *       500:
- *         description: Error al obtener la lista de eventos pendientes
- */
-router.get('/pending', eventController.getPendingEvent);
+
 /**
  * @swagger
  * /api/events/post:
@@ -397,6 +387,8 @@ router.put('/put/:id', eventController.putEvent);
  *     summary: Eliminar un evento por su ID.
  *     description: Esta ruta elimina un evento por su ID utilizando el parámetro `evento_id` en la URL.
  *     tags: [Eventos]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: evento_id
@@ -428,7 +420,7 @@ router.put('/put/:id', eventController.putEvent);
  *               example: Error al eliminar el evento
  */
 
-router.delete('/delete/:evento_id', eventController.delete);
+router.delete('/delete/:evento_id', validateRole([1]), eventController.delete);
 
 
 module.exports = router;

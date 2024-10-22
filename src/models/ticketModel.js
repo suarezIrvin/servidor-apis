@@ -118,7 +118,7 @@ const TicketModel = {
 },
 
   updateTicketHorarioId: (horarioId, code) => {
-    const query = `UPDATE tickets SET horario_id = ? WHERE code = ?`;
+    const query = `UPDATE tickets SET id_horario = ? WHERE code = ?`;
     return pool.execute(query, [horarioId, code]);
   },
 

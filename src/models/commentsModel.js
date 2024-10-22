@@ -6,8 +6,8 @@ const CommentsModel = {
         return pool.execute(
             `
             SELECT c.Comentario_id, c.Usuario_id, c.Evento_id, c.Comentario, c.Fecha, u.Nombre AS Usuario_nombre
-            FROM Comentarios c
-            JOIN Usuarios u ON c.Usuario_id = u.Usuario_id
+            FROM comentarios c
+            JOIN usuarios u ON c.Usuario_id = u.Usuario_id
             `
         );
     },
@@ -17,8 +17,8 @@ const CommentsModel = {
         return pool.execute(
             `
             SELECT c.Comentario_id, c.Usuario_id, c.Evento_id, c.Comentario, c.Fecha, u.Nombre AS Usuario_nombre
-            FROM Comentarios c
-            JOIN Usuarios u ON c.Usuario_id = u.Usuario_id
+            FROM comentarios c
+            JOIN usuarios u ON c.Usuario_id = u.Usuario_id
             WHERE c.Evento_id = ?
             LIMIT ? OFFSET ?
             `,
@@ -28,7 +28,7 @@ const CommentsModel = {
 
     createComment: (evento_id, usuario_id, comentario, fecha) => {
         const query = `
-            INSERT INTO Comentarios (Evento_id, Usuario_id, Comentario, Fecha)
+            INSERT INTO comentarios (Evento_id, Usuario_id, Comentario, Fecha)
             VALUES (?, ?, ?, ?)
         `;
         const values = [evento_id, usuario_id, comentario, fecha];
@@ -36,7 +36,7 @@ const CommentsModel = {
     },
 
     deleteComment: (comentario_id) => {
-        const query = 'DELETE FROM Comentarios WHERE Comentario_id = ?';
+        const query = 'DELETE FROM comentarios WHERE Comentario_id = ?';
         return pool.execute(query, [comentario_id]);
     }
 };

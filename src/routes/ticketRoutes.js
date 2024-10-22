@@ -11,6 +11,8 @@ const {validateRole} = require('../middlewares/validateRole')
  *     description: Esta ruta obtiene todos los tickets creados.
  *     tags:
  *       - Tickets
+ *     security:
+ *       - bearerAuth: []  
  *     responses:
  *       200:
  *         description: Lista de tickets.
@@ -87,29 +89,286 @@ router.get('/check',validateRole([2]), ticketController.checkTicket);
  *       500:
  *         description: Error al crear el ticket.
  */
-router.post('/create', validateRole([3]),ticketController.createTicket);
+router.post('/create', validateRole([2]),ticketController.createTicket);
 
 
 /* NEW CODE */
-// Eliminar un ticket
+/**
+ * @openapi
+ * /api/ticket/{ticket_id}:
+ *   delete:
+ *     summary: Eliminar un ticket.
+ *     description: Esta ruta elimina un ticket existente por su ID.
+ *     tags:
+ *       - Tickets
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: ticket_id
+ *         required: true
+ *         description: ID del ticket a eliminar.
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *     responses:
+ *       204:
+ *         description: Ticket eliminado exitosamente.
+ *       404:
+ *         description: Ticket no encontrado.
+ *       500:
+ *         description: Error al eliminar el ticket.
+ */
 router.delete('/:ticket_id', validateRole([1,3]), ticketController.deleteTicket);
 
 // Obtener un ticket por su ID
+/**
+ * @openapi
+ * /api/ticket/{ticket_id}:
+ *   get:
+ *     summary: Obtener un ticket por su ID.
+ *     description: Esta ruta obtiene los detalles de un ticket existente por su ID.
+ *     tags:
+ *       - Tickets
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: ticket_id
+ *         required: true
+ *         description: ID del ticket a obtener.
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *     responses:
+ *       200:
+ *         description: Detalles del ticket.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 ticket_id:
+ *                   type: integer
+ *                   example: 1
+ *                 info:
+ *                   type: string
+ *                   example: "Información sobre el ticket"
+ *                 code:
+ *                   type: string
+ *                   example: "UTP-DEH-2024-10-13-1a2b3c4d"
+ *                 status:
+ *                   type: integer
+ *                   example: 0
+ *                 id_horario:
+ *                   type: integer
+ *                   example: 1
+ *                 evento_nombre:
+ *                   type: string
+ *                   example: "Evento Ejemplo"
+ *       404:
+ *         description: Ticket no encontrado.
+ *       500:
+ *         description: Error al obtener el ticket.
+ */
 router.get('/:ticket_id', ticketController.getTicketById);
 
 // Obtener los tickets de un evento
-router.get('/event/:evento_id', ticketController.getTicketsByEvent2);  
+/**
+ * @openapi
+ * /api/ticket/event/{evento_id}:
+ *   get:
+ *     summary: Obtener los tickets de un evento.
+ *     description: Esta ruta obtiene todos los tickets asociados a un evento por su ID.
+ *     tags:
+ *       - Tickets
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: evento_id
+ *         required: true
+ *         description: ID del evento para obtener sus tickets.
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *     responses:
+ *       200:
+ *         description: Lista de tickets asociados al evento.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   ticket_id:
+ *                     type: integer
+ *                     example: 1
+ *                   info:
+ *                     type: string
+ *                     example: "Información sobre el ticket"
+ *                   code:
+ *                     type: string
+ *                     example: "UTP-DEH-2024-10-13-1a2b3c4d"
+ *                   status:
+ *                     type: integer
+ *                     example: 0
+ *                   id_horario:
+ *                     type: integer
+ *                     example: 1
+ *                   evento_nombre:
+ *                     type: string
+ *                     example: "Evento Ejemplo"
+ *       404:
+ *         description: Evento no encontrado.
+ *       500:
+ *         description: Error al obtener los tickets del evento.
+ */
+router.get('/event/:evento_id', ticketController.getTicketsByEvent2);
 
 // Actualizar el status de un ticket
+/**
+ * @openapi
+ * /api/ticket/{ticket_id}:
+ *   put:
+ *     summary: Actualizar el status de un ticket.
+ *     description: Esta ruta actualiza el estado de un ticket existente por su ID.
+ *     tags:
+ *       - Tickets
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: ticket_id
+ *         required: true
+ *         description: ID del ticket a actualizar.
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               status:
+ *                 type: integer
+ *                 example: 1
+ *     responses:
+ *       200:
+ *         description: Status actualizado exitosamente.
+ *       400:
+ *         description: Datos de entrada inválidos.
+ *       404:
+ *         description: Ticket no encontrado.
+ *       500:
+ *         description: Error al actualizar el ticket.
+ */
 router.put('/:ticket_id', validateRole([1,3,4]), ticketController.updateStatusTicket);
 
-// scaner del QR
+// scanner del QR
+/**
+ * @openapi
+ * /api/ticket/scan:
+ *   post:
+ *     summary: Escanear un ticket.
+ *     description: Esta ruta permite escanear un ticket utilizando un código QR.
+ *     tags:
+ *       - Tickets
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - qr_code
+ *             properties:
+ *               qr_code:
+ *                 type: string
+ *                 example: "QR-12345"
+ *     responses:
+ *       200:
+ *         description: Ticket escaneado exitosamente.
+ *       400:
+ *         description: Datos de entrada inválidos.
+ *       500:
+ *         description: Error al escanear el ticket.
+ */
 router.post('/scan', validateRole([1,4]), ticketController.scanTicket);
 
-//verificar el Código del cupón - cliente
+// verificar el Código del cupón - cliente
+/**
+ * @openapi
+ * /api/ticket/check:
+ *   post:
+ *     summary: Verificar el código del cupón.
+ *     description: Esta ruta verifica el código de un cupón enviado por el cliente.
+ *     tags:
+ *       - Tickets
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - coupon_code
+ *             properties:
+ *               coupon_code:
+ *                 type: string
+ *                 example: "CUPON-XYZ"
+ *     responses:
+ *       200:
+ *         description: Cupón verificado exitosamente.
+ *       400:
+ *         description: Datos de entrada inválidos.
+ *       404:
+ *         description: Cupón no encontrado.
+ *       500:
+ *         description: Error al verificar el cupón.
+ */
 router.post('/check', ticketController.checkTicket);
 
-//verificar el Código del cupón
+// verificar el Código del cupón
+/**
+ * @openapi
+ * /api/ticket/redeem:
+ *   post:
+ *     summary: Redimir tickets.
+ *     description: Esta ruta permite redimir tickets utilizando un código de cupón.
+ *     tags:
+ *       - Tickets
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - coupon_code
+ *             properties:
+ *               coupon_code:
+ *                 type: string
+ *                 example: "CUPON-XYZ"
+ *     responses:
+ *       200:
+ *         description: Tickets redimidos exitosamente.
+ *       400:
+ *         description: Datos de entrada inválidos.
+ *       404:
+ *         description: Cupón no encontrado.
+ *       500:
+ *         description: Error al redimir el cupón.
+ */
 router.post('/redeem', ticketController.redeemTickets);
 
 

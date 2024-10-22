@@ -4,6 +4,8 @@ const pool = require("../config/connection");
 const authController = require("../controllers/authController");
 const Stripe = require("stripe");
 const stripe = new Stripe("sk_test_4eC39HqLyjWDarjtT1zdp7dc");
+const { validateRole } = require('../middlewares/validateRole');
+
 
 const router = express.Router();
 
@@ -237,6 +239,8 @@ router.post("/login", authController.login);
  *     description: Esta ruta obtiene a todos los usuarios registrados.
  *     tags:
  *       - Usuario
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       200:
  *         description: Lista de usuarios existentes.
@@ -287,7 +291,7 @@ router.post("/login", authController.login);
  *       500:
  *         description: Error al obtener las notificaciones.
  */
-router.get("/", userController.getAll);
+router.get("/", validateRole([1]), userController.getAll);
 
 
 
@@ -370,6 +374,8 @@ router.get("/:id", userController.getById);
  *     description: Elimina al usuario registrado ingresando el Id.
  *     tags:
  *       - Usuario
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - name: id
  *         in: path
@@ -385,7 +391,7 @@ router.get("/:id", userController.getById);
  *       500:
  *         description: Error al eliminar el usuario.
  */
-router.delete("/:id", userController.delete);
+router.delete("/:id", validateRole([1]), userController.delete);
 
 
 /**
