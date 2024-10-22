@@ -136,8 +136,11 @@ const Event = {
 
     getEventByTicket: async (ticket) =>{
         const [result] = await pool.query(
-            `SELECT * FROM ticket_event_view
-            WHERE ticket_id = ?`, [ticket]
+            `SELECT t.ticket_id, t.code, t.status, h.hora_inicio, h.hora_fin, e.nombre, e.fecha_inicio, e.ubicacion, e.tipo_evento, e.fecha_termino
+        FROM tickets t
+        JOIN horarios h ON t.id_horario = h.horario_id
+        JOIN eventos e ON h.evento_id = e.evento_id
+        WHERE t.ticket_id = ?`, [ticket]
         );
         return result;
     },
