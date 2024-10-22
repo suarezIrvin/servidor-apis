@@ -123,22 +123,14 @@ const ticketController = {
       if (ticket[0]?.status == undefined) {
         return res.status(200).send('Ticket inválido');
       }
-      if (ticket[0]?.redeem == 0 || ticket[0]?.redeem == null || ticket[0]?.id_horario == null) {
-        return res.status(200).send('Ticket no registrado para su uso');
+      if (ticket[0]?.redeem == 0 || ticket[0]?.redeem == null) {
+        return res.status(200).send('Ticket no registrado para uso');
       }
       if (ticket[0]?.status === 1) {
         return res.status(200).send('El ticket ya ha sido utilizado');
       }
 
-      const hosterId = req.user.usuario_id;
-
-      const now = new Date();
-      now.setHours(now.getHours() - (new Date().getTimezoneOffset() / 60));
-      const data = { 
-        status: 1,
-        hoster_id: hosterId,
-        canje_at: now
-      }
+      const data = { status: 1}
       await TicketModel.update(ticket[0].ticket_id, data)
       const getEvent = await  EventModel.getEventByTicket(ticket[0].ticket_id);
   
@@ -198,62 +190,29 @@ const ticketController = {
   redeemTickets: async (req, res) => {
     try {
       const { evento_id, code, horario_id } = req.body;
-
+  
       if (!evento_id) {
         return res.status(400).json({
-          message: "Se requiere el id del evento",
+          message: 'Se requiere el id del evento',
         });
       }
-      const usuario_id = req.user.usuario_id;
-      const data = {
-        usuario_id: usuario_id,
-        evento_id: evento_id
-      }
+  
       // Inserta el pago en la base de datos utilizando el modelo TicketModel
       await TicketModel.confirmPayTicket(data);
 
       // Actualizar el ticket con el ID de pago
       await TicketModel.updateTicketWithPagoId(payId, code);
 
-      // Cambios 23-10
-      const [ticket] = await TicketModel.getTicketByCode(code);
-      if (ticket.length == 0) {
-        return res.status(404).json({
-          message: "El ticket no existe",
-        });
-      }
-      console.log(ticket);
-      const idTicket = ticket[0].ticket_id;
-      if (ticket[0].redeem == 1) {
-        return res.status(404).json({
-          message: "El ticket ha sido canjeado anteriormente",
-        });
-      }
-      await TicketModel.update(idTicket, { redeem: 1 });
-      // Cambios 23-10
-
       // Actualizar el ticket con horario_id
-      await TicketModel.updateTicketHorarioId(horario_id, code);
-
+      await TicketModel.updateTicketHorarioId(horario_id, code)
+      
+  
       // Responder con un mensaje de éxito
-      res.json({ message: "Pago exitoso" });
+      res.json({ message: 'Pago exitoso' });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
   },
-
-  historyScan: async (req, res) =>{
-    try {
-      const { hoster_id } = req.params;
-      const [rows] = await TicketModel.getHistoryScan(hoster_id);
-      if (rows.length === 0) {
-        return res.status(404).json({ message: "No tickets found for the specified hoster."});
-      }
-      res.json(rows);
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
-  }
   
 
 
