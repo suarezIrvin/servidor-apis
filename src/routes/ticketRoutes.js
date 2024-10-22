@@ -81,7 +81,7 @@ router.post('/create', ticketController.createTicket);
 
 /* NEW CODE */
 // Eliminar un ticket
-router.delete('/:ticket_id', ticketController.deleteTicket);
+router.delete('/:ticket_id', validateRole([1,3]), ticketController.deleteTicket);
 
 // Obtener un ticket por su ID
 router.get('/:ticket_id', ticketController.getTicketById);
@@ -90,10 +90,16 @@ router.get('/:ticket_id', ticketController.getTicketById);
 router.get('/event/:evento_id', ticketController.getTicketsByEvent2);  
 
 // Actualizar el status de un ticket
-router.put('/:ticket_id', ticketController.updateStatusTicket);
+router.put('/:ticket_id', validateRole([1,3,4]), ticketController.updateStatusTicket);
 
 // scaner del QR
-router.post('/scan-ticket', ticketController.scanTicket);
+router.post('/scan', validateRole([1,4]), ticketController.scanTicket);
+
+//verificar el Código del cupón - cliente
+router.post('/check', ticketController.checkTicket);
+
+//verificar el Código del cupón
+router.post('/redeem', ticketController.redeemTickets);
 
 
 module.exports = router;
