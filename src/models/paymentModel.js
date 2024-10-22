@@ -43,15 +43,10 @@ const Payment =  {
             return result;
     },
 
-    getPaymentHistoryByUserId : async (usuario_id) => {
+    getPaymentHistoryByUserId : async (userId) => {
         const [result] = await pool.query(
-            `
-               SELECT Pagos.*, Pago_Tarjeta.numero_tarjeta, Pago_Tarjeta.fecha_expiracion, Pago_Tarjeta.cvv
-               FROM Pagos
-               LEFT JOIN Pago_Tarjeta ON Pagos.pago_id = Pago_Tarjeta.pago_id
-               WHERE Pagos.usuario_id = ?
-            `,
-            [usuario_id]
+            `SELECT * FROM pagos WHERE usuario_id = ? `,
+            [userId]
             );
 
             return result;
@@ -62,7 +57,35 @@ const Payment =  {
         paymentIntentId,
         { payment_method: paymentMethod }
       );
-    }
+    },
+    
+    getDetailedPaymentHistoryByUserId: async (userId) => {
+      const [result] = await pool.query(
+          `
+          SELECT 
+              p.pago_id,
+              p.monto,
+              p.fecha AS fecha_pago,
+              e.nombre AS nombre_evento,
+              e.fecha_inicio,
+              e.fecha_termino,
+              e.ubicacion,
+              h.hora_inicio,
+              h.hora_fin,
+              t.ticket_id,
+              t.info AS info_ticket,
+              t.code AS codigo_ticket
+          FROM pagos p
+          JOIN eventos e ON p.evento_id = e.evento_id
+          JOIN horarios h ON e.evento_id = h.evento_id
+          JOIN tickets t ON p.pago_id = t.pago_id
+          WHERE p.usuario_id = ?
+          `,
+          [userId]
+      );
+  
+      return result;
+  },  
 
 };
 

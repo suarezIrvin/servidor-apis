@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const ticketController = require('../controllers/ticketController');
+const {validateRole} = require('../middlewares/validateRole')
 
 /**
  * @openapi
@@ -41,7 +42,11 @@ const ticketController = require('../controllers/ticketController');
  *       500:
  *         description: Error al obtener los tickets.
  */
-router.get('/list', ticketController.getTickets);
+router.get('/list', validateRole([2, 3]), ticketController.getTickets);
+
+
+
+router.get('/check',validateRole([2]), ticketController.checkTicket);
 
 
 /**
@@ -52,6 +57,8 @@ router.get('/list', ticketController.getTickets);
  *     description: Esta ruta crea un nuevo ticket asociado a un horario, generando automáticamente el código y el status.
  *     tags:
  *       - Tickets
+ *     security:
+ *       - bearerAuth: []  # Requiere autenticación con token
  *     requestBody:
  *       required: true
  *       content:
@@ -73,10 +80,14 @@ router.get('/list', ticketController.getTickets);
  *         description: Ticket creado exitosamente.
  *       400:
  *         description: Faltan datos requeridos.
+ *       401:
+ *         description: No autorizado, token no válido o no presente.
+ *       403:
+ *         description: No tienes permiso para acceder a este recurso.
  *       500:
  *         description: Error al crear el ticket.
  */
-router.post('/create', ticketController.createTicket);
+router.post('/create', validateRole([3]),ticketController.createTicket);
 
 
 /* NEW CODE */

@@ -1,4 +1,7 @@
+const { check } = require("express-validator");
 const pool = require("../config/connection");
+
+
 
 const TicketModel = {
   getAllTickets: () => {
@@ -88,7 +91,37 @@ const TicketModel = {
   getTicketByCode: (code) => {
     const query = `SELECT * FROM tickets WHERE code = ?`;
     return pool.execute( query, [code] );
-  }
+  },
+
+  validateTicket: (code) => {
+    const query = `SELECT code,redeem FROM tickets WHERE code = ?`;
+    return pool.execute( query, [code] );
+  },
+
+  confirmPayTicket: (evento_id) => {
+    const query = `
+    INSERT INTO pagos (monto, fecha, usuario_id, evento_id, f_inicio_ep, f_FIN_ep)
+    VALUES (0, CURRENT_DATE(), 70, ?, NULL, NULL);
+  `;
+    return pool.execute( query, [evento_id]  );
+  },
+
+  addPayTicket: () => {
+    const query = `SELECT LAST_INSERT_ID() as pago_id;`;
+    return pool.execute(query);
+  },
+
+
+  updateTicketWithPagoId: (payId, code) => {
+    const query = `UPDATE tickets SET pago_id = ? WHERE code = ?`;
+    return pool.execute(query, [payId, code]);
+},
+
+  updateTicketHorarioId: (horarioId, code) => {
+    const query = `UPDATE tickets SET horario_id = ? WHERE code = ?`;
+    return pool.execute(query, [horarioId, code]);
+  },
+
   
 };
 

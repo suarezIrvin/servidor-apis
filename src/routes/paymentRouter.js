@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const paymentController = require('../controllers/paymentController');
+const { validateRole } = require('../middlewares/validateRole');
 
 
 
@@ -107,7 +108,7 @@ router.post('/confirm-payment', paymentController.payConfirm);
 
 /**
  * @openapi
- * /api/payment/payment-history:
+ * /api/payment/history:
  *   get:
  *     summary: Obtiene el historial de pagos
  *     tags:
@@ -153,7 +154,7 @@ router.get('/payment-history', paymentController.payHistory);
 
 /**
  * @openapi
- * /api/payment/history/{usuario_id}:
+ * /api/payment/history/:
  *   get:
  *     summary: obtiene el historial de un usuario por medio de su id
  *     description: Obtiene el historial por medio del id del usuario
@@ -204,6 +205,57 @@ router.get('/payment-history', paymentController.payHistory);
  *       500:
  *         description: Error al obtener el historial.
  */
-router.get('/history/:usuario_id', paymentController.payHistoryByUserId);
+router.get('/history/', validateRole([2]), paymentController.payHistoryByUserId);
+
+/**
+ * @openapi
+ * /api/payment/history/detailed:
+ *   get:
+ *     summary: Obtiene el historial detallado de un usuario autenticado.
+ *     description: Obtiene el historial detallado de pagos, eventos, tickets, y horarios del usuario autenticado.
+ *     tags:
+ *       - payment
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Detalles del historial de pago de un usuario encontrado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 pago_id:
+ *                   type: integer
+ *                 monto:
+ *                   type: string
+ *                 fecha:
+ *                   type: string
+ *                   format: date
+ *                 nombre_evento:
+ *                   type: string
+ *                 fecha_inicio:
+ *                   type: string
+ *                 fecha_termino:
+ *                   type: string
+ *                 ubicacion:
+ *                   type: string
+ *                 hora_inicio:
+ *                   type: string
+ *                 hora_fin:
+ *                   type: string
+ *                 ticket_id:
+ *                   type: integer
+ *                 info_ticket:
+ *                   type: string
+ *                 codigo_ticket:
+ *                   type: string
+ *       404:
+ *         description: Historial no encontrado.
+ *       500:
+ *         description: Error al obtener el historial.
+ */
+router.get('/history/detailed', validateRole([2]), paymentController.payDetailedHistoryByUserId);
+
 
 module.exports = router;

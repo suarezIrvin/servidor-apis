@@ -52,20 +52,38 @@ const paymentController = {
   },
 
   payHistoryByUserId : async (req, res) => {
-    const { usuario_id } = req.params;
-    if (!usuario_id) {
+    const userId = req.user.id;
+
+    if (!userId) {
       return res.status(400).send('Falta el parámetro usuario_id');
     }
-    console.log(usuario_id);
+    
     
     try {
-      const result = await Payment.getPaymentHistoryByUserId(usuario_id);
+      const result = await Payment.getPaymentHistoryByUserId(userId);
       res.status(200).json(result);
     } catch (error) {
       console.error('Error al obtener el historial:', error);
       res.status(500).send('Error al obtener el historial');
     }
+  },
+  
+  payDetailedHistoryByUserId: async (req, res) => {
+    const userId = req.user.id; 
+
+    if (!userId) {
+      return res.status(400).send('Falta el parámetro usuario_id');
+    }
+
+    try {
+      const result = await Payment.getDetailedPaymentHistoryByUserId(userId);
+      res.status(200).json(result);
+    } catch (error) {
+      console.error('Error al obtener el historial detallado:', error);
+      res.status(500).send('Error al obtener el historial detallado');
+    }
   }
+
 };
 
 

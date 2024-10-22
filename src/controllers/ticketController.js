@@ -142,6 +142,91 @@ const ticketController = {
     }
   },
 
+  checkTicket: async (req, res) => {
+    try {
+      const { code } = req.body;
+  
+      // Verificar si el código fue enviado en la solicitud
+      if (!code) {
+        return res.status(400).json({
+          message: 'El código del cupón es requerido.'
+        });
+      }
+  
+      // Verificar si el cupón existe en la base de datos
+      const [result] = await TicketModel.validateTicket(code); // Consulta el cupón
+  
+      // Si no hay resultados, el cupón no existe
+      if (result.length === 0) {
+        return res.status(404).json({
+          message: 'El cupón no existe. Por favor, verifica el código ingresado.'
+        });
+      }
+  
+      const ticket = result[0];
+  
+      // Verificar si el cupón ya ha sido utilizado
+      if (ticket.redeem === 1) {
+        return res.status(200).json({
+          message: 'El cupón ya ha sido canjeado.'
+        });
+      }
+  
+      // El cupón es válido y no ha sido utilizado
+      res.status(200).json({
+        message: 'El cupón es válido y puede ser canjeado.'
+      });
+    } catch (error) {
+      // Manejo de errores
+      res.status(500).json({
+        status: 'error',
+        message: 'Error del servidor. Por favor, intenta nuevamente más tarde.',
+        error: error.message
+      });
+    }
+  },
+  
+
+  redeemTickets: async (req, res) => {
+    try {
+      const { evento_id, code, horario_id } = req.body;
+  
+      if (!evento_id) {
+        return res.status(400).json({
+          message: 'Se requiere el id del evento',
+        });
+      }
+  
+      // Inserta el pago en la base de datos utilizando el modelo TicketModel
+      await TicketModel.confirmPayTicket(evento_id);
+  
+      // Obtener el último ID de pago insertado
+      const [rows] = await TicketModel.addPayTicket();
+      const payId = rows[0]?.pago_id; // Extraer el valor de pago_id
+  
+      if (!payId) {
+        return res.status(500).json({
+          error: 'Error al obtener el ID de pago',
+        });
+      }
+  
+      // Actualizar el ticket con el ID de pago
+      await TicketModel.updateTicketWithPagoId(payId, code);
+
+      // Actualizar el ticket con horario_id
+      await TicketModel.updateTicketHorarioId(horario_id, code)
+      
+  
+      // Responder con un mensaje de éxito
+      res.json({ message: 'Pago exitoso' });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  },
+  
+
+
+
 };
 
 module.exports = ticketController;
