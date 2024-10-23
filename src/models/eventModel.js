@@ -394,11 +394,13 @@ const Event = {
                 e.autorizado_por, 
                 e.fecha_autorizacion, 
                 i.imagen_url,
+                c.categoria,
                 s.forma AS forma_escenario
             FROM 
                 eventos e
             LEFT JOIN imagenes i ON i.evento_id = e.evento_id
             LEFT JOIN escenario s ON s.evento_id = e.evento_id
+            LEFT JOIN categorias c ON e.categoria_id = c.categoria_id
             WHERE 
                 e.estado = 'Aprobado'` // Filtrar eventos con estado "Aprobado"
         );
