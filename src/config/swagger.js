@@ -26,7 +26,8 @@ const options = {
     "src/routes/seatsRouter.js",
     "src/routes/sceneryRouter.js",
     "src/routes/ticketRoutes.js",
-    "src/routes/scheduleRoutes.js"
+    "src/routes/scheduleRoutes.js",
+    "src/routes/cuponRoutes.js",
   ],
 };
 
