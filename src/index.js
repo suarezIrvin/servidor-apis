@@ -27,7 +27,7 @@ app.get("/test", (req, res) => {
 
 // Ruta protegida por middleware de autenticación
 app.get("/dashboard", authMiddleware, (req, res) => {
-  res.json({ message: `Welcome ${req.userRole}` });
+  res.json({ message: `Welcome ${req.user.usuario_id}` });
 });
 
 // Iniciar el servidor digital event

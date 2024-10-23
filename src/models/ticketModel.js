@@ -30,6 +30,18 @@ const TicketModel = {
     );
   },
 
+  getHistoryScan: (hoster_id) => {
+    return pool.execute(
+      `
+      SELECT t.ticket_id, t.code, t.canje_at, u.nombre, u.last_name
+      FROM tickets t 
+      JOIN usuarios u ON t.hoster_id = u.usuario_id
+      WHERE t.hoster_id = ?
+            `,
+      [hoster_id]
+    );
+  },
+
   createTicket: (info, code, status, id_horario) => {
     const query = `
             INSERT INTO tickets (info, code, status, id_horario)
@@ -121,6 +133,8 @@ const TicketModel = {
     const query = `UPDATE tickets SET id_horario = ? WHERE code = ?`;
     return pool.execute(query, [horarioId, code]);
   },
+
+  
 
   
 };

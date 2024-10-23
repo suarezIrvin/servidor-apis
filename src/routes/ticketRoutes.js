@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const ticketController = require('../controllers/ticketController');
-const {validateRole} = require('../middlewares/validateRole')
+const {validateRole} = require('../middlewares/validateRole');
+const authMiddleware = require('../middlewares/authMiddleware');
 
 /**
  * @openapi
@@ -299,8 +300,8 @@ router.put('/:ticket_id', validateRole([1,3,4]), ticketController.updateStatusTi
  *       500:
  *         description: Error al escanear el ticket.
  */
-router.post('/scan', validateRole([1,4]), ticketController.scanTicket);
-
+router.post('/scan', validateRole([1,4]), authMiddleware, ticketController.scanTicket);
+router.get('/history-scan/:hoster_id', validateRole([1,4]), ticketController.historyScan);
 // verificar el Código del cupón - cliente
 /**
  * @openapi

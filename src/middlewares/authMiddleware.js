@@ -17,8 +17,10 @@ const authMiddleware = async (req, res, next) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
+    console.log("Decoded Token:", decoded);
+
     const [rows] = await pool.query(
-      "SELECT * FROM Usuarios WHERE usuario_id = ?",
+      "SELECT * FROM usuarios WHERE usuario_id = ?",
       [decoded.id]
     );
 
@@ -27,12 +29,6 @@ const authMiddleware = async (req, res, next) => {
     }
 
     req.user = rows[0];
-
-    const expirationDate = new Date(decoded.exp * 1000);
-    await pool.query(
-      "INSERT INTO Tokens (usuario_id, token, expiracion) VALUES (?, ?, ?)",
-      [req.user.usuario_id, token, expirationDate]
-    );
 
     next();
   } catch (err) {
