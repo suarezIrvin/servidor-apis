@@ -45,7 +45,7 @@ const authMiddleware = require('../middlewares/authMiddleware');
  *       500:
  *         description: Error al obtener los tickets.
  */
-router.get('/list', validateRole([2, 3]), ticketController.getTickets);
+router.get('/list', validateRole([1, 2, 3]), ticketController.getTickets);
 
 
 

@@ -14,6 +14,7 @@ const seatsRouter = require("./seatsRouter");
 const userRoutes = require("./userRoutes");
 const ticketRoutes = require("./ticketRoutes");
 const scheduleRoutes = require("./scheduleRoutes");
+const cuponRoutes = require('./cuponRoutes');
 
 
 // Categorias de las rutas 
@@ -29,6 +30,8 @@ router.use("/seats", seatsRouter);
 router.use("/users", userRoutes);
 router.use("/ticket", ticketRoutes);
 router.use("/schedule", scheduleRoutes);
+router.use("/cupon", cuponRoutes);
+
 
 
 module.exports = router;
