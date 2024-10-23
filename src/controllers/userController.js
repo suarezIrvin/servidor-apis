@@ -144,7 +144,7 @@ const userController = {
       ];
       console.log(values);
       const updateUserQuery =
-        "UPDATE Usuarios SET nombre = ?, email = ?, contrasena = ?, telefono = ?, rol_id = ?, membresia_id = ?, activo = ?, last_name = ?, fotoPerfil = ? WHERE usuario_id = ?";
+        "UPDATE usuarios SET nombre = ?, email = ?, contrasena = ?, telefono = ?, rol_id = ?, membresia_id = ?, activo = ?, last_name = ?, fotoPerfil = ? WHERE usuario_id = ?";
   
       const [result] = await User.update(updateUserQuery, values);
   

@@ -20,9 +20,9 @@ const CommentsModel = {
             FROM comentarios c
             JOIN usuarios u ON c.Usuario_id = u.Usuario_id
             WHERE c.Evento_id = ?
-            LIMIT ? OFFSET ?
+            LIMIT ${parseInt(limit)} OFFSET ${parseInt(offset)}
             `,
-            [evento_id, parseInt(limit), parseInt(offset)]
+            [evento_id]
         );
     },
 
