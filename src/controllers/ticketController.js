@@ -123,7 +123,7 @@ const ticketController = {
       if (ticket[0]?.status == undefined) {
         return res.status(200).send('Ticket inválido');
       }
-      if (ticket[0]?.redeem == 0 || ticket[0]?.redeem == null) {
+      if (ticket[0]?.redeem == 0 || ticket[0]?.redeem == null || ticket[0]?.id_horario == null) {
         return res.status(200).send('Ticket no registrado para su uso');
       }
       if (ticket[0]?.status === 1) {
