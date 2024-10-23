@@ -198,35 +198,51 @@ const ticketController = {
   redeemTickets: async (req, res) => {
     try {
       const { evento_id, code, horario_id } = req.body;
-  
+
       if (!evento_id) {
         return res.status(400).json({
-          message: 'Se requiere el id del evento',
+          message: "Se requiere el id del evento",
         });
       }
-  
+
       // Inserta el pago en la base de datos utilizando el modelo TicketModel
       await TicketModel.confirmPayTicket(evento_id);
-  
+
       // Obtener el último ID de pago insertado
       const [rows] = await TicketModel.addPayTicket();
       const payId = rows[0]?.pago_id; // Extraer el valor de pago_id
-  
+
       if (!payId) {
         return res.status(500).json({
-          error: 'Error al obtener el ID de pago',
+          error: "Error al obtener el ID de pago",
         });
       }
-  
+
       // Actualizar el ticket con el ID de pago
       await TicketModel.updateTicketWithPagoId(payId, code);
 
+      // Cambios 23-10
+      const [ticket] = await TicketModel.getTicketByCode(code);
+      if (ticket.length == 0) {
+        return res.status(404).json({
+          message: "El ticket no existe",
+        });
+      }
+      console.log(ticket);
+      const idTicket = ticket[0].ticket_id;
+      if (ticket[0].redeem == 1) {
+        return res.status(404).json({
+          message: "El ticket ha sido canjeado anteriormente",
+        });
+      }
+      await TicketModel.update(idTicket, { redeem: 1 });
+      // Cambios 23-10
+
       // Actualizar el ticket con horario_id
-      await TicketModel.updateTicketHorarioId(horario_id, code)
-      
-  
+      await TicketModel.updateTicketHorarioId(horario_id, code);
+
       // Responder con un mensaje de éxito
-      res.json({ message: 'Pago exitoso' });
+      res.json({ message: "Pago exitoso" });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
