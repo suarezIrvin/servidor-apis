@@ -175,11 +175,12 @@ const eventController = {
 
     getApprovedEvent: async (req, res) => {
         try {
-            // Llama al método del modelo para obtener los eventos aprobados
-            const events = await Event.getApprovedEvents();
-            
-            // Devuelve la lista de eventos aprobados en formato JSON
-            res.status(200).json(events);
+          // Llama al método del modelo para obtener los eventos aprobados
+          const events = await Event.getApprovedEvents();
+          const currentDate = new Date();
+          const eventsNew = events.filter(event => new Date(event.fecha_termino) > currentDate);
+          // Devuelve la lista de eventos aprobados en formato JSON
+          res.status(200).json(eventsNew);
         } catch (error) {
             // Maneja errores y envía una respuesta de error
             console.error('Error al obtener la lista de eventos aprobados:', error);
