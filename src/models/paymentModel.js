@@ -26,14 +26,6 @@ const Payment =  {
     },
 
 
-    getPaymentHistoryByUserId : async (userId) => {
-        const [result] = await pool.query(
-            `SELECT * FROM pagos WHERE usuario_id = ? `,
-            [userId]
-            );
-
-            return result;
-    },
     
     getDetailedPaymentHistoryByUserId: async (userId) => {
       const [result] = await pool.query(
@@ -52,9 +44,9 @@ const Payment =  {
               t.info AS info_ticket,
               t.code AS codigo_ticket
           FROM pagos p
-          JOIN eventos e ON p.evento_id = e.evento_id
-          JOIN horarios h ON e.evento_id = h.evento_id
-          JOIN tickets t ON p.pago_id = t.pago_id
+          LEFT JOIN eventos e ON p.evento_id = e.evento_id
+          LEFT JOIN horarios h ON e.evento_id = h.evento_id
+          LEFT JOIN tickets t ON p.pago_id = t.pago_id
           WHERE p.usuario_id = ?
           `,
           [userId]
