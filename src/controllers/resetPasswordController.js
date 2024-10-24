@@ -35,7 +35,7 @@ const resetPasswordController = {
   
       await updateResetToken(hashedToken, formattedResetExpire, email);
   
-      const resetUrl = `https://api-digitalevent.onrender.com/api/password/reset-password/${hashedToken}`;
+      const resetUrl = `https://api-digital.fly.dev/api/password/reset-password/${hashedToken}`;
       const transporter = nodemailer.createTransport({
         service: "Gmail",
         auth: {
