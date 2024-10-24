@@ -197,16 +197,20 @@ const ticketController = {
 
   redeemTickets: async (req, res) => {
     try {
-      const { usuario_id, evento_id, code, horario_id } = req.body;
+      const { evento_id, code, horario_id } = req.body;
 
       if (!evento_id) {
         return res.status(400).json({
           message: "Se requiere el id del evento",
         });
       }
-
+      const usuario_id = req.user.usuario_id;
+      const data = {
+        usuario_id: usuario_id,
+        evento_id: evento_id
+      }
       // Inserta el pago en la base de datos utilizando el modelo TicketModel
-      await TicketModel.confirmPayTicket(usuario_id, evento_id);
+      await TicketModel.confirmPayTicket(data);
 
       // Obtener el último ID de pago insertado
       const [rows] = await TicketModel.addPayTicket();

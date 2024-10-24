@@ -370,7 +370,7 @@ router.post('/check', ticketController.checkTicket);
  *       500:
  *         description: Error al redimir el cupón.
  */
-router.post('/redeem', ticketController.redeemTickets);
+router.post('/redeem', authMiddleware, ticketController.redeemTickets);
 
 
 module.exports = router;
