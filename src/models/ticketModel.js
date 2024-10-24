@@ -110,12 +110,12 @@ const TicketModel = {
     return pool.execute( query, [code] );
   },
 
-  confirmPayTicket: (evento_id) => {
+  confirmPayTicket: (usuario_id, evento_id) => {
     const query = `
     INSERT INTO pagos (monto, fecha, usuario_id, evento_id, f_inicio_ep, f_FIN_ep)
-    VALUES (0, CURRENT_DATE(), 70, ?, NULL, NULL);
+    VALUES (0, CURRENT_DATE(), ?, ?, NULL, NULL);
   `;
-    return pool.execute( query, [evento_id]  );
+    return pool.execute( query, [usuario_id, evento_id]  );
   },
 
   addPayTicket: () => {
