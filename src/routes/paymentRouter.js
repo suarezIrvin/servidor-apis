@@ -84,56 +84,6 @@ router.post('/payment', paymentController.pay);
 
 /**
  * @openapi
- * /api/payment/history/:
- *   get:
- *     summary: obtiene el historial de un usuario por medio de su id
- *     description: Obtiene el historial por medio del id del usuario
- *     tags:
- *       - payment
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: Detalles del historial de pago de un usuario encontrado.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                   pago_id:
- *                     type: integer
- *                   monto:
- *                     type: string
- *                   fecha:
- *                     type: string
- *                     format: date
- *                   tipo_pago_id:
- *                     type: integer
- *                   usuario_id:
- *                     type: integer
- *                   evento_id:
- *                     type: integer
- *                   tarjeta:
- *                     type: object
- *                     properties:
- *                       tarjeta_id:
- *                         type: integer
- *                       numero_tarjeta:
- *                         type: string
- *                       fecha_expiracion:
- *                         type: string
- *                         format: date
- *                       cvv:
- *                         type: string
- *       404:
- *         description: historial no encontrado.
- *       500:
- *         description: Error al obtener el historial.
- */
-router.get('/history/', validateRole([2]), paymentController.payHistoryByUserId);
-
-/**
- * @openapi
  * /api/payment/history/detailed:
  *   get:
  *     summary: Obtiene el historial detallado de un usuario autenticado.

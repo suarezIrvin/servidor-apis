@@ -32,6 +32,7 @@ const Payment =  {
           `
           SELECT 
               p.pago_id,
+              p.usuario_id,
               p.monto,
               p.fecha AS fecha_pago,
               e.nombre AS nombre_evento,
