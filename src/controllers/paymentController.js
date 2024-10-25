@@ -44,9 +44,12 @@ const paymentController = {
 
     try {
       const result = await Payment.getDetailedPaymentHistoryByUserId(userId);
+      if (result.length == 0) {
+        res.status(404).json({message: "No hay historial de pagos"})
+        return;
+      }
       res.status(200).json(result);
     } catch (error) {
-      console.error('Error al obtener el historial detallado:', error);
       res.status(500).send('Error al obtener el historial detallado');
     }
   },

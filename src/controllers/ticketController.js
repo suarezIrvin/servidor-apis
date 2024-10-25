@@ -198,54 +198,60 @@ const ticketController = {
   redeemTickets: async (req, res) => {
     try {
       const { evento_id, code, horario_id } = req.body;
-
-      if (!evento_id) {
+  
+      if (!evento_id || !horario_id) {
         return res.status(400).json({
-          message: "Se requiere el id del evento",
+          message: "Se requiere el id del evento y el id del horario",
         });
       }
+  
+      const [redeemCountResult] = await TicketModel.countRedeemedTicketsByHorarioId(horario_id);
+      const totalRedeemed = redeemCountResult[0]?.total;
+  
+      if (totalRedeemed >= 125) {
+        return res.status(404).json({
+          message: `El horario ${horario_id} ya ha alcanzado el límite de 125 tickets redimidos`,
+        });
+      }
+  
       const usuario_id = req.user.usuario_id;
       const data = {
         usuario_id: usuario_id,
         evento_id: evento_id
-      }
-      // Inserta el pago en la base de datos utilizando el modelo TicketModel
+      };
+  
       await TicketModel.confirmPayTicket(data);
-
-      // Obtener el último ID de pago insertado
+  
       const [rows] = await TicketModel.addPayTicket();
-      const payId = rows[0]?.pago_id; // Extraer el valor de pago_id
-
+      const payId = rows[0]?.pago_id; 
+  
       if (!payId) {
         return res.status(500).json({
           error: "Error al obtener el ID de pago",
         });
       }
-
-      // Actualizar el ticket con el ID de pago
+  
+      
       await TicketModel.updateTicketWithPagoId(payId, code);
-
-      // Cambios 23-10
+  
       const [ticket] = await TicketModel.getTicketByCode(code);
       if (ticket.length == 0) {
         return res.status(404).json({
           message: "El ticket no existe",
         });
       }
-      console.log(ticket);
+  
       const idTicket = ticket[0].ticket_id;
       if (ticket[0].redeem == 1) {
         return res.status(404).json({
           message: "El ticket ha sido canjeado anteriormente",
         });
       }
+  
       await TicketModel.update(idTicket, { redeem: 1 });
-      // Cambios 23-10
-
-      // Actualizar el ticket con horario_id
+  
       await TicketModel.updateTicketHorarioId(horario_id, code);
-
-      // Responder con un mensaje de éxito
+  
       res.json({ message: "Pago exitoso" });
     } catch (error) {
       res.status(500).json({ error: error.message });
@@ -263,10 +269,43 @@ const ticketController = {
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
-  }
-  
+  },
 
+  getAvailableTicketsForHorario1: async (req, res) => {
+    try {
+      const result = await TicketModel.getAvailableTicketsForHorario1();
+      res.status(200).json(result);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  },
 
+  getAvailableTicketsForHorario2: async (req, res) => {
+    try {
+      const result = await TicketModel.getAvailableTicketsForHorario2();
+      res.status(200).json(result);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  },
+
+  getAvailableTicketsByHorario: async (req, res) => {
+    try {
+      const { horario_id } = req.params;
+
+      const [redeemedCountResult] = await TicketModel.countRedeemedTicketsByHorarioId(horario_id);
+      const redeemedTickets = redeemedCountResult[0]?.total || 0;
+
+      const availableTickets = 125 - redeemedTickets; 
+
+      res.status(200).json({
+        horario_id,
+        availableTickets
+      });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  },
 
 };
 

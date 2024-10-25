@@ -134,7 +134,31 @@ const TicketModel = {
     return pool.execute(query, [horarioId, code]);
   },
 
-  
+  countRedeemedTicketsByHorarioId: (horarioId) => {
+    const query = `SELECT COUNT(*) as total FROM tickets WHERE id_horario = ? AND redeem = 1`;
+    return pool.execute(query, [horarioId]);
+  },
+
+  getAvailableTicketsForHorario1: () => {
+    const totalTickets = 125; 
+    return pool.execute(
+      `SELECT COUNT(*) as total FROM tickets WHERE id_horario = 1 AND redeem = 1`
+    ).then(([rows]) => {
+      const redeemed = rows[0].total;
+      const available = totalTickets - redeemed;
+      return { horario_id: 1, tickets_disponibles: available };
+    });
+  },
+  getAvailableTicketsForHorario2: () => {
+    const totalTickets = 125; 
+    return pool.execute(
+      `SELECT COUNT(*) as total FROM tickets WHERE id_horario = 2 AND redeem = 1`
+    ).then(([rows]) => {
+      const redeemed = rows[0].total;
+      const available = totalTickets - redeemed;
+      return { horario_id: 2, tickets_disponibles: available };
+    });
+  },
 
   
 };

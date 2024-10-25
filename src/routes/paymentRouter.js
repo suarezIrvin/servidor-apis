@@ -130,7 +130,7 @@ router.post('/payment', paymentController.pay);
  *       500:
  *         description: Error al obtener el historial.
  */
-router.get('/history/detailed', validateRole([2]), paymentController.payDetailedHistoryByUserId);
+router.get('/history/detailed', validateRole([1, 2]), paymentController.payDetailedHistoryByUserId);
 
 /**
  * @openapi
