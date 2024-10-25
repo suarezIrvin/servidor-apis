@@ -118,11 +118,6 @@ const TicketModel = {
     return pool.execute( query, [data.usuario_id, data.evento_id]  );
   },
 
-  addPayTicket: () => {
-    const query = `SELECT LAST_INSERT_ID() as pago_id;`;
-    return pool.execute(query);
-  },
-
 
   updateTicketWithPagoId: (payId, code) => {
     const query = `UPDATE tickets SET pago_id = ? WHERE code = ?`;

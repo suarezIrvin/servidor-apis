@@ -43,11 +43,13 @@ const Payment =  {
               h.hora_fin,
               t.ticket_id,
               t.info AS info_ticket,
-              t.code AS codigo_ticket
+              t.code AS codigo_ticket,
+              i.imagen_url
           FROM pagos p
-          LEFT JOIN eventos e ON p.evento_id = e.evento_id
-          LEFT JOIN horarios h ON e.evento_id = h.evento_id
-          LEFT JOIN tickets t ON p.pago_id = t.pago_id
+          INNER JOIN eventos e ON p.evento_id = e.evento_id
+          LEFT JOIN imagenes i ON i.evento_id = e.evento_id
+          INNER JOIN tickets t ON p.pago_id = t.pago_id
+          LEFT JOIN horarios h ON h.horario_id = t.id_horario
           WHERE p.usuario_id = ?
           `,
           [userId]

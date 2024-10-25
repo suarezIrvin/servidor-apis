@@ -212,16 +212,6 @@ const ticketController = {
       // Inserta el pago en la base de datos utilizando el modelo TicketModel
       await TicketModel.confirmPayTicket(data);
 
-      // Obtener el último ID de pago insertado
-      const [rows] = await TicketModel.addPayTicket();
-      const payId = rows[0]?.pago_id; // Extraer el valor de pago_id
-
-      if (!payId) {
-        return res.status(500).json({
-          error: "Error al obtener el ID de pago",
-        });
-      }
-
       // Actualizar el ticket con el ID de pago
       await TicketModel.updateTicketWithPagoId(payId, code);
 
