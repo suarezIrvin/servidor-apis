@@ -343,7 +343,7 @@ router.post('/check', ticketController.checkTicket);
  * /api/ticket/redeem:
  *   post:
  *     summary: Redimir tickets.
- *     description: Esta ruta permite redimir tickets utilizando un código de cupón.
+ *     description: Esta ruta permite redimir tickets utilizando un código de ticket y asociar el ticket a un horario específico. Además, se asegura de que no se rediman más de 121 tickets por cada horario.
  *     tags:
  *       - Tickets
  *     security:
@@ -355,22 +355,81 @@ router.post('/check', ticketController.checkTicket);
  *           schema:
  *             type: object
  *             required:
- *               - coupon_code
+ *               - code
+ *               - horario_id
+ *               - evento_id
  *             properties:
- *               coupon_code:
+ *               code:
  *                 type: string
- *                 example: "CUPON-XYZ"
+ *                 example: "TICKET-123XYZ"
+ *               horario_id:
+ *                 type: integer
+ *                 example: 1
+ *               evento_id:
+ *                 type: integer
+ *                 example: 1001
  *     responses:
  *       200:
- *         description: Tickets redimidos exitosamente.
+ *         description: Ticket redimido exitosamente.
  *       400:
- *         description: Datos de entrada inválidos.
+ *         description: Solicitud inválida o el límite de 121 tickets redimidos para el horario ha sido alcanzado.
  *       404:
- *         description: Cupón no encontrado.
+ *         description: El ticket no existe o ya ha sido redimido.
  *       500:
- *         description: Error al redimir el cupón.
+ *         description: Error al redimir el ticket.
  */
 router.post('/redeem', authMiddleware, ticketController.redeemTickets);
 
+/**
+ * @openapi
+ * /api/ticket/available/h1:
+ *   get:
+ *     summary: Obtener tickets disponibles para el Horario 1.
+ *     description: Esta ruta obtiene la cantidad de tickets disponibles para el Horario 1.
+ *     tags:
+ *       - Tickets
+ *     responses:
+ *       200:
+ *         description: Cantidad de tickets disponibles para el Horario 1.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 available_tickets:
+ *                   type: integer
+ *                   example: 100
+ *       404:
+ *         description: Horario no encontrado.
+ *       500:
+ *         description: Error al obtener la cantidad de tickets disponibles.
+ */
+router.get('/available/h1', ticketController.getAvailableTicketsForHorario1);
+
+/**
+ * @openapi
+ * /api/ticket/available/h2:
+ *   get:
+ *     summary: Obtener tickets disponibles para el Horario 2.
+ *     description: Esta ruta obtiene la cantidad de tickets disponibles para el Horario 2.
+ *     tags:
+ *       - Tickets
+ *     responses:
+ *       200:
+ *         description: Cantidad de tickets disponibles para el Horario 2.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 available_tickets:
+ *                   type: integer
+ *                   example: 75
+ *       404:
+ *         description: Horario no encontrado.
+ *       500:
+ *         description: Error al obtener la cantidad de tickets disponibles.
+ */
+router.get('/available/h2', ticketController.getAvailableTicketsForHorario2);
 
 module.exports = router;
