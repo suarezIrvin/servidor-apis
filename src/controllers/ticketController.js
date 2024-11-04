@@ -231,8 +231,6 @@ const ticketController = {
         });
       }
   
-      
-      await TicketModel.updateTicketWithPagoId(payId, code);
   
       const [ticket] = await TicketModel.getTicketByCode(code);
       if (ticket.length == 0) {
@@ -247,6 +245,8 @@ const ticketController = {
           message: "El ticket ha sido canjeado anteriormente",
         });
       }
+
+      await TicketModel.updateTicketWithPagoId(payId, code);
   
       await TicketModel.update(idTicket, { redeem: 1 });
   
