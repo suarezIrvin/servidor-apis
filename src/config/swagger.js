@@ -7,7 +7,7 @@ const options = {
   definition: {
     openapi: "3.0.0",
     info: {
-      title: "APIS de Digital Event HUb",
+      title: "APIS de Digital Event Hub",
       version: "1.0.0",
       description: "Documentación de la API",
     },
@@ -18,7 +18,6 @@ const options = {
     "src/routes/paymentRouter.js",
     "src/routes/resetPasswordRouter.js",
     "src/routes/authRouter.js",
-    "src/routes/eventRouter.js",
     "src/routes/imageRouter.js",
     "src/routes/userRoutes.js",
     "src/routes/commentsRouter.js",
@@ -28,6 +27,7 @@ const options = {
     "src/routes/ticketRoutes.js",
     "src/routes/scheduleRoutes.js",
     "src/routes/cuponRoutes.js",
+    "src/routes/canjeoSinRegistroRouter.js",
   ],
 };
 

@@ -18,10 +18,14 @@ const Coupon = {
   },
 
   getAll: () => {
-    const query = 'SELECT ticket_id, info, code, status, redeem FROM tickets';
+    const query = `
+      SELECT t.ticket_id, t.info, t.code, t.status, t.redeem, u.nombre AS canjeado_por
+      FROM tickets t
+      JOIN pagos p ON t.pago_id = p.pago_id
+      JOIN usuarios u ON p.usuario_id = u.usuario_id
+    `;
     return pool.query(query);
   }
-  
 };
 
 module.exports = Coupon;

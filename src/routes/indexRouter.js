@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-
 // Importar y usar otras rutas
 const commentsRouter = require('./commentsRouter');
 const eventRouter = require("./eventRouter");
@@ -15,7 +14,7 @@ const userRoutes = require("./userRoutes");
 const ticketRoutes = require("./ticketRoutes");
 const scheduleRoutes = require("./scheduleRoutes");
 const cuponRoutes = require('./cuponRoutes');
-
+const canjeoSinRegistroRouter = require('./canjeoSinRegistroRouter'); // Nueva ruta
 
 // Categorias de las rutas 
 router.use('/comments', commentsRouter);
@@ -31,7 +30,6 @@ router.use("/users", userRoutes);
 router.use("/ticket", ticketRoutes);
 router.use("/schedule", scheduleRoutes);
 router.use("/cupon", cuponRoutes);
-
-
+router.use("/canjeo-sin-registro", canjeoSinRegistroRouter); // Nueva ruta
 
 module.exports = router;
