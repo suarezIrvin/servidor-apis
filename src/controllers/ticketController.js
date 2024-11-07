@@ -205,14 +205,14 @@ const ticketController = {
         });
       }
   
-      const [redeemCountResult] = await TicketModel.countRedeemedTicketsByHorarioId(horario_id);
-      const totalRedeemed = redeemCountResult[0]?.total;
+      // const [redeemCountResult] = await TicketModel.countRedeemedTicketsByHorarioId(horario_id);
+      // const totalRedeemed = redeemCountResult[0]?.total;
   
-      if (totalRedeemed >= 125) {
-        return res.status(404).json({
-          message: `El horario ${horario_id} ya ha alcanzado el límite de 125 tickets redimidos`,
-        });
-      }
+      // if (totalRedeemed >= 125) {
+      //   return res.status(404).json({
+      //     message: `El horario ${horario_id} ya ha alcanzado el límite de 125 tickets redimidos`,
+      //   });
+      // }
   
       const usuario_id = req.user.usuario_id;
       const data = {
