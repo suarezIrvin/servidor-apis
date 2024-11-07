@@ -140,7 +140,7 @@ const TicketModel = {
   },
 
   getAvailableTicketsForHorario1: () => {
-    const totalTickets = 125; 
+    const totalTickets = 140; 
     return pool.execute(
       `SELECT COUNT(*) as total FROM tickets WHERE id_horario = 1 AND redeem = 1`
     ).then(([rows]) => {
@@ -150,7 +150,7 @@ const TicketModel = {
     });
   },
   getAvailableTicketsForHorario2: () => {
-    const totalTickets = 125; 
+    const totalTickets = 140; 
     return pool.execute(
       `SELECT COUNT(*) as total FROM tickets WHERE id_horario = 2 AND redeem = 1`
     ).then(([rows]) => {
