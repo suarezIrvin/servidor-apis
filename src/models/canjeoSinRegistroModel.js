@@ -6,9 +6,15 @@ const CanjeoSinRegistroModel = {
     return pool.execute(query, [code]);
   },
 
-  updateTicketToRedeemed: (ticket_id) => {
-    const query = `UPDATE tickets SET redeem = 1 WHERE ticket_id = ?`;
-    return pool.execute(query, [ticket_id]);
+  updateTicketToRedeemed: (ticket_id, id_horario) => {
+    const query = `
+      UPDATE tickets 
+      SET redeem = 1, 
+          id_horario = ?, 
+          canje_at = NOW()
+      WHERE ticket_id = ?
+    `;
+    return pool.execute(query, [id_horario, ticket_id]);
   }
 };
 

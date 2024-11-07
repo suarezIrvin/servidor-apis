@@ -208,9 +208,9 @@ const ticketController = {
       const [redeemCountResult] = await TicketModel.countRedeemedTicketsByHorarioId(horario_id);
       const totalRedeemed = redeemCountResult[0]?.total;
   
-      if (totalRedeemed >= 140) {
+      if (totalRedeemed >= 125) {
         return res.status(404).json({
-          message: `El horario ${horario_id} ya ha alcanzado el límite de 140 tickets redimidos`,
+          message: `El horario ${horario_id} ya ha alcanzado el límite de 125 tickets redimidos`,
         });
       }
   
@@ -296,7 +296,7 @@ const ticketController = {
       const [redeemedCountResult] = await TicketModel.countRedeemedTicketsByHorarioId(horario_id);
       const redeemedTickets = redeemedCountResult[0]?.total || 0;
 
-      const availableTickets = 140 - redeemedTickets; 
+      const availableTickets = 125 - redeemedTickets; 
 
       res.status(200).json({
         horario_id,

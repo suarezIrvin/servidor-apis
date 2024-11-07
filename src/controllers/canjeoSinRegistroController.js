@@ -2,7 +2,7 @@ const CanjeoSinRegistroModel = require("../models/canjeoSinRegistroModel");
 
 const CanjeoSinRegistroController = {
   async redeemTicket(req, res) {
-    const { code } = req.body;
+    const { code, id_horario } = req.body; // Agrega id_horario
 
     try {
       // Verificar si el ticket existe y obtener información
@@ -18,8 +18,8 @@ const CanjeoSinRegistroController = {
         return res.status(400).json({ message: "El ticket ya ha sido canjeado" });
       }
 
-      // Actualizar el ticket a canjeado
-      await CanjeoSinRegistroModel.updateTicketToRedeemed(ticket.ticket_id);
+      // Actualizar el ticket a canjeado e incluir el horario
+      await CanjeoSinRegistroModel.updateTicketToRedeemed(ticket.ticket_id, id_horario);
 
       // Devolver respuesta exitosa con el código de ticket
       return res.status(200).json({ message: "Ticket canjeado exitosamente", ticketCode: ticket.code });

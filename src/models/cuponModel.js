@@ -21,8 +21,8 @@ const Coupon = {
     const query = `
       SELECT t.ticket_id, t.info, t.code, t.status, t.redeem, u.nombre AS canjeado_por
       FROM tickets t
-      JOIN pagos p ON t.pago_id = p.pago_id
-      JOIN usuarios u ON p.usuario_id = u.usuario_id
+      LEFT JOIN pagos p ON t.pago_id = p.pago_id
+      LEFT JOIN usuarios u ON p.usuario_id = u.usuario_id
     `;
     return pool.query(query);
   }
